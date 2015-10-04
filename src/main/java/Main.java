@@ -5,7 +5,7 @@ public class Main {
 
     public static void main(String[] args) {
         port(getHerokuAssignedPort());
-        get("/hello", (req, res) -> "Hello World");
+        get("/hello", (req, res) -> {return "<h1>Hello World</h1>";});
     }
 
     static int getHerokuAssignedPort() {
