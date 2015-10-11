@@ -1,8 +1,10 @@
 package cardswithfriends;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Game {
+public class Game implements Serializable {
+	private static final long serialVersionUID = -9150883982784712022L;
 	private int gameId;
 	private GameState gameState;
 	private List<Move> moves;
@@ -33,6 +35,10 @@ public class Game {
 
 	public void setMoves(List<Move> moves) {
 		this.moves = moves;
+	}
+	
+	public static Game getGame(int gameID) {
+		return DBHandler.getGame(gameID);
 	}
 	
 }

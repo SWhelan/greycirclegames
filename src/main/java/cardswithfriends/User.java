@@ -1,6 +1,10 @@
 package cardswithfriends;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
+	private static final long serialVersionUID = -8255733091222689114L;
+	
 	private int userId;
 	private String userName;
 	
@@ -14,6 +18,10 @@ public class User {
 	}
 	public String getUserName() {
 		return userName;
+	}
+	
+	public static User getUser(int userID) {
+		return DBHandler.getUser(userID);
 	}
 	
 }
