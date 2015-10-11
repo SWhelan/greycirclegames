@@ -4,11 +4,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class KingsCorner extends Game{
-	public final User[] turnOrder;
+	public final Player[] turnOrder;
 	
-	public KingsCorner(int gameId, List<User> players){
+	public KingsCorner(int gameId, List<Player> players){
 		super(gameId, players);
-		turnOrder = new User[players.size()];
+		turnOrder = new Player[players.size()];
 	}
 	
 	private KingsCorner(KingsCornerGenerator kc){
@@ -23,7 +23,7 @@ public class KingsCorner extends Game{
 	}
 
 	@Override
-	protected final GameState newGameState(List<User> players) {
+	protected final GameState newGameState(List<Player> players) {
 		GameState game = new KCGameState();
 		return game;
 	}
@@ -32,8 +32,8 @@ public class KingsCorner extends Game{
 		public int gameId;
 		public GameState gs;
 		public List<Move> moves;
-		public List<User> players;
-		public User[] getTurnOrder(){
+		public List<Player> players;
+		public Player[] getTurnOrder(){
 			return null;
 		}
 	}

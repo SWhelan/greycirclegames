@@ -16,10 +16,10 @@ public abstract class Game{
 	//The list of moves
 	private final List<Move> moves;
 	
-	private final List<User> players;
+	private final List<Player> players;
 	
 	//Make a completely new game
-	public Game(int gameId, List<User> players){
+	public Game(int gameId, List<Player> players){
 		this.gameId = gameId;
 		this.gameState = newGameState(players);
 		this.moves = new LinkedList<Move>();
@@ -27,7 +27,7 @@ public abstract class Game{
 	}
 	
 	//Make a pre-existing game
-	public Game(int gameId, GameState gameState, List<Move> moves, List<User> players){
+	public Game(int gameId, GameState gameState, List<Move> moves, List<Player> players){
 		this.gameId = gameId;
 		this.gameState = gameState;
 		this.moves = moves;
@@ -35,7 +35,7 @@ public abstract class Game{
 	}
 	
 	//A game state for a completely new game
-	protected abstract GameState newGameState(List<User> players);
+	protected abstract GameState newGameState(List<Player> players);
 	
 	//Convert this game to the save format
 	protected abstract String toDBForm();

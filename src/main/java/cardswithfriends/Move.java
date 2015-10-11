@@ -1,7 +1,7 @@
 package cardswithfriends;
 
 public abstract class Move {
-	private final User user;
+	private final Player user;
 	private final Pile origin;
 	private final Pile moving;
 	private final Pile destination;
@@ -13,7 +13,7 @@ public abstract class Move {
 	 * @param moving the card or pile being moved
 	 * @param destination the pile to place the card or pile onto
 	 */
-	protected Move(User user, Pile origin, Pile moving, Pile destination){
+	protected Move(Player user, Pile origin, Pile moving, Pile destination){
 		this.user = user;
 		this.origin = origin;
 		this.moving = moving;
@@ -26,7 +26,7 @@ public abstract class Move {
 	
 	@Override
 	public String toString(){
-		//User # placed card on pile X or Moved PIle X onto Pile Y
-		return this.user.getUserName() + " moved " + this.moving.toString() + " onto " + this.destination.toString();
+		//Player # placed card on pile X or Moved PIle X onto Pile Y
+		return this.user.getPlayerName() + " moved " + this.moving.toString() + " onto " + this.destination.toString();
 	}
 }

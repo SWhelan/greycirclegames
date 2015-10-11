@@ -4,13 +4,13 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.jetty.server.Authentication.User;
+import org.eclipse.jetty.server.Authentication.Player;
 
 public class KCGameState extends GameState{
 	
 	public Map<Integer, Pile> piles;
 	
-	public Map<User, Pile> userHands = new HashMap<User, Pile>();
+	public Map<Player, Pile> userHands = new HashMap<Player, Pile>();
 
 	public KCGameState(KCGameStateGenerator kc){
 		//Initialize to a pre-existing game
@@ -93,11 +93,11 @@ public class KCGameState extends GameState{
 		this.northWest = northWest;
 	}
 
-	public Map<User, Pile> getUserHands() {
+	public Map<Player, Pile> getPlayerHands() {
 		return userHands;
 	}
 
-	public void setUserHands(Map<User, Pile> userHands) {
+	public void setPlayerHands(Map<Player, Pile> userHands) {
 		this.userHands = userHands;
 	}
 

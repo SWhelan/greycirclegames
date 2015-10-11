@@ -1,6 +1,6 @@
 package cardswithfriends;
 
-public class User {
+public class User implements Player{
 	private int userId;
 	private String userName;
 	
@@ -9,7 +9,7 @@ public class User {
 		this.userName = userName;
 	}
 	
-	public int getUserId() {
+	public int getPlayerId() {
 		return userId;
 	}
 	public String getUserName() {

@@ -6,11 +6,11 @@ import java.util.Map;
 public abstract class GameState {
 	//The current turn
 	protected int turnNumber;
-	protected Map<User, Pile> userHands;
+	protected Map<Player, Pile> userHands;
 	
 	public GameState(){
 		turnNumber = 0;
-		userHands = new HashMap<User, Pile>();
+		userHands = new HashMap<Player, Pile>();
 	}
 
 	public int getTurnNumber() {
