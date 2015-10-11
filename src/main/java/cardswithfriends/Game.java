@@ -1,38 +1,66 @@
 package cardswithfriends;
 
+import java.util.LinkedList;
 import java.util.List;
 
-public class Game {
-	private int gameId;
-	private GameState gameState;
-	private List<Move> moves;
+/**
+ * The Game holds a all the information about the game.
+ * @author George
+ *
+ */
+public abstract class Game{
+	//The id of a game
+	private final int gameId;
+	//The game state
+	private final GameState gameState;
+	//The list of moves
+	private final List<Move> moves;
 	
-	public boolean applyMove(){
-		return true;
+	private final List<User> players;
+	
+	//Make a completely new game
+	public Game(int gameId, List<User> players){
+		this.gameId = gameId;
+		this.gameState = newGameState(players);
+		this.moves = new LinkedList<Move>();
+		this.players = players;
 	}
+	
+	//Make a pre-existing game
+	public Game(int gameId, GameState gameState, List<Move> moves, List<User> players){
+		this.gameId = gameId;
+		this.gameState = gameState;
+		this.moves = moves;
+		this.players = players;
+	}
+	
+	//A game state for a completely new game
+	protected abstract GameState newGameState(List<User> players);
+	
+	//Convert this game to the save format
+	protected abstract String toDBForm();
 
-	public int getGameId() {
+	//Apply a move to the game
+	public abstract boolean applyMove(Move move);
+
+	//Get the gameId
+	public final int getGameId() {
 		return gameId;
 	}
 
-	public void setGameId(int gameId) {
-		this.gameId = gameId;
-	}
-
-	public GameState getGameState() {
+	//Get the game state
+	public final GameState getGameState() {
 		return gameState;
 	}
 
-	public void setGameState(GameState gameState) {
-		this.gameState = gameState;
-	}
-
-	public List<Move> getMoves() {
+	//Get the moves that have happened in the game
+	public final List<Move> getMoves() {
 		return moves;
 	}
-
-	public void setMoves(List<Move> moves) {
-		this.moves = moves;
+	
+	//Get a valid new game id -- will use database
+	public static int getNewGameId(){
+		return -1;
 	}
 	
 }

@@ -1,10 +1,10 @@
 package cardswithfriends;
 
-public class Move {
-	private User user;
-	private Pile origin;
-	private Pile moving;
-	private Pile destination;
+public abstract class Move {
+	private final User user;
+	private final Pile origin;
+	private final Pile moving;
+	private final Pile destination;
 
 	/**
 	 * 
@@ -13,25 +13,16 @@ public class Move {
 	 * @param moving the card or pile being moved
 	 * @param destination the pile to place the card or pile onto
 	 */
-	private Move(User user, Pile origin, Pile moving, Pile destination){
+	protected Move(User user, Pile origin, Pile moving, Pile destination){
 		this.user = user;
 		this.origin = origin;
 		this.moving = moving;
 		this.destination = destination;
 	}
 	
-	public static Move makeMoveIfValid(User user, Pile origin, Pile moving, Pile destination){
-		if(isValid(moving, destination)){
-			return new Move(user, origin, moving, destination);
-		} else {
-			return null;
-		}
-	}
+	public abstract boolean isValid();
 	
-	private static boolean isValid(Pile moving, Pile destination){
-		// Should probably not do this.
-		return true;
-	}
+	public abstract void apply();
 	
 	@Override
 	public String toString(){

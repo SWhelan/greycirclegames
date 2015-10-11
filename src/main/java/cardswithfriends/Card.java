@@ -10,7 +10,7 @@ public class Card {
 		this.suit = suit;
 	}
 	
-	public Card makeCard(int number, Suit suit) throws IllegalArgumentException {
+	public static Card make(int number, Suit suit) throws IllegalArgumentException {
 		if(number > 0 && number < 14){
 			return new Card(number, suit);
 		} else {
