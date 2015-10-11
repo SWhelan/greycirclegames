@@ -1,4 +1,6 @@
 package cardswithfriends;
 public interface Player {
-	public int getPlayerID();
+	public Integer getPlayerID();
+	public abstract int hashCode();
+	public abstract boolean equals(Object o);
 }

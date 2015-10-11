@@ -1,8 +1,8 @@
 package cardswithfriends;
 
 public class Card {
-	private int number;
-	private Suit suit;
+	private final int number;
+	private final Suit suit;
 	
 	private Card(int number, Suit suit) {
 		super();

@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 public class Pile {
 	private LinkedList<Card> cards;
+	public String name;
 
 	public boolean removeAll(Pile toRemove) {
 		return cards.removeAll(toRemove.cards);
@@ -18,11 +19,11 @@ public class Pile {
 		return cards.isEmpty();
 	}
 
-	public Card getFirst() {
+	public Card getTop() {
 		return cards.getFirst();
 	}
 
-	public Card getLast() {
+	public Card getBottom() {
 		return cards.getLast();
 	}
 

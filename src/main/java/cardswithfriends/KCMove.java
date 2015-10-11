@@ -2,7 +2,7 @@ package cardswithfriends;
 
 public class KCMove extends Move {
 	
-	private KCMove(User user, Pile origin, Pile moving, Pile destination){
+	KCMove(User user, Pile origin, Pile moving, Pile destination){
 		super(user, origin, moving, destination);
 	}
 

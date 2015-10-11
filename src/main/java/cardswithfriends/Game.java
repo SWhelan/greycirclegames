@@ -38,7 +38,7 @@ public abstract class Game{
 	protected abstract GameState newGameState(List<Player> players);
 	
 	//Convert this game to the save format
-	protected abstract String toDBForm();
+	protected abstract boolean save();
 
 	//Apply a move to the game
 	public abstract boolean applyMove(Move move);
