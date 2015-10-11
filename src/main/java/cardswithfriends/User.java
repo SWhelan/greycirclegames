@@ -1,10 +1,9 @@
 package cardswithfriends;
 
 import java.io.Serializable;
-
-public class User implements Serializable {
-	private static final long serialVersionUID = -8255733091222689114L;
 	
+public class User implements Player,Serializable {
+	private static final long serialVersionUID = -8255733091222689114L;
 	private int userId;
 	private String userName;
 	
@@ -13,7 +12,7 @@ public class User implements Serializable {
 		this.userName = userName;
 	}
 	
-	public int getUserId() {
+	public Integer getPlayerID() {
 		return userId;
 	}
 	public String getUserName() {
@@ -23,5 +22,4 @@ public class User implements Serializable {
 	public static User getUser(int userID) {
 		return DBHandler.getUser(userID);
 	}
-	
 }

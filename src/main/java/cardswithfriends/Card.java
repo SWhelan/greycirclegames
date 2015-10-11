@@ -1,8 +1,8 @@
 package cardswithfriends;
 
 public class Card {
-	private int number;
-	private Suit suit;
+	private final int number;
+	private final Suit suit;
 	
 	private Card(int number, Suit suit) {
 		super();
@@ -10,7 +10,7 @@ public class Card {
 		this.suit = suit;
 	}
 	
-	public Card makeCard(int number, Suit suit) throws IllegalArgumentException {
+	public static Card make(int number, Suit suit) throws IllegalArgumentException {
 		if(number > 0 && number < 14){
 			return new Card(number, suit);
 		} else {
