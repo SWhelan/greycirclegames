@@ -11,10 +11,12 @@ public class User implements Player,Serializable {
 		this.userId = userId;
 		this.userName = userName;
 	}
-	
-	public Integer getPlayerID() {
+	@Override
+	public int getPlayerId() {
 		return userId;
 	}
+	
+	@Override
 	public String getUserName() {
 		return userName;
 	}
