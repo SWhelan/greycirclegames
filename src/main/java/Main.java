@@ -1,11 +1,10 @@
-import static spark.Spark.get;
 import static spark.SparkBase.port;
 
 public class Main {
 
     public static void main(String[] args) {
         port(getHerokuAssignedPort());
-        get("/hello", (req, res) -> {return "<h1>Hello World</h1>";});
+        TemplateHandler.registerTemplates();
     }
 
     static int getHerokuAssignedPort() {

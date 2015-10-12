@@ -62,5 +62,10 @@ public abstract class Game{
 	public static int getNewGameId(){
 		return -1;
 	}
+
+	protected String toDBForm() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

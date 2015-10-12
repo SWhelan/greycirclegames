@@ -8,12 +8,18 @@ public class User implements Player{
 		this.userId = userId;
 		this.userName = userName;
 	}
-	
+	@Override
 	public int getPlayerId() {
 		return userId;
 	}
 	public String getUserName() {
 		return userName;
+	}
+	
+	@Override
+	public String getPlayerName() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

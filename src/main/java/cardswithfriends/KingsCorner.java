@@ -1,6 +1,5 @@
 package cardswithfriends;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class KingsCorner extends Game{
@@ -42,6 +41,12 @@ public class KingsCorner extends Game{
 	protected String toDBForm() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	protected boolean save() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
