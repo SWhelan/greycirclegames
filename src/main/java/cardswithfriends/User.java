@@ -1,6 +1,9 @@
 package cardswithfriends;
 
-public class User implements Player{
+import java.io.Serializable;
+	
+public class User implements Player,Serializable {
+	private static final long serialVersionUID = -8255733091222689114L;
 	private int userId;
 	private String userName;
 	
@@ -12,14 +15,13 @@ public class User implements Player{
 	public int getPlayerId() {
 		return userId;
 	}
+	
+	@Override
 	public String getUserName() {
 		return userName;
 	}
 	
-	@Override
-	public String getPlayerName() {
-		// TODO Auto-generated method stub
-		return null;
+	public static User getUser(int userID) {
+		return DBHandler.getUser(userID);
 	}
-	
 }

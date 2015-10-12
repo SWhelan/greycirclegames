@@ -110,4 +110,12 @@ public class KCGameState extends GameState{
 	public static class KCGameStateGenerator{
 	}
 	
+	public static KingsCorner getKCGame(int gameID) {
+		return DBHandler.getKCGame(gameID);
+	}
+	
+//	public static KingsCorner updateKCGame(int gameID, GameState gameState) {
+//		return DBHandler.updateKCGame(gameID, gameState);
+//	}
+	
 }

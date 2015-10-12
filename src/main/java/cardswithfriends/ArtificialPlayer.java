@@ -28,7 +28,7 @@ public class ArtificialPlayer implements Player {
 	}
 
 	@Override
-	public String getPlayerName() {
+	public String getUserName() {
 		return "Computer Player";
 	}
 }

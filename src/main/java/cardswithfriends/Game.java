@@ -1,5 +1,7 @@
 package cardswithfriends;
 
+import java.io.Serializable;
+import java.util.List;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +11,8 @@ import java.util.List;
  *
  */
 public abstract class Game{
+	
+	private static final long serialVersionUID = -9150883982784712022L;
 	//The id of a game
 	private final int gameId;
 	//The game state

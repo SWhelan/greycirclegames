@@ -1,10 +1,12 @@
 import static spark.SparkBase.port;
 
+
 public class Main {
 
     public static void main(String[] args) {
         port(getHerokuAssignedPort());
         TemplateHandler.registerTemplates();
+        DBHandler.runTJsTestCode();
     }
 
     static int getHerokuAssignedPort() {
