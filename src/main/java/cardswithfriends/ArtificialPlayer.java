@@ -22,7 +22,7 @@ public class ArtificialPlayer implements Player {
 	}
 
 	@Override
-	public int getPlayerId() {
+	public Integer getPlayerId() {
 		// TODO Auto-generated method stub
 		return -1;
 	}

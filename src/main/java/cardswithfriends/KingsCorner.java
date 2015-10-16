@@ -3,6 +3,7 @@ package cardswithfriends;
 import java.util.List;
 
 public class KingsCorner extends Game{
+	private static final long serialVersionUID = 4654549203834433105L;
 	public final Player[] turnOrder;
 	
 	public KingsCorner(int gameId, List<Player> players){
@@ -35,12 +36,6 @@ public class KingsCorner extends Game{
 		public Player[] getTurnOrder(){
 			return null;
 		}
-	}
-
-	@Override
-	protected String toDBForm() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

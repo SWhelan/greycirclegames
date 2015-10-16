@@ -1,4 +1,7 @@
+package templates;
+
 import static spark.Spark.get;
+import static spark.Spark.post;
 
 import java.util.HashMap;
 
@@ -30,8 +33,13 @@ public class TemplateHandler {
         get("/games", 		(rq, rs) -> renderGameList(rq, rs), 	new MustacheTemplateEngine());
         get("/tutorial", 	(rq, rs) -> renderTutorial(rq, rs), 	new MustacheTemplateEngine());
         get("/leaderboard", (rq, rs) -> renderLeaderboard(rq, rs), 	new MustacheTemplateEngine());
-        
+       /* before((rq, rs) -> {
+            if (rq.session().attribute("userId") == null) {
+                halt(401, "You are not welcome here");
+            }
+        });*/
         //TODO
+        post("/login", (rq, rs) -> postLogin(rq, rs));
         /*
         post("/login")
         post("/new")
@@ -60,6 +68,12 @@ public class TemplateHandler {
 		6.6.19 private static ModelAndView renderFriendInfo(Request rq, Response rs) 
 		Renders a page of info about a friend containing how many game won against that friend.
         */
+	}
+
+	private static Object postLogin(Request rq, Response rs) {
+		Object email = rq.attribute("email");
+		System.out.println(email.toString());
+		return null;
 	}
 
 	private static ModelAndView renderHome(Request rq, Response rs) {

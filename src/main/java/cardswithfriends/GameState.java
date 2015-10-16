@@ -1,6 +1,5 @@
 package cardswithfriends;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public abstract class GameState {

@@ -12,7 +12,7 @@ public class User implements Player,Serializable {
 		this.userName = userName;
 	}
 	@Override
-	public int getPlayerId() {
+	public Integer getPlayerId() {
 		return userId;
 	}
 	
