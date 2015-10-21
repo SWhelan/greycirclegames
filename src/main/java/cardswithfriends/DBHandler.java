@@ -3,6 +3,8 @@
  */
 package cardswithfriends;
 
+import java.util.List;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -33,7 +35,15 @@ public class DBHandler {
 		return null;
 	}
 	
+	public static User getUserByEmail(String email){
+		return null;
+	}
+	
 	public static KingsCorner getKCGame(int gameID) {
+		return null;
+	}
+	
+	public static List<KingsCorner> getKCGamesforUser(int userId){
 		return null;
 	}
 
