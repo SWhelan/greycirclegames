@@ -1,11 +1,11 @@
 package cardswithfriends;
 
-import java.util.Set;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Set;
 	
 public class User implements Player,Serializable {
 	private static final long serialVersionUID = -8255733091222689114L;
@@ -33,12 +33,6 @@ public class User implements Player,Serializable {
 	}
 
 	public Set<User> getFriends(){
-		return null;
-	}
-
-	@Override
-	public Integer getPlayerID() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

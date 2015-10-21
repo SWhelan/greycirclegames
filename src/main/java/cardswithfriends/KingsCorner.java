@@ -44,10 +44,4 @@ public class KingsCorner extends Game{
 		return false;
 	}
 
-	@Override
-	protected boolean save() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 }
