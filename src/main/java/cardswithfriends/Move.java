@@ -27,6 +27,6 @@ public abstract class Move {
 	@Override
 	public String toString(){
 		//Player # placed card on pile X or Moved PIle X onto Pile Y
-		return this.user.getPlayerName() + " moved " + this.moving.toString() + " onto " + this.destination.toString();
+		return this.user.getUserName() + " moved " + this.moving.toString() + " from " + this.origin.toString() + " onto " + this.destination.toString();
 	}
 }

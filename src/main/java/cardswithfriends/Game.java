@@ -1,5 +1,6 @@
 package cardswithfriends;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,7 +9,9 @@ import java.util.List;
  * @author George
  *
  */
-public abstract class Game{
+public abstract class Game implements Serializable {
+	
+	private static final long serialVersionUID = -9150883982784712022L;
 	//The id of a game
 	private final int gameId;
 	//The game state
@@ -61,6 +64,10 @@ public abstract class Game{
 	//Get a valid new game id -- will use database
 	public final static int getNewGameId(){
 		return -1;
+	}
+
+	public List<Player> getPlayers() {
+		return players;
 	}
 	
 }

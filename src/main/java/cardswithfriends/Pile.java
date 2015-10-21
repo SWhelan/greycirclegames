@@ -6,6 +6,10 @@ import java.util.LinkedList;
 public class Pile {
 	private LinkedList<Card> cards;
 	public String name;
+	
+	public Pile(){
+		
+	}
 
 	public boolean removeAll(Pile toRemove) {
 		return cards.removeAll(toRemove.cards);

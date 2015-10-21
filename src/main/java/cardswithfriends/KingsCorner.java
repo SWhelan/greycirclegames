@@ -1,9 +1,9 @@
 package cardswithfriends;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class KingsCorner extends Game{
+	private static final long serialVersionUID = 4654549203834433105L;
 	public final Player[] turnOrder;
 	
 	public KingsCorner(int gameId, List<Player> players){
@@ -39,9 +39,9 @@ public class KingsCorner extends Game{
 	}
 
 	@Override
-	protected String toDBForm() {
+	protected boolean save() {
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 	@Override

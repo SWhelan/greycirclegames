@@ -20,4 +20,15 @@ public class ArtificialPlayer implements Player {
 	public int hashCode(){
 		return this.getPlayerID().hashCode();
 	}
+
+	@Override
+	public Integer getPlayerId() {
+		// TODO Auto-generated method stub
+		return -1;
+	}
+
+	@Override
+	public String getUserName() {
+		return "Computer Player";
+	}
 }
