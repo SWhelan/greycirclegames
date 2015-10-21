@@ -1,37 +1,32 @@
 package cardswithfriends;
 
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.LinkedList;
 
-public class Pile {
+public class Pile implements Serializable{
 	private LinkedList<Card> cards;
-	public String name;
+	public final String name;
 	
-	public Pile(){
-		
+	public Pile(String n){
+		name = n;
+		cards = new LinkedList<Card>();
 	}
 
 	public boolean removeAll(Pile toRemove) {
 		return cards.removeAll(toRemove.cards);
 	}
 
-	public Card removeFirst() {
-		return cards.removeFirst();
-	}
-
-	public boolean isEmpty() {
-		return cards.isEmpty();
-	}
-
 	public Card getTop() {
-		return cards.getFirst();
-	}
-
-	public Card getBottom() {
 		return cards.getLast();
 	}
 
-	public void addFirst(Card e) {
-		cards.addFirst(e);
+	public Card getBottom() {
+		return cards.getFirst();
+	}
+
+	public void addOn(Card e) {
+		cards.addLast(e);
 	}
 
 	public boolean contains(Object o) {
@@ -50,5 +45,19 @@ public class Pile {
 		return cards.addAll(c.cards);
 	}
 	
+	public static Pile makeDeck(String n){
+		Pile p = new Pile(n);
+		for(int i = 1; i < 14; i++){
+			for(Card.Suit s : Card.Suit.values()){
+				p.add(Card.make(i, s));
+			}
+		}
+		
+		return p;
+	}
+	
+	public static void shuffle(Pile p){
+		Collections.shuffle(p.cards);
+	}
 	
 }

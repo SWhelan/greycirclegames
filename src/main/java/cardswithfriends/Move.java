@@ -1,6 +1,8 @@
 package cardswithfriends;
 
-public abstract class Move {
+import java.io.Serializable;
+
+public abstract class Move implements Serializable{
 	private final Player user;
 	private final Pile origin;
 	private final Pile moving;

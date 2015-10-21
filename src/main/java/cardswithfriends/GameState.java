@@ -1,15 +1,12 @@
 package cardswithfriends;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public abstract class GameState {
+public abstract class GameState implements Serializable{
 	//The current turn
 	protected int turnNumber;
 	protected Map<Player, Pile> userHands;
 
-	public int getTurnNumber() {
-		return turnNumber;
-	}
-	
-	protected abstract String toDBForm();
+	protected abstract void initializeToNewGameState();
 }

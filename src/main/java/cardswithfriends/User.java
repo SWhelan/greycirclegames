@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Set;
 	
 public class User implements Player,Serializable {
@@ -33,6 +34,30 @@ public class User implements Player,Serializable {
 	}
 
 	public Set<User> getFriends(){
+		return null;
+	}
+	
+	public Leaderboard getLeaderboard(){
+		return null;
+	}
+	
+	public boolean sendFriendRequest(User user){
+		return false;
+	}
+	
+	public boolean acceptFriendRequest(User user){
+		return false;
+	}
+	
+	public List<Game> getCurrentGames(){
+		return null;
+	}
+	
+	public static User make(String userName, String email, String password){
+		return null;
+	}
+	
+	public static User login(String userName, String email, String password){
 		return null;
 	}
 	

@@ -65,9 +65,5 @@ public abstract class Game implements Serializable {
 	public final static int getNewGameId(){
 		return -1;
 	}
-
-	public List<Player> getPlayers() {
-		return players;
-	}
 	
 }

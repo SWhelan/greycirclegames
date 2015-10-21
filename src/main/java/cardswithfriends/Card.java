@@ -1,6 +1,8 @@
 package cardswithfriends;
 
-public class Card {
+import java.io.Serializable;
+
+public class Card implements Serializable{
 	private final int number;
 	private final Suit suit;
 	
