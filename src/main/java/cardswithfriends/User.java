@@ -1,5 +1,6 @@
 package cardswithfriends;
 
+import java.util.Set;
 import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -29,6 +30,16 @@ public class User implements Player,Serializable {
 	@Override
 	public String getUserName() {
 		return userName;
+	}
+
+	public Set<User> getFriends(){
+		return null;
+	}
+
+	@Override
+	public Integer getPlayerID() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	public String getPassword() {

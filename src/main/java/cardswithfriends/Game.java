@@ -62,7 +62,7 @@ public abstract class Game implements Serializable {
 	}
 	
 	//Get a valid new game id -- will use database
-	public static int getNewGameId(){
+	public final static int getNewGameId(){
 		return -1;
 	}
 
