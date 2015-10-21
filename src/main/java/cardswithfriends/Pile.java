@@ -43,8 +43,8 @@ public class Pile {
 		return cards.add(e);
 	}
 
-	public boolean addAll(Collection<? extends Card> c) {
-		return cards.addAll(c);
+	public boolean addAll(Pile c) {
+		return cards.addAll(c.cards);
 	}
 	
 	
