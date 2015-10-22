@@ -8,7 +8,7 @@ public enum Constants {
 	WEST_PILE (5),
 	NORTH_WEST_PILE (6),
 	NORTH_EAST_PILE (7),
-	SOURTH_EAST_PILE (8),
+	SOUTH_EAST_PILE (8),
 	SOUTH_WEST_PILE (9);
 	
 	private int id;

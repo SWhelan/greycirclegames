@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public abstract class Move implements Serializable{
 	private final Player user;
-	private final Pile origin;
-	private final Pile moving;
-	private final Pile destination;
+	protected final Pile origin;
+	protected final Pile moving;
+	protected final Pile destination;
 
 	/**
 	 * 

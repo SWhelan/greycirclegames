@@ -27,6 +27,10 @@ public class Card implements Serializable{
 	public Suit getSuit() {
 		return suit;
 	}
+	
+	public boolean isRed(){
+		return suit == Suit.DIAMOND || suit == Suit.HEART;
+	}
 
 	public enum Suit {
 		SPADE("Spade"),

@@ -24,6 +24,10 @@ public class Pile implements Serializable{
 	public Card getBottom() {
 		return cards.getFirst();
 	}
+	
+	public Card removeTop(){
+		return cards.removeLast();
+	}
 
 	public void addOn(Card e) {
 		cards.addLast(e);
@@ -31,6 +35,10 @@ public class Pile implements Serializable{
 
 	public boolean contains(Object o) {
 		return cards.contains(o);
+	}
+	
+	public boolean containsAll(Pile p){
+		return cards.containsAll(p.cards);
 	}
 
 	public int size() {
