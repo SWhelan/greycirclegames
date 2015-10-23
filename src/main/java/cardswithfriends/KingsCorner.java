@@ -1,20 +1,17 @@
 package cardswithfriends;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class KingsCorner extends Game{
 	private static final long serialVersionUID = 4654549203834433105L;
-	public Player[] turnOrder = new Player[7];
+	public List<Player> turnOrder;
 	private int currentPlayer;
 	
 	public KingsCorner(int gameId, List<Player> players){
 		super(gameId, players);
-		//TODO better than this maybe stream to array or while/iterator
-		int i = 0;
-		for(Player p : players){
-			turnOrder[i] = p;
-			i++;
-		}
+		turnOrder = new ArrayList<Player>();
+		turnOrder.addAll(players);
 		currentPlayer = 0;
 	}
 	
@@ -39,12 +36,12 @@ public class KingsCorner extends Game{
 		Pile curUserHand = gs.userHands.get(getCurrentPlayer());
 		Pile drawPile = gs.piles.get(PileIds.DRAW_PILE);
 		curUserHand.add(drawPile.removeTop());
-		currentPlayer = (currentPlayer + 1) % turnOrder.length;
+		currentPlayer = (currentPlayer + 1) % turnOrder.size();
 		return save();
 	}
 
 	public Player getCurrentPlayer(){
-		return turnOrder[currentPlayer];
+		return turnOrder.get(currentPlayer);
 	}
 	
 	private KCGameState getKCGameState(){
@@ -64,7 +61,7 @@ public class KingsCorner extends Game{
 		public List<Move> moves;
 		public List<Player> players;
 		public int currentPlayer;
-		public Player[] getTurnOrder(){
+		public List<Player> getTurnOrder(){
 			return null;
 		}
 	}
