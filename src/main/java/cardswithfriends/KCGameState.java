@@ -43,7 +43,7 @@ public class KCGameState extends GameState{
 			userHands.put(p, new Pile(p.getUserName()+"'s Pile"));
 		}
 		
-		Pile drawPile = piles.get(Constants.DRAW_PILE);
+		Pile drawPile = piles.get(PileIds.DRAW_PILE.getId());
 		
 		//Deal cards to users
 		for(int i = 0; i < 7; i++){
@@ -53,16 +53,16 @@ public class KCGameState extends GameState{
 		}
 		
 		//Add cards to initial piles
-		addCardTo(piles.get(Constants.NORTH_PILE), piles.get(Constants.NORTH_WEST_PILE), drawPile);
-		addCardTo(piles.get(Constants.EAST_PILE), piles.get(Constants.NORTH_EAST_PILE), drawPile);
-		addCardTo(piles.get(Constants.SOUTH_PILE), piles.get(Constants.SOUTH_WEST_PILE), drawPile);
-		addCardTo(piles.get(Constants.WEST_PILE), piles.get(Constants.SOUTH_EAST_PILE), drawPile);
+		addCardTo(piles.get(PileIds.NORTH_PILE.getId()), piles.get(PileIds.NORTH_WEST_PILE.getId()), drawPile);
+		addCardTo(piles.get(PileIds.EAST_PILE.getId()), piles.get(PileIds.NORTH_EAST_PILE.getId()), drawPile);
+		addCardTo(piles.get(PileIds.SOUTH_PILE.getId()), piles.get(PileIds.SOUTH_WEST_PILE.getId()), drawPile);
+		addCardTo(piles.get(PileIds.WEST_PILE.getId()), piles.get(PileIds.SOUTH_EAST_PILE.getId()), drawPile);
 	}
 
 	private void addCardTo(Pile notKing, Pile isKing, Pile drawPile) {
 		Card c = drawPile.removeTop();
 		//If the card is a king
-		if(c.getNumber() != 12){
+		if(c.getNumber() != GlobalConstants.KING){
 			notKing.add(c);
 		}else{
 			isKing.add(c);
@@ -73,19 +73,15 @@ public class KCGameState extends GameState{
 		piles = new HashMap<Integer, Pile>();
 		Pile drawPile = Pile.makeDeck("Draw Pile");
 		Pile.shuffle(drawPile);
-		piles.put(Constants.DRAW_PILE.getId(), drawPile);
-		piles.put(Constants.EAST_PILE.getId(), new Pile("East Pile"));
-		piles.put(Constants.NORTH_PILE.getId(), new Pile("North Pile"));
-		piles.put(Constants.SOUTH_PILE.getId(), new Pile("South Pile"));
-		piles.put(Constants.WEST_PILE.getId(), new Pile("West Pile"));
-		piles.put(Constants.NORTH_EAST_PILE.getId(), new Pile("Northeast Pile"));
-		piles.put(Constants.NORTH_WEST_PILE.getId(), new Pile("Northwest Pile"));
-		piles.put(Constants.SOUTH_EAST_PILE.getId(), new Pile("Southeast Pile"));
-		piles.put(Constants.SOUTH_WEST_PILE.getId(), new Pile("Southwest Pile"));
+		piles.put(PileIds.DRAW_PILE.getId(), drawPile);
+		piles.put(PileIds.EAST_PILE.getId(), new Pile("East Pile"));
+		piles.put(PileIds.NORTH_PILE.getId(), new Pile("North Pile"));
+		piles.put(PileIds.SOUTH_PILE.getId(), new Pile("South Pile"));
+		piles.put(PileIds.WEST_PILE.getId(), new Pile("West Pile"));
+		piles.put(PileIds.NORTH_EAST_PILE.getId(), new Pile("Northeast Pile"));
+		piles.put(PileIds.NORTH_WEST_PILE.getId(), new Pile("Northwest Pile"));
+		piles.put(PileIds.SOUTH_EAST_PILE.getId(), new Pile("Southeast Pile"));
+		piles.put(PileIds.SOUTH_WEST_PILE.getId(), new Pile("Southwest Pile"));
 	}
-	
-//	public static KingsCorner updateKCGame(int gameID, GameState gameState) {
-//		return DBHandler.updateKCGame(gameID, gameState);
-//	}
 	
 }

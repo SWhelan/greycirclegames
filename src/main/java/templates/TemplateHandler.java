@@ -12,6 +12,7 @@ import cardswithfriends.DBHandler;
 import cardswithfriends.KingsCorner;
 import cardswithfriends.Player;
 import cardswithfriends.User;
+import cardswithfriends.views.KingsCornerView;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -48,12 +49,13 @@ public class TemplateHandler {
         });
         //TODO
         post("/login", (rq, rs) -> postLogin(rq, rs), 	new MustacheTemplateEngine());
+        post("/register", (rq, rs) -> postRegister(rq, rs), new MustacheTemplateEngine());
         /*
         post("/login")
         post("/new")
         post("/makeMove")
         post("/turn")
-        post("/register")
+        
         post("/removeFriend")
         post("/addFriend")
         get("/friends/:name")
@@ -78,7 +80,6 @@ public class TemplateHandler {
         */
 	}
 
-	
 	private static boolean requiresAuthentication(String path) {
 		if(	path == null || 
 			path.equals("/") || 
@@ -107,6 +108,27 @@ public class TemplateHandler {
 			// "There was an error. Try again.";
 			return renderLogin(rq, rs);
 		}
+	}
+	
+	private static ModelAndView postRegister(Request rq, Response rs) {
+		String email = rq.queryParams("email");
+		String password = rq.queryParams("password");
+		String passwordAgain = rq.queryParams("password-again");
+		
+		if(DBHandler.getUserByEmail(email) != null){
+			//Error email already in use.
+			return renderRegister(rq, rs);
+		}
+		
+		if(!password.equals(passwordAgain)){
+			//Error passwords don't match
+			return renderRegister(rq, rs);
+		}
+		
+		//Make the new user
+		User newUser = new User(0, email);
+		DBHandler.createUser(newUser);
+		return renderLogin(rq, rs);
 	}
 
 	private static boolean checkLogin(User user, String password) {
@@ -153,8 +175,8 @@ public class TemplateHandler {
 		players.add(new User(10, "sdlfkjsd"));
 		KingsCorner game1 = new KingsCorner(1, players);
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		List<KingsCorner> games = new LinkedList<KingsCorner>();
-		games.add(game1);
+		List<KingsCornerView> games = new LinkedList<KingsCornerView>();
+		games.add(new KingsCornerView(game1));
 		info.put("games", games);
 		return new ModelAndView(info, GAME_LIST_TEMPLATE);
 	}

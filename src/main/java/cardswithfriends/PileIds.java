@@ -1,6 +1,6 @@
 package cardswithfriends;
 
-public enum Constants {
+public enum PileIds {
 	DRAW_PILE (1),
 	NORTH_PILE (2),
 	EAST_PILE (3),
@@ -13,7 +13,7 @@ public enum Constants {
 	
 	private int id;
 	
-	private Constants(int id){
+	private PileIds(int id){
 		this.id = id;
 	}
 	

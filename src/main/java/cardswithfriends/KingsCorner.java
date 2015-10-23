@@ -4,12 +4,17 @@ import java.util.List;
 
 public class KingsCorner extends Game{
 	private static final long serialVersionUID = 4654549203834433105L;
-	public final Player[] turnOrder;
+	public Player[] turnOrder = new Player[7];
 	private int currentPlayer;
 	
 	public KingsCorner(int gameId, List<Player> players){
 		super(gameId, players);
-		turnOrder = (Player[]) players.toArray();
+		//TODO better than this maybe stream to array or while/iterator
+		int i = 0;
+		for(Player p : players){
+			turnOrder[i] = p;
+			i++;
+		}
 		currentPlayer = 0;
 	}
 	
@@ -32,7 +37,7 @@ public class KingsCorner extends Game{
 	public boolean endTurn(){
 		KCGameState gs = getKCGameState();
 		Pile curUserHand = gs.userHands.get(getCurrentPlayer());
-		Pile drawPile = gs.piles.get(Constants.DRAW_PILE);
+		Pile drawPile = gs.piles.get(PileIds.DRAW_PILE);
 		curUserHand.add(drawPile.removeTop());
 		currentPlayer = (currentPlayer + 1) % turnOrder.length;
 		return save();
