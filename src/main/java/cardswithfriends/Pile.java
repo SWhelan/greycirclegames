@@ -62,6 +62,10 @@ public class Pile implements Serializable{
 		return cards.addAll(c.cards);
 	}
 	
+	public boolean isEmpty(){
+		return cards.isEmpty();
+	}
+	
 	public List<Card> getCards(){
 		List<Card> cardsInPile = new LinkedList<Card>();
 		cardsInPile.addAll(cards);

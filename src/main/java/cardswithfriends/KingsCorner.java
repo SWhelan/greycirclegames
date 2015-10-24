@@ -35,8 +35,12 @@ public class KingsCorner extends Game{
 		KCGameState gs = getGameState();
 		Pile curUserHand = gs.userHands.get(getCurrentPlayer());
 		Pile drawPile = gs.piles.get(PileIds.DRAW_PILE.ordinal());
-		curUserHand.add(drawPile.removeTop());
-		currentPlayer = (currentPlayer + 1) % turnOrder.size();
+		if(drawPile.size() != 0){
+			curUserHand.add(drawPile.removeTop());
+		}
+		if(!gameIsOver()){
+			currentPlayer = (currentPlayer + 1) % turnOrder.size();
+		}
 		return save();
 	}
 
@@ -71,5 +75,14 @@ public class KingsCorner extends Game{
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	
+	@Override
+	public boolean gameIsOver(){
+		for(Pile p : getGameState().userHands.values()){
+			if(p.isEmpty()){
+				return true;
+			}
+		}
+		return false;
+	}
 }
