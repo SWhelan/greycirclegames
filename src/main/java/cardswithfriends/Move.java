@@ -1,10 +1,13 @@
 package cardswithfriends;
 
-public abstract class Move {
-	private final Player user;
-	private final Pile origin;
-	private final Pile moving;
-	private final Pile destination;
+import java.io.Serializable;
+
+public abstract class Move implements Serializable{
+	private static final long serialVersionUID = 1L;
+	private final Player player;
+	protected final Pile origin;
+	protected final Pile moving;
+	protected final Pile destination;
 
 	/**
 	 * 
@@ -13,8 +16,8 @@ public abstract class Move {
 	 * @param moving the card or pile being moved
 	 * @param destination the pile to place the card or pile onto
 	 */
-	protected Move(Player user, Pile origin, Pile moving, Pile destination){
-		this.user = user;
+	public Move(Player player, Pile origin, Pile moving, Pile destination){
+		this.player = player;
 		this.origin = origin;
 		this.moving = moving;
 		this.destination = destination;
@@ -27,6 +30,6 @@ public abstract class Move {
 	@Override
 	public String toString(){
 		//Player # placed card on pile X or Moved PIle X onto Pile Y
-		return this.user.getPlayerName() + " moved " + this.moving.toString() + " onto " + this.destination.toString();
+		return this.player.getUserName() + " moved " + this.moving.toString() + " from " + this.origin.toString() + " onto " + this.destination.toString();
 	}
 }

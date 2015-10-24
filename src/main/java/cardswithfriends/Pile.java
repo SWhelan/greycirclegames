@@ -1,38 +1,50 @@
 package cardswithfriends;
 
-import java.util.Collection;
+import java.io.Serializable;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
-public class Pile {
+public class Pile implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private LinkedList<Card> cards;
-	public String name;
+	public final String name;
+	
+	public Pile(String n){
+		name = n;
+		cards = new LinkedList<Card>();
+	}
 
 	public boolean removeAll(Pile toRemove) {
 		return cards.removeAll(toRemove.cards);
 	}
-
-	public Card removeFirst() {
-		return cards.removeFirst();
-	}
-
-	public boolean isEmpty() {
-		return cards.isEmpty();
+	
+	public Card get(int index){
+		return cards.get(index);
 	}
 
 	public Card getTop() {
-		return cards.getFirst();
-	}
-
-	public Card getBottom() {
 		return cards.getLast();
 	}
 
-	public void addFirst(Card e) {
-		cards.addFirst(e);
+	public Card getBottom() {
+		return cards.getFirst();
+	}
+	
+	public Card removeTop(){
+		return cards.removeLast();
+	}
+
+	public void addOn(Card e) {
+		cards.addLast(e);
 	}
 
 	public boolean contains(Object o) {
 		return cards.contains(o);
+	}
+	
+	public boolean containsAll(Pile p){
+		return cards.containsAll(p.cards);
 	}
 
 	public int size() {
@@ -43,9 +55,41 @@ public class Pile {
 		return cards.add(e);
 	}
 
-	public boolean addAll(Collection<? extends Card> c) {
-		return cards.addAll(c);
+	public boolean addAll(Pile c) {
+		return cards.addAll(c.cards);
 	}
 	
+	public boolean isEmpty(){
+		return cards.isEmpty();
+	}
+	
+	public List<Card> getCards(){
+		List<Card> cardsInPile = new LinkedList<Card>();
+		cardsInPile.addAll(cards);
+		return cardsInPile;
+	}
+	
+	public static Pile makeDeck(String n){
+		Pile p = new Pile(n);
+		for(int i = 1; i < 14; i++){
+			for(Card.Suit s : Card.Suit.values()){
+				p.add(Card.make(i, s));
+			}
+		}
+		
+		return p;
+	}
+	
+	public static void shuffle(Pile p){
+		Collections.shuffle(p.cards);
+	}
+	
+	public boolean equals(Object o){
+		if(o instanceof Pile){
+			Pile p = (Pile) o;
+			return p.cards.equals(this.cards);
+		}
+		return false;
+	}
 	
 }

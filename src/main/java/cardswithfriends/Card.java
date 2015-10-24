@@ -1,6 +1,9 @@
 package cardswithfriends;
 
-public class Card {
+import java.io.Serializable;
+
+public class Card implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private final int number;
 	private final Suit suit;
 	
@@ -25,21 +28,40 @@ public class Card {
 	public Suit getSuit() {
 		return suit;
 	}
+	
+	public boolean isRed(){
+		return suit == Suit.DIAMOND || suit == Suit.HEART;
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof Card){
+			Card other = (Card) o;
+			return other.getNumber() == this.getNumber() && other.getSuit() == this.getSuit();
+		}
+		return false;
+	}
 
 	public enum Suit {
-		SPADE("Spade"),
-		DIAMOND("Diamond"),
-		HEART("Heart"),
-		CLUB("Club");
+		SPADE("Spade", "&#9824;"),
+		DIAMOND("Diamond", "&#9826;"),
+		HEART("Heart", "&#9825;"),
+		CLUB("Club", "&#9827;");
 		
 		private String displayName;
+		private String html;
 		
-		private Suit(String displayName){
+		private Suit(String displayName, String html){
 			this.displayName = displayName;
+			this.html = html;
 		}
 		
 		public String getDisplayName(){
 			return this.displayName;
+		}
+		
+		public String getHtml(){
+			return this.html;
 		}
 	};
 }

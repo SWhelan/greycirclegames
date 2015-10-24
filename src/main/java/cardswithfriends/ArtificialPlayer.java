@@ -1,5 +1,6 @@
 package cardswithfriends;
 public class ArtificialPlayer implements Player {
+	private static final long serialVersionUID = 1L;
 	private int playerID;
 
 	public Integer getPlayerID() {
@@ -22,7 +23,7 @@ public class ArtificialPlayer implements Player {
 	}
 
 	@Override
-	public int getPlayerId() {
+	public Integer getPlayerId() {
 		// TODO Auto-generated method stub
 		return -1;
 	}

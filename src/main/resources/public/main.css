@@ -1,0 +1,15 @@
+.card {
+	border-style: solid;
+	border-color: black;
+	border-width: 1px;
+}
+
+.emptyPile{
+	border-style: dashed;
+	border-color: black;
+	border-width: 1px;
+}
+
+.pile{
+	margin: 1em;
+}

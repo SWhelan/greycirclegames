@@ -1,16 +1,15 @@
 package cardswithfriends;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * The Game holds a all the information about the game.
+ * The Game holds all the information about the game.
  * @author George
  *
  */
-public abstract class Game{
+public abstract class Game implements Serializable {
 	
 	private static final long serialVersionUID = -9150883982784712022L;
 	//The id of a game
@@ -19,7 +18,7 @@ public abstract class Game{
 	private final GameState gameState;
 	//The list of moves
 	private final List<Move> moves;
-	
+	//The list of players
 	private final List<Player> players;
 	
 	//Make a completely new game
@@ -38,6 +37,10 @@ public abstract class Game{
 		this.players = players;
 	}
 	
+	public List<Player> getPlayers() {
+		return players;
+	}
+
 	//A game state for a completely new game
 	protected abstract GameState newGameState(List<Player> players);
 	
@@ -53,7 +56,7 @@ public abstract class Game{
 	}
 
 	//Get the game state
-	public final GameState getGameState() {
+	public GameState getGameState() {
 		return gameState;
 	}
 
@@ -62,14 +65,15 @@ public abstract class Game{
 		return moves;
 	}
 	
-	//Get a valid new game id -- will use database
-	public static int getNewGameId(){
-		return -1;
+	public final void addMove(Move m){
+		moves.add(m);
 	}
-
-	protected String toDBForm() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public abstract boolean gameIsOver();
+	
+	//Get a valid new game id -- will use database
+	public final static int getNewGameId(){
+		return -1;
 	}
 	
 }

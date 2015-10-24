@@ -1,7 +1,19 @@
+package templates;
+
+import static spark.Spark.before;
 import static spark.Spark.get;
+import static spark.Spark.post;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
+import cardswithfriends.DBHandler;
+import cardswithfriends.KingsCorner;
+import cardswithfriends.Player;
+import cardswithfriends.User;
+import cardswithfriends.views.GameView;
+import cardswithfriends.views.KingsCornerView;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -30,14 +42,21 @@ public class TemplateHandler {
         get("/games", 		(rq, rs) -> renderGameList(rq, rs), 	new MustacheTemplateEngine());
         get("/tutorial", 	(rq, rs) -> renderTutorial(rq, rs), 	new MustacheTemplateEngine());
         get("/leaderboard", (rq, rs) -> renderLeaderboard(rq, rs), 	new MustacheTemplateEngine());
-        
+        before((rq, rs) -> {
+        	String path = rq.pathInfo();
+            if (requiresAuthentication(path) && rq.cookie("id") == null) {
+            	rs.redirect("/");
+            }
+        });
         //TODO
+        post("/login", (rq, rs) -> postLogin(rq, rs), 	new MustacheTemplateEngine());
+        post("/register", (rq, rs) -> postRegister(rq, rs), new MustacheTemplateEngine());
         /*
         post("/login")
         post("/new")
         post("/makeMove")
         post("/turn")
-        post("/register")
+        
         post("/removeFriend")
         post("/addFriend")
         get("/friends/:name")
@@ -62,12 +81,75 @@ public class TemplateHandler {
         */
 	}
 
+	private static boolean requiresAuthentication(String path) {
+		if(	path == null || 
+			path.equals("/") || 
+			path.equals("/login") || 
+			path.equals("/register") || 
+			path.equals("/tutorial")){
+			return false;
+		}
+		return true;
+	}
+
+
+	private static ModelAndView postLogin(Request rq, Response rs) {
+		String email = rq.queryParams("email");
+		String password = rq.queryParams("password");
+		User user = DBHandler.getUserByEmail(email);
+		if(checkLogin(user, password)){
+			if(user == null){
+				//TODO remove once we are saving users.
+				rs.cookie("id", "10");
+			} else {
+				rs.cookie("id", user.getPlayerId().toString());
+			}
+			return renderHome(rq, rs);
+		} else {
+			// "There was an error. Try again.";
+			return renderLogin(rq, rs);
+		}
+	}
+	
+	private static ModelAndView postRegister(Request rq, Response rs) {
+		String email = rq.queryParams("email");
+		String password = rq.queryParams("password");
+		String passwordAgain = rq.queryParams("password-again");
+		
+		if(DBHandler.getUserByEmail(email) != null){
+			//Error email already in use.
+			return renderRegister(rq, rs);
+		}
+		
+		if(!password.equals(passwordAgain)){
+			//Error passwords don't match
+			return renderRegister(rq, rs);
+		}
+		
+		//Make the new user
+		User newUser = new User(0, email);
+		DBHandler.createUser(newUser);
+		return renderLogin(rq, rs);
+	}
+
+	private static boolean checkLogin(User user, String password) {
+		if(user == null || user.checkPassword(password)){
+			//return false
+		}		
+		return true;
+	}
+
 	private static ModelAndView renderHome(Request rq, Response rs) {
 		return new ModelAndView(new HashMap<String, String>(), HOME_TEMPLATE);
 	}
 	
 	private static ModelAndView renderLogin(Request rq, Response rs) {
-		return new ModelAndView(new HashMap<String, String>(), LOGIN_TEMPLATE);
+		String email = rq.queryParams("email");
+		String password = rq.queryParams("password");
+		HashMap<String, String> info = new HashMap<String, String>();
+		info.put("email", email);
+		info.put("password", password);
+		return new ModelAndView(info, LOGIN_TEMPLATE);
 	}
 	
 	private static ModelAndView logout(Request rq, Response rs) {
@@ -87,8 +169,22 @@ public class TemplateHandler {
 	}
 
 	private static ModelAndView renderGameList(Request rq, Response rs) {
-		// TODO Auto-generated method stub
-		return new ModelAndView(new HashMap<String, String>(), GAME_LIST_TEMPLATE);
+		// real thing 
+		//List<KingsCorner> games = DBHandler.getKCGamesforUser(Integer.parseInt(rq.cookie("id")));
+		//testing
+		List<Player> players = new LinkedList<Player>();
+		players.add(new User(10, "sdlfkjsd"));
+		players.add(new User(11, "asdfadsfkj"));
+		KingsCorner game1 = new KingsCorner(1, players);
+		KingsCorner game2 = new KingsCorner(2, players);
+		KingsCorner game3 = new KingsCorner(3, players);
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		List<KingsCornerView> games = new LinkedList<KingsCornerView>();
+		games.add(new KingsCornerView(game1));
+		games.add(new KingsCornerView(game2));
+		games.add(new KingsCornerView(game3));
+		info.put("games", games);
+		return new ModelAndView(info, GAME_LIST_TEMPLATE);
 	}
 
 	private static ModelAndView renderFriends(Request rq, Response rs) {
@@ -97,8 +193,14 @@ public class TemplateHandler {
 	}
 
 	private static ModelAndView renderGame(Request rq, Response rs) {
-		// TODO Auto-generated method stub
-		return new ModelAndView(new HashMap<String, String>(), KINGS_CORNERS_TEMPLATE);
+		List<Player> players = new LinkedList<Player>();
+		User user = new User(10, "sdlfkjsd");
+		players.add(user);
+		players.add(new User(11, "asdfadsfkj"));
+		KingsCorner game1 = new KingsCorner(1, players);
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		info.put("game", new GameView(game1, user));
+		return new ModelAndView(info, KINGS_CORNERS_TEMPLATE);
 	}
 
 	private static ModelAndView renderCreateGame(Request rq, Response rs) {
