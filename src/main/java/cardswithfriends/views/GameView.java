@@ -12,7 +12,7 @@ import cardswithfriends.Player;
 
 public class GameView {
 	List<Card> userHand;
-	List<List<Card>> numCards = new LinkedList<List<Card>>();
+	List<List<Card>> otherPlayers = new LinkedList<List<Card>>();
 	List<Card> drawPile;
 	
 	List<Card> northPile;
@@ -30,7 +30,7 @@ public class GameView {
 			if(e.equals(viewingPlayer)){
 				userHand = game.getGameState().userHands.get(viewingPlayer).getCards();
 			} else {
-				numCards.add(game.getGameState().userHands.get(e).getCards());
+				otherPlayers.add(game.getGameState().userHands.get(e).getCards());
 			}
 		});	
 		Map<Integer, Pile> piles = game.getGameState().piles;

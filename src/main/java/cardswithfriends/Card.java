@@ -43,19 +43,25 @@ public class Card implements Serializable {
 	}
 
 	public enum Suit {
-		SPADE("Spade"),
-		DIAMOND("Diamond"),
-		HEART("Heart"),
-		CLUB("Club");
+		SPADE("Spade", "&#9824;"),
+		DIAMOND("Diamond", "&#9826;"),
+		HEART("Heart", "&#9825;"),
+		CLUB("Club", "&#9827;");
 		
 		private String displayName;
+		private String html;
 		
-		private Suit(String displayName){
+		private Suit(String displayName, String html){
 			this.displayName = displayName;
+			this.html = html;
 		}
 		
 		public String getDisplayName(){
 			return this.displayName;
+		}
+		
+		public String getHtml(){
+			return this.html;
 		}
 	};
 }
