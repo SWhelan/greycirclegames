@@ -34,7 +34,7 @@ public class KingsCorner extends Game{
 	public boolean endTurn(){
 		KCGameState gs = getGameState();
 		Pile curUserHand = gs.userHands.get(getCurrentPlayer());
-		Pile drawPile = gs.piles.get(PileIds.DRAW_PILE);
+		Pile drawPile = gs.piles.get(PileIds.DRAW_PILE.ordinal());
 		curUserHand.add(drawPile.removeTop());
 		currentPlayer = (currentPlayer + 1) % turnOrder.size();
 		return save();

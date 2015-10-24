@@ -3,8 +3,8 @@ package cardswithfriends;
 public class KCMove extends Move {
 	private static final long serialVersionUID = 1L;
 
-	public KCMove(User user, Pile origin, Pile moving, Pile destination){
-		super(user, origin, moving, destination);
+	public KCMove(Player player, Pile origin, Pile moving, Pile destination){
+		super(player, origin, moving, destination);
 	}
 
 	@Override
