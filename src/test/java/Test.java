@@ -83,7 +83,11 @@ public class Test {
     	int numCardsPlayed = 0;
     	for(Entry<Integer, Pile> e : kc.piles.entrySet()){
     		if(e.getKey() != PileIds.DRAW_PILE.getId()){
-    			numCardsPlayed++;
+    			if(e.getValue().size() == 1){
+    				numCardsPlayed++;
+    			}else if(e.getValue().size() != 0){
+    				Assert.isTrue(false, "Initial card pile should be only 1 or 0 size.");
+    			}
     		}
     		allCards.addAll(e.getValue().getCards());
     	}
