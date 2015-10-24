@@ -3,6 +3,7 @@ package cardswithfriends;
 import java.io.Serializable;
 
 public abstract class Move implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private final Player user;
 	protected final Pile origin;
 	protected final Pile moving;

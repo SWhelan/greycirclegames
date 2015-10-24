@@ -1,7 +1,8 @@
 package cardswithfriends;
 
 public class KCMove extends Move {
-	
+	private static final long serialVersionUID = 1L;
+
 	KCMove(User user, Pile origin, Pile moving, Pile destination){
 		super(user, origin, moving, destination);
 	}

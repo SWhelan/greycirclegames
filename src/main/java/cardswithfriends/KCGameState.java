@@ -4,12 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class KCGameState extends GameState{
-	
+public class KCGameState extends GameState {
+	private static final long serialVersionUID = 1L;
 	public Map<Integer, Pile> piles;
 	
-	public Map<Player, Pile> userHands = new HashMap<Player, Pile>();
-
 	public KCGameState(KCGameStateGenerator kc){
 		//Initialize to a pre-existing game
 	}

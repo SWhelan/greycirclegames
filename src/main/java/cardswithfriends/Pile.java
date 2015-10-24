@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 
 public class Pile implements Serializable{
+	private static final long serialVersionUID = 1L;
 	private LinkedList<Card> cards;
 	public final String name;
 	
@@ -15,6 +16,10 @@ public class Pile implements Serializable{
 
 	public boolean removeAll(Pile toRemove) {
 		return cards.removeAll(toRemove.cards);
+	}
+	
+	public Card get(int index){
+		return cards.get(index);
 	}
 
 	public Card getTop() {

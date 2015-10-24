@@ -173,10 +173,15 @@ public class TemplateHandler {
 		//testing
 		List<Player> players = new LinkedList<Player>();
 		players.add(new User(10, "sdlfkjsd"));
+		players.add(new User(11, "asdfadsfkj"));
 		KingsCorner game1 = new KingsCorner(1, players);
+		KingsCorner game2 = new KingsCorner(2, players);
+		KingsCorner game3 = new KingsCorner(3, players);
 		HashMap<String, Object> info = new HashMap<String, Object>();
 		List<KingsCornerView> games = new LinkedList<KingsCornerView>();
 		games.add(new KingsCornerView(game1));
+		games.add(new KingsCornerView(game2));
+		games.add(new KingsCornerView(game3));
 		info.put("games", games);
 		return new ModelAndView(info, GAME_LIST_TEMPLATE);
 	}

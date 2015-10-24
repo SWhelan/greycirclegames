@@ -1,5 +1,14 @@
 {{> header}}
 {{#games}}
-A gamestate: {{#gameState}}{{turnNumber}}{{/gameState}}
+<div class="gameListItem">
+<a href = "/game/{{gameId}}">
+Game Id: {{gameId}}
+<br/>
+Players:<br/>
+{{#players}}{{.}}<br/>{{/players}}
+Current Player: {{currentPlayerName}}
+</a>
+<hr/>
+</div>
 {{/games}}
 {{> footer}}
