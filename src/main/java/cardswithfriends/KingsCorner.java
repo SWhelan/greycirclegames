@@ -23,7 +23,7 @@ public class KingsCorner extends Game{
 
 	@Override
 	public boolean applyMove(Move move) {
-		if(move.isValid()){
+		if(!gameIsOver() && move.isValid()){
 			move.apply();
 			addMove(move);
 			return true;
@@ -32,11 +32,17 @@ public class KingsCorner extends Game{
 	}
 	
 	public boolean endTurn(){
+		if(gameIsOver()){
+			return false;
+		}
 		KCGameState gs = getGameState();
 		Pile curUserHand = gs.userHands.get(getCurrentPlayer());
-		Pile drawPile = gs.piles.get(PileIds.DRAW_PILE);
-		curUserHand.add(drawPile.removeTop());
+		Pile drawPile = gs.piles.get(PileIds.DRAW_PILE.ordinal());
+		if(!drawPile.isEmpty()){
+			curUserHand.add(drawPile.removeTop());
+		}
 		currentPlayer = (currentPlayer + 1) % turnOrder.size();
+		
 		return save();
 	}
 
@@ -71,5 +77,14 @@ public class KingsCorner extends Game{
 		// TODO Auto-generated method stub
 		return false;
 	}
-
+	
+	@Override
+	public boolean gameIsOver(){
+		for(Pile p : getGameState().userHands.values()){
+			if(p.isEmpty()){
+				return true;
+			}
+		}
+		return false;
+	}
 }

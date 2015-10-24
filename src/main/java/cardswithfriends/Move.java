@@ -16,8 +16,8 @@ public abstract class Move implements Serializable{
 	 * @param moving the card or pile being moved
 	 * @param destination the pile to place the card or pile onto
 	 */
-	public Move(Player user, Pile origin, Pile moving, Pile destination){
-		this.player = user;
+	public Move(Player player, Pile origin, Pile moving, Pile destination){
+		this.player = player;
 		this.origin = origin;
 		this.moving = moving;
 		this.destination = destination;

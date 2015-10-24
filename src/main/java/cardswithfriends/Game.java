@@ -69,6 +69,8 @@ public abstract class Game implements Serializable {
 		moves.add(m);
 	}
 	
+	public abstract boolean gameIsOver();
+	
 	//Get a valid new game id -- will use database
 	public final static int getNewGameId(){
 		return -1;
