@@ -31,6 +31,15 @@ public class Card implements Serializable{
 	public boolean isRed(){
 		return suit == Suit.DIAMOND || suit == Suit.HEART;
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof Card){
+			Card other = (Card) o;
+			return other.getNumber() == this.getNumber() && other.getSuit() == this.getSuit();
+		}
+		return false;
+	}
 
 	public enum Suit {
 		SPADE("Spade"),

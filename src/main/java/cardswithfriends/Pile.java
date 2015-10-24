@@ -78,4 +78,12 @@ public class Pile implements Serializable{
 		Collections.shuffle(p.cards);
 	}
 	
+	public boolean equals(Object o){
+		if(o instanceof Pile){
+			Pile p = (Pile) o;
+			return p.cards.equals(this.cards);
+		}
+		return false;
+	}
+	
 }

@@ -2,8 +2,8 @@ package cardswithfriends;
 
 public class KCMove extends Move {
 	
-	KCMove(User user, Pile origin, Pile moving, Pile destination){
-		super(user, origin, moving, destination);
+	public KCMove(Player player, Pile origin, Pile moving, Pile destination){
+		super(player, origin, moving, destination);
 	}
 
 	@Override
@@ -19,7 +19,7 @@ public class KCMove extends Move {
 		return false;
 	}
 
-	private boolean cardsAreCompatible(Card movingBottom, Card destTop) {
+	private static boolean cardsAreCompatible(Card movingBottom, Card destTop) {
 		boolean numbersCompatible = movingBottom.getNumber() == destTop.getNumber() - 1;
 		boolean suitsCompatible = movingBottom.isRed() ^ destTop.isRed();
 		return numbersCompatible && suitsCompatible;
@@ -35,4 +35,5 @@ public class KCMove extends Move {
 		destination.addAll(moving);
 	}
 
+	
 }

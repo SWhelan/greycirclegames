@@ -6,8 +6,8 @@ import java.util.Map;
 
 public abstract class GameState implements Serializable{
 	//The current turn
-	protected int turnNumber;
-	protected Map<Player, Pile> userHands;
+	public int turnNumber;
+	public Map<Player, Pile> userHands;
 
 	protected abstract void initializeToNewGameState(List<Player> players);
 

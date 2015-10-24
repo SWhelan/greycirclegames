@@ -95,4 +95,112 @@ public class Test {
     	
     	Assert.isTrue(allCards.size() == 52, "All cards should be somewhere.");
     }
+    
+    /*
+     * TEST KCMove
+     */
+    
+    public void testKCMoveIsValidGoodData(){
+    	Player p = new User(0, "Player");
+    	Pile origin = new Pile("Origin");
+    	origin.add(Card.make(10, Card.Suit.CLUB));
+    	origin.add(Card.make(11, Card.Suit.HEART));
+    	origin.add(Card.make(8, Card.Suit.CLUB));
+    	
+    	Pile moving = new Pile("Moving");
+    	moving.add(Card.make(11, Card.Suit.HEART));
+    	
+    	Pile dest = new Pile("Destination");
+    	dest.addOn(Card.make(13, Card.Suit.DIAMOND));
+    	dest.addOn(Card.make(12, Card.Suit.SPADE));
+    	
+    	Move m = new KCMove(p, origin, moving, dest);
+    	Assert.isTrue(m.isValid(), "This should be a valid move.");
+    }
+    
+    public void testKCMoveIsValidBadDataOriginNotContains(){
+    	Player p = new User(0, "Player");
+    	Pile origin = new Pile("Origin");
+    	origin.add(Card.make(10, Card.Suit.CLUB));
+    	//origin.add(Card.make(11, Card.Suit.HEART));
+    	origin.add(Card.make(8, Card.Suit.CLUB));
+    	
+    	Pile moving = new Pile("Moving");
+    	moving.add(Card.make(11, Card.Suit.HEART));
+    	
+    	Pile dest = new Pile("Destination");
+    	dest.addOn(Card.make(13, Card.Suit.DIAMOND));
+    	dest.addOn(Card.make(12, Card.Suit.SPADE));
+    	
+    	Move m = new KCMove(p, origin, moving, dest);
+    	Assert.isTrue(!m.isValid(), "This should not be a valid move.");
+    }
+    
+    public void testKCMoveIsValidBadDataCardsNotCompatible(){
+    	Player p = new User(0, "Player");
+    	Pile origin = new Pile("Origin");
+    	origin.add(Card.make(10, Card.Suit.CLUB));
+    	origin.add(Card.make(11, Card.Suit.HEART));
+    	origin.add(Card.make(8, Card.Suit.CLUB));
+    	
+    	Pile moving = new Pile("Moving");
+    	moving.add(Card.make(11, Card.Suit.HEART));
+    	
+    	Pile dest = new Pile("Destination");
+    	dest.addOn(Card.make(13, Card.Suit.SPADE));
+    	dest.addOn(Card.make(12, Card.Suit.DIAMOND));
+    	
+    	Move m = new KCMove(p, origin, moving, dest);
+    	Assert.isTrue(!m.isValid(), "This should not be a valid move.");
+    }
+    
+    public void testKCMoveApply(){
+    	Player p = new User(0, "Player");
+    	Pile origin = new Pile("Origin");
+    	origin.add(Card.make(10, Card.Suit.CLUB));
+    	origin.add(Card.make(11, Card.Suit.HEART));
+    	origin.add(Card.make(8, Card.Suit.CLUB));
+    	
+    	Pile moving = new Pile("Moving");
+    	moving.add(Card.make(11, Card.Suit.HEART));
+    	
+    	Pile dest = new Pile("Destination");
+    	dest.addOn(Card.make(13, Card.Suit.DIAMOND));
+    	dest.addOn(Card.make(12, Card.Suit.SPADE));
+    	
+    	Move m = new KCMove(p, origin, moving, dest);
+    	m.apply();
+    	
+    	Pile appliedOrigin = new Pile("Origin");
+    	appliedOrigin.add(Card.make(10, Card.Suit.CLUB));
+    	appliedOrigin.add(Card.make(8, Card.Suit.CLUB));
+    	
+    	Pile appliedDest = new Pile("Destination");
+    	appliedDest.addOn(Card.make(13, Card.Suit.DIAMOND));
+    	appliedDest.addOn(Card.make(12, Card.Suit.SPADE));
+    	appliedDest.addOn(Card.make(11, Card.Suit.HEART));
+
+    	Assert.isTrue(appliedDest.equals(dest), "Destination should have new card.");
+    	Assert.isTrue(appliedOrigin.equals(origin), "Origin should not have moved card.");
+    }
+    
+    /*
+     * TEST KingsCorner
+     */
+    
+    public void testKingsCornerEndTurn(){
+    	List<Player> players = new LinkedList<Player>();
+    	players.add(new User(0, "Test user 0"));
+    	players.add(new User(1, "Test user 1"));
+    	players.add(new User(2, "Test user 2"));
+    	KingsCorner kc = new KingsCorner(0, players);
+    	GameState gs = kc.getGameState();
+    	
+    	Player currentPlayer = kc.getCurrentPlayer();
+    	kc.endTurn();
+    	Pile prevPlayerHand = gs.userHands.get(currentPlayer);
+    	Assert.isTrue(prevPlayerHand.size() == 8, "Ending a turn should draw a card.");
+    	
+    	
+    }
 }
