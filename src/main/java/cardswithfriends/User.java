@@ -32,6 +32,15 @@ public class User implements Player,Serializable {
 	public String getUserName() {
 		return userName;
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof User){
+			User other = (User) o;
+			return other.userId == this.userId;
+		}
+		return false;
+	}
 
 	public Set<User> getFriends(){
 		return null;

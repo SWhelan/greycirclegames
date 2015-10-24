@@ -1,8 +1,12 @@
 package cardswithfriends;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 public class Pile implements Serializable{
 	private static final long serialVersionUID = 1L;
@@ -56,6 +60,12 @@ public class Pile implements Serializable{
 
 	public boolean addAll(Pile c) {
 		return cards.addAll(c.cards);
+	}
+	
+	public List<Card> getCards(){
+		List<Card> cardsInPile = new LinkedList<Card>();
+		cardsInPile.addAll(cards);
+		return cardsInPile;
 	}
 	
 	public static Pile makeDeck(String n){
