@@ -84,4 +84,9 @@ public class KCGameState extends GameState{
 		piles.put(PileIds.SOUTH_WEST_PILE.getId(), new Pile("Southwest Pile"));
 	}
 	
+	public class Test{
+		public void testInitializeToNewGameState(List<Player> players){
+			initializeToNewGameState(players);
+		}
+	}
 }
