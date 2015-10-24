@@ -12,6 +12,7 @@ import cardswithfriends.DBHandler;
 import cardswithfriends.KingsCorner;
 import cardswithfriends.Player;
 import cardswithfriends.User;
+import cardswithfriends.views.GameView;
 import cardswithfriends.views.KingsCornerView;
 import spark.ModelAndView;
 import spark.Request;
@@ -173,10 +174,15 @@ public class TemplateHandler {
 		//testing
 		List<Player> players = new LinkedList<Player>();
 		players.add(new User(10, "sdlfkjsd"));
+		players.add(new User(11, "asdfadsfkj"));
 		KingsCorner game1 = new KingsCorner(1, players);
+		KingsCorner game2 = new KingsCorner(2, players);
+		KingsCorner game3 = new KingsCorner(3, players);
 		HashMap<String, Object> info = new HashMap<String, Object>();
 		List<KingsCornerView> games = new LinkedList<KingsCornerView>();
 		games.add(new KingsCornerView(game1));
+		games.add(new KingsCornerView(game2));
+		games.add(new KingsCornerView(game3));
 		info.put("games", games);
 		return new ModelAndView(info, GAME_LIST_TEMPLATE);
 	}
@@ -187,8 +193,14 @@ public class TemplateHandler {
 	}
 
 	private static ModelAndView renderGame(Request rq, Response rs) {
-		// TODO Auto-generated method stub
-		return new ModelAndView(new HashMap<String, String>(), KINGS_CORNERS_TEMPLATE);
+		List<Player> players = new LinkedList<Player>();
+		User user = new User(10, "sdlfkjsd");
+		players.add(user);
+		players.add(new User(11, "asdfadsfkj"));
+		KingsCorner game1 = new KingsCorner(1, players);
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		info.put("game", new GameView(game1, user));
+		return new ModelAndView(info, KINGS_CORNERS_TEMPLATE);
 	}
 
 	private static ModelAndView renderCreateGame(Request rq, Response rs) {

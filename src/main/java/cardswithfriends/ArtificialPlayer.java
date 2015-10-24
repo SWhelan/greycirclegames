@@ -1,5 +1,6 @@
 package cardswithfriends;
 public class ArtificialPlayer implements Player {
+	private static final long serialVersionUID = 1L;
 	private int playerID;
 
 	public Integer getPlayerID() {

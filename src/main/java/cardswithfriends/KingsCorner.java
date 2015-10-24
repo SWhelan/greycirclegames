@@ -32,7 +32,7 @@ public class KingsCorner extends Game{
 	}
 	
 	public boolean endTurn(){
-		KCGameState gs = getKCGameState();
+		KCGameState gs = getGameState();
 		Pile curUserHand = gs.userHands.get(getCurrentPlayer());
 		Pile drawPile = gs.piles.get(PileIds.DRAW_PILE);
 		curUserHand.add(drawPile.removeTop());
@@ -44,8 +44,8 @@ public class KingsCorner extends Game{
 		return turnOrder.get(currentPlayer);
 	}
 	
-	private KCGameState getKCGameState(){
-		return (KCGameState) getGameState();
+	public KCGameState getGameState(){
+		return (KCGameState) super.getGameState();
 	}
 	
 	@Override

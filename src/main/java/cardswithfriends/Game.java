@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * The Game holds a all the information about the game.
+ * The Game holds all the information about the game.
  * @author George
  *
  */
@@ -18,7 +18,7 @@ public abstract class Game implements Serializable {
 	private final GameState gameState;
 	//The list of moves
 	private final List<Move> moves;
-	
+	//The list of players
 	private final List<Player> players;
 	
 	//Make a completely new game
@@ -37,6 +37,10 @@ public abstract class Game implements Serializable {
 		this.players = players;
 	}
 	
+	public List<Player> getPlayers() {
+		return players;
+	}
+
 	//A game state for a completely new game
 	protected abstract GameState newGameState(List<Player> players);
 	
@@ -52,7 +56,7 @@ public abstract class Game implements Serializable {
 	}
 
 	//Get the game state
-	public final GameState getGameState() {
+	public GameState getGameState() {
 		return gameState;
 	}
 
