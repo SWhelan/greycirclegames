@@ -45,7 +45,7 @@ public class KingsCorner extends Game{
 	}
 	
 	public KCGameState getGameState(){
-		return (KCGameState) getGameState();
+		return (KCGameState) super.getGameState();
 	}
 	
 	@Override

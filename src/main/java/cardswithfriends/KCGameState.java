@@ -41,20 +41,20 @@ public class KCGameState extends GameState {
 			userHands.put(p, new Pile(p.getUserName()+"'s Pile"));
 		}
 		
-		Pile drawPile = piles.get(PileIds.DRAW_PILE.getId());
+		Pile drawPile = piles.get(PileIds.DRAW_PILE.ordinal());
 		
 		//Deal cards to users
-		for(int i = 0; i < 7; i++){
+		for(int i = 0; i < GlobalConstants.MAX_PLAYERS; i++){
 			for(Pile p : userHands.values()){
 				p.add(drawPile.removeTop());
 			}
 		}
 		
 		//Add cards to initial piles
-		addCardTo(piles.get(PileIds.NORTH_PILE.getId()), piles.get(PileIds.NORTH_WEST_PILE.getId()), drawPile);
-		addCardTo(piles.get(PileIds.EAST_PILE.getId()), piles.get(PileIds.NORTH_EAST_PILE.getId()), drawPile);
-		addCardTo(piles.get(PileIds.SOUTH_PILE.getId()), piles.get(PileIds.SOUTH_WEST_PILE.getId()), drawPile);
-		addCardTo(piles.get(PileIds.WEST_PILE.getId()), piles.get(PileIds.SOUTH_EAST_PILE.getId()), drawPile);
+		addCardTo(piles.get(PileIds.NORTH_PILE.ordinal()), piles.get(PileIds.NORTH_WEST_PILE.ordinal()), drawPile);
+		addCardTo(piles.get(PileIds.EAST_PILE.ordinal()), piles.get(PileIds.NORTH_EAST_PILE.ordinal()), drawPile);
+		addCardTo(piles.get(PileIds.SOUTH_PILE.ordinal()), piles.get(PileIds.SOUTH_WEST_PILE.ordinal()), drawPile);
+		addCardTo(piles.get(PileIds.WEST_PILE.ordinal()), piles.get(PileIds.SOUTH_EAST_PILE.ordinal()), drawPile);
 	}
 
 	private void addCardTo(Pile notKing, Pile isKing, Pile drawPile) {
@@ -71,15 +71,15 @@ public class KCGameState extends GameState {
 		piles = new HashMap<Integer, Pile>();
 		Pile drawPile = Pile.makeDeck("Draw Pile");
 		Pile.shuffle(drawPile);
-		piles.put(PileIds.DRAW_PILE.getId(), drawPile);
-		piles.put(PileIds.EAST_PILE.getId(), new Pile("East Pile"));
-		piles.put(PileIds.NORTH_PILE.getId(), new Pile("North Pile"));
-		piles.put(PileIds.SOUTH_PILE.getId(), new Pile("South Pile"));
-		piles.put(PileIds.WEST_PILE.getId(), new Pile("West Pile"));
-		piles.put(PileIds.NORTH_EAST_PILE.getId(), new Pile("Northeast Pile"));
-		piles.put(PileIds.NORTH_WEST_PILE.getId(), new Pile("Northwest Pile"));
-		piles.put(PileIds.SOUTH_EAST_PILE.getId(), new Pile("Southeast Pile"));
-		piles.put(PileIds.SOUTH_WEST_PILE.getId(), new Pile("Southwest Pile"));
+		piles.put(PileIds.DRAW_PILE.ordinal(), drawPile);
+		piles.put(PileIds.EAST_PILE.ordinal(), new Pile("East Pile"));
+		piles.put(PileIds.NORTH_PILE.ordinal(), new Pile("North Pile"));
+		piles.put(PileIds.SOUTH_PILE.ordinal(), new Pile("South Pile"));
+		piles.put(PileIds.WEST_PILE.ordinal(), new Pile("West Pile"));
+		piles.put(PileIds.NORTH_EAST_PILE.ordinal(), new Pile("Northeast Pile"));
+		piles.put(PileIds.NORTH_WEST_PILE.ordinal(), new Pile("Northwest Pile"));
+		piles.put(PileIds.SOUTH_EAST_PILE.ordinal(), new Pile("Southeast Pile"));
+		piles.put(PileIds.SOUTH_WEST_PILE.ordinal(), new Pile("Southwest Pile"));
 	}
 	
 	public class Test{

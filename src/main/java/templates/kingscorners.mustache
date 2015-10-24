@@ -1,3 +1,12 @@
 {{> header}}
-
+{{#game}}
+<div class="card col-md-3">Draw Pile has {{drawPile.size}} cards remaining.</div>
+<div class="viewingHand">
+	{{#userHand}}
+		<div class="card col-md-3">
+		{{number}} {{suit.displayName}}
+		</div>
+	{{/userHand}}
+</div>
+{{/game}}
 {{> footer}}
