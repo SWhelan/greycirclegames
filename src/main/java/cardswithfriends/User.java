@@ -1,46 +1,83 @@
 package cardswithfriends;
 
-import java.io.Serializable;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.List;
 import java.util.Set;
+
+import com.mongodb.DBObject;
+import com.mongodb.ReflectionDBObject;
 	
-public class User implements Player,Serializable {
-	private static final long serialVersionUID = -8255733091222689114L;
+public class User extends ReflectionDBObject implements Player {
 	private static final int NUM_BITS = 128;
 	private static final int RADIX = 32;
 	private static final String ALGORITHM = "SHA-256";
-	private int userId;
+	private int _id;
 	private String userName;
 	private String password;
 	private String salt;
 	private String email;
 	
-	public User(int userId, String userName){
-		this.userId = userId;
+	public User(int _id, String userName, String password, String salt, String email){
+		this._id = _id;
 		this.userName = userName;
+		this.password = password;
+		this.salt = salt;
+		this.email = email;
 	}
 	
-	@Override
-	public Integer getPlayerId() {
-		return userId;
+	public User(int _id, String userName) {
+		this(_id, userName, null, null, null);
 	}
-	
-	@Override
+
+	public User(DBObject obj) {
+		this((Integer)obj.get("_id"),
+				(String)obj.get("UserName"),
+				(String)obj.get("Password"),
+				(String)obj.get("Salt"),
+				(String)obj.get("Email"));
+	}
+
+	public Integer get_id() {
+		return _id;
+	}
+
+	public void set_id(int _id) {
+		this._id = _id;
+	}
+
 	public String getUserName() {
 		return userName;
 	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 	
-	@Override
-	public boolean equals(Object o){
-		if(o instanceof User){
-			User other = (User) o;
-			return other.userId == this.userId;
-		}
-		return false;
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	public String getSalt() {
+		return salt;
+	}
+
+	public void setSalt(String salt) {
+		this.salt = salt;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public Set<User> getFriends(){
@@ -49,6 +86,18 @@ public class User implements Player,Serializable {
 	
 	public Leaderboard getLeaderboard(){
 		return null;
+	}
+	public List<Game> getCurrentGames(){
+		return null;
+	}
+
+	@Override
+	public boolean equals(Object o){
+		if(o instanceof User){
+			User other = (User) o;
+			return other._id == this._id;
+		}
+		return false;
 	}
 	
 	public boolean sendFriendRequest(User user){
@@ -59,29 +108,12 @@ public class User implements Player,Serializable {
 		return false;
 	}
 	
-	public List<Game> getCurrentGames(){
-		return null;
-	}
-	
 	public static User make(String userName, String email, String password){
 		return null;
 	}
 	
 	public static User login(String userName, String email, String password){
 		return null;
-	}
-	
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public String getSalt() {
-		return salt;
-	}
-	public void setSalt(String salt) {
-		this.salt = salt;
 	}
 	
 	public static String generateSalt(){

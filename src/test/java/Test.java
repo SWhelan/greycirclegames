@@ -81,8 +81,8 @@ public class Test {
     	}
     	
     	int numCardsPlayed = 0;
-    	for(Entry<Integer, Pile> e : kc.piles.entrySet()){
-    		if(e.getKey() != PileIds.DRAW_PILE.ordinal()){
+    	for(Entry<String, Pile> e : kc.piles.entrySet()){
+    		if(!e.getKey().equals(Integer.toString(PileIds.DRAW_PILE.ordinal()))){
     			if(e.getValue().size() == 1){
     				numCardsPlayed++;
     			}else if(e.getValue().size() != 0){
@@ -196,10 +196,10 @@ public class Test {
     	KingsCorner kc = new KingsCorner(0, players);
     	KCGameState gs = (KCGameState) kc.getGameState();
     	
-    	Pile drawPile = gs.piles.get(PileIds.DRAW_PILE.ordinal());
+    	Pile drawPile = gs.piles.get(Integer.toString(PileIds.DRAW_PILE.ordinal()));
     	Card topCard = drawPile.getTop();
     	
-    	Player currentPlayer = kc.getCurrentPlayer();
+    	Player currentPlayer = kc.getCurrentPlayerObject();
     	Pile currentPlayerHand = gs.userHands.get(currentPlayer);
     	Assert.isTrue(!currentPlayerHand.contains(topCard), "The card in the draw pile should not be in a player's hand.");
     	kc.endTurn();

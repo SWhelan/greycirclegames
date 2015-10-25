@@ -1,11 +1,10 @@
 package cardswithfriends;
 
-import java.io.Serializable;
+import com.mongodb.ReflectionDBObject;
 
-public class Card implements Serializable {
-	private static final long serialVersionUID = 1L;
-	private final int number;
-	private final Suit suit;
+public class Card extends ReflectionDBObject {
+	private int number;
+	private Suit suit;
 	
 	private Card(int number, Suit suit) {
 		super();
@@ -24,11 +23,16 @@ public class Card implements Serializable {
 	public int getNumber() {
 		return number;
 	}
-
 	public Suit getSuit() {
 		return suit;
 	}
-	
+	public void setNumber(int number) {
+		this.number = number;
+	}
+	public void setSuit(Suit suit) {
+		this.suit = suit;
+	}
+
 	public boolean isRed(){
 		return suit == Suit.DIAMOND || suit == Suit.HEART;
 	}

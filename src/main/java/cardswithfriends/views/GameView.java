@@ -33,7 +33,7 @@ public class GameView {
 				otherPlayers.add(game.getGameState().userHands.get(e).getCards());
 			}
 		});	
-		Map<Integer, Pile> piles = game.getGameState().piles;
+		Map<String, Pile> piles = game.getGameState().piles;
 		drawPile = piles.get(PileIds.DRAW_PILE.ordinal()).getCards();
 		
 		northPile = piles.get(PileIds.NORTH_PILE.ordinal()).getCards();

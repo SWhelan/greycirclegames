@@ -3,8 +3,9 @@ package cardswithfriends;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mongodb.DBObject;
+
 public class KingsCorner extends Game{
-	private static final long serialVersionUID = 4654549203834433105L;
 	public List<Player> turnOrder;
 	private int currentPlayer;
 	
@@ -21,6 +22,30 @@ public class KingsCorner extends Game{
 		currentPlayer = kc.currentPlayer;
 	}
 
+//	public KingsCorner(DBObject obj) {
+//		this((Integer)obj.get("_id"),
+//				(String)obj.get("UserName"),
+//				(String)obj.get("Password"),
+//				(String)obj.get("Salt"),
+//				(String)obj.get("Email"));	
+//		}
+	
+	public int getCurrentPlayer(){
+		return currentPlayer;
+	}
+	
+	public void setCurrentPlayer(int currentPlayer){
+		this.currentPlayer = currentPlayer;
+	}
+	
+	public List<Player> getTurnOrder(){
+		return turnOrder;
+	}
+	
+	public void setTurnOrder(List<Player> turnOrder){
+		this.turnOrder = turnOrder;
+	}
+	
 	@Override
 	public boolean applyMove(Move move) {
 		if(!gameIsOver() && move.isValid()){
@@ -37,7 +62,7 @@ public class KingsCorner extends Game{
 		}
 		KCGameState gs = getGameState();
 		Pile curUserHand = gs.userHands.get(getCurrentPlayer());
-		Pile drawPile = gs.piles.get(PileIds.DRAW_PILE.ordinal());
+		Pile drawPile = gs.piles.get(Integer.toString(PileIds.DRAW_PILE.ordinal()));
 		if(!drawPile.isEmpty()){
 			curUserHand.add(drawPile.removeTop());
 		}
@@ -46,7 +71,7 @@ public class KingsCorner extends Game{
 		return save();
 	}
 
-	public Player getCurrentPlayer(){
+	public Player getCurrentPlayerObject(){
 		return turnOrder.get(currentPlayer);
 	}
 	
