@@ -28,12 +28,12 @@ public class GameView {
 	public GameView(KingsCorner game, Player viewingPlayer){
 		game.getPlayers().stream().forEach((e) -> { 
 			if(e.equals(viewingPlayer)){
-				userHand = game.getGameState().userHands.get(viewingPlayer).getCards();
+				userHand = game.getGameState().userHands.get(Integer.toString(viewingPlayer.get_id())).getCards();
 			} else {
-				otherPlayers.add(game.getGameState().userHands.get(e).getCards());
+				otherPlayers.add(game.getGameState().userHands.get(Integer.toString(e.get_id())).getCards());
 			}
 		});	
-		Map<Integer, Pile> piles = game.getGameState().piles;
+		Map<String, Pile> piles = game.getGameState().piles;
 		drawPile = piles.get(PileIds.DRAW_PILE.ordinal()).getCards();
 		
 		northPile = piles.get(PileIds.NORTH_PILE.ordinal()).getCards();

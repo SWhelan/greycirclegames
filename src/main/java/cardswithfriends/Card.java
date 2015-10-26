@@ -1,16 +1,19 @@
 package cardswithfriends;
 
-import java.io.Serializable;
+import com.mongodb.ReflectionDBObject;
 
-public class Card implements Serializable {
-	private static final long serialVersionUID = 1L;
-	private final int number;
-	private final Suit suit;
+public class Card extends ReflectionDBObject {
+	private int number;
+	
+	//The ordinal vlaue of the suit (index, e.g. Spade is 1, Diamond is 2 ...)
+	//need to do this for enum to go into the db, mongo sucks with enums
+	//just use the decodeSuit/encodeSuit to access the enum
+	int suitOrdinal;	
 	
 	private Card(int number, Suit suit) {
 		super();
 		this.number = number;
-		this.suit = suit;
+		this.suitOrdinal = suit.ordinal();
 	}
 	
 	public static Card make(int number, Suit suit) throws IllegalArgumentException {
@@ -24,20 +27,31 @@ public class Card implements Serializable {
 	public int getNumber() {
 		return number;
 	}
-
-	public Suit getSuit() {
-		return suit;
+	public void setNumber(int number) {
+		this.number = number;
 	}
-	
+	public Suit decodeSuit() {
+		return Suit.values()[suitOrdinal];
+	}
+	public void encodeSuit(Suit suit) {
+		this.suitOrdinal = suit.ordinal();
+	};
+	public int getSuitOrdinal() {
+		return suitOrdinal;
+	}
+	public void setSuitOrdinal(int suitOrdinal) {
+		this.suitOrdinal = suitOrdinal;
+	}
+
 	public boolean isRed(){
-		return suit == Suit.DIAMOND || suit == Suit.HEART;
+		return decodeSuit() == Suit.DIAMOND || decodeSuit() == Suit.HEART;
 	}
 	
 	@Override
 	public boolean equals(Object o){
 		if(o instanceof Card){
 			Card other = (Card) o;
-			return other.getNumber() == this.getNumber() && other.getSuit() == this.getSuit();
+			return other.getNumber() == this.getNumber() && other.decodeSuit() == this.decodeSuit();
 		}
 		return false;
 	}
@@ -51,15 +65,21 @@ public class Card implements Serializable {
 		private String displayName;
 		private String html;
 		
+
 		private Suit(String displayName, String html){
 			this.displayName = displayName;
 			this.html = html;
 		}
 		
+		public void setDisplayName(String displayName) {
+			this.displayName = displayName;
+		}
+		public void setHtml(String html) {
+			this.html = html;
+		}
 		public String getDisplayName(){
 			return this.displayName;
 		}
-		
 		public String getHtml(){
 			return this.html;
 		}

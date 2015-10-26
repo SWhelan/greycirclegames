@@ -102,7 +102,7 @@ public class TemplateHandler {
 				//TODO remove once we are saving users.
 				rs.cookie("id", "10");
 			} else {
-				rs.cookie("id", user.getPlayerId().toString());
+				rs.cookie("id", user.get_id().toString());
 			}
 			return renderHome(rq, rs);
 		} else {

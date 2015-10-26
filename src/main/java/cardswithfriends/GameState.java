@@ -1,14 +1,28 @@
 package cardswithfriends;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public abstract class GameState implements Serializable{
-	private static final long serialVersionUID = 1L;
+import com.mongodb.ReflectionDBObject;
+
+public abstract class GameState extends ReflectionDBObject {
 	//The current turn
 	public int turnNumber;
-	public Map<Player, Pile> userHands;
+	//Use the player _id rather than the player
+	public Map<String, Pile> userHands;
+	
+	public int getTurnNumber() {
+		return turnNumber;
+	}
+	public void setTurnNumber(int turnNumber) {
+		this.turnNumber = turnNumber;
+	}
+	public Map<String, Pile> getUserHands() {
+		return userHands;
+	}
+	public void setUserHands(Map<String, Pile> userHands) {
+		this.userHands = userHands; 
+	}
 
 	protected abstract void initializeToNewGameState(List<Player> players);
 }

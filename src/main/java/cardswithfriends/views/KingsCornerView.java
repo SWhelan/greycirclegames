@@ -11,8 +11,8 @@ public class KingsCornerView {
 	public String currentPlayerName;
 	public List<String> players = new LinkedList<String>();
 	public KingsCornerView(KingsCorner kc){
-		gameId = kc.getGameId();
-		currentPlayerName = kc.getCurrentPlayer().getUserName();
+		gameId = kc.get_id();
+		currentPlayerName = kc.getCurrentPlayerObject().getUserName();
 		for(Player p : kc.turnOrder){
 			players.add(p.getUserName());
 		}

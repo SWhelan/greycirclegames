@@ -1,18 +1,33 @@
 package cardswithfriends;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Pile implements Serializable{
-	private static final long serialVersionUID = 1L;
+import com.mongodb.ReflectionDBObject;
+
+public class Pile extends ReflectionDBObject {
 	private LinkedList<Card> cards;
-	public final String name;
+	public String name;
 	
 	public Pile(String n){
 		name = n;
 		cards = new LinkedList<Card>();
+	}
+	
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public void setCards(LinkedList<Card> cards) {
+		this.cards = cards;
+	}
+	public List<Card> getCards(){
+		List<Card> cardsInPile = new LinkedList<Card>();
+		cardsInPile.addAll(cards);
+		return cardsInPile;
 	}
 
 	public boolean removeAll(Pile toRemove) {
@@ -61,12 +76,6 @@ public class Pile implements Serializable{
 	
 	public boolean isEmpty(){
 		return cards.isEmpty();
-	}
-	
-	public List<Card> getCards(){
-		List<Card> cardsInPile = new LinkedList<Card>();
-		cardsInPile.addAll(cards);
-		return cardsInPile;
 	}
 	
 	public static Pile makeDeck(String n){

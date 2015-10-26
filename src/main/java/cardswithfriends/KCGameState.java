@@ -5,9 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 public class KCGameState extends GameState {
-	private static final long serialVersionUID = 1L;
-	public Map<Integer, Pile> piles;
+	public Map<String, Pile> piles;
 	
+	public Map<String, Pile> getPiles() {
+		return piles;
+	}
+	public void setPiles(Map<String, Pile> piles) {
+		this.piles = piles;
+	}
+
 	public KCGameState(KCGameStateGenerator kc){
 		//Initialize to a pre-existing game
 	}
@@ -18,11 +24,11 @@ public class KCGameState extends GameState {
 		super();
 	}
 
-	public Map<Player, Pile> getPlayerHands() {
+	public Map<String, Pile> getPlayerHands() {
 		return userHands;
 	}
 
-	public void setPlayerHands(Map<Player, Pile> userHands) {
+	public void setPlayerHands(Map<String, Pile> userHands) {
 		this.userHands = userHands;
 	}
 
@@ -36,12 +42,12 @@ public class KCGameState extends GameState {
 	@Override
 	protected void initializeToNewGameState(List<Player> players) {
 		initializePiles();
-		userHands = new HashMap<Player, Pile>();
+		userHands = new HashMap<String, Pile>();
 		for(Player p : players){
-			userHands.put(p, new Pile(p.getUserName()+"'s Pile"));
+			userHands.put(Integer.toString(p.get_id()), new Pile(p.getUserName()+"'s Pile"));
 		}
 		
-		Pile drawPile = piles.get(PileIds.DRAW_PILE.ordinal());
+		Pile drawPile = piles.get(Integer.toString(PileIds.DRAW_PILE.ordinal()));
 		
 		//Deal cards to users
 		for(int i = 0; i < GlobalConstants.MAX_PLAYERS; i++){
@@ -51,10 +57,10 @@ public class KCGameState extends GameState {
 		}
 		
 		//Add cards to initial piles
-		addCardTo(piles.get(PileIds.NORTH_PILE.ordinal()), piles.get(PileIds.NORTH_WEST_PILE.ordinal()), drawPile);
-		addCardTo(piles.get(PileIds.EAST_PILE.ordinal()), piles.get(PileIds.NORTH_EAST_PILE.ordinal()), drawPile);
-		addCardTo(piles.get(PileIds.SOUTH_PILE.ordinal()), piles.get(PileIds.SOUTH_WEST_PILE.ordinal()), drawPile);
-		addCardTo(piles.get(PileIds.WEST_PILE.ordinal()), piles.get(PileIds.SOUTH_EAST_PILE.ordinal()), drawPile);
+		addCardTo(piles.get(Integer.toString(PileIds.NORTH_PILE.ordinal())), piles.get(Integer.toString(PileIds.NORTH_WEST_PILE.ordinal())), drawPile);
+		addCardTo(piles.get(Integer.toString(PileIds.EAST_PILE.ordinal())), piles.get(Integer.toString(PileIds.NORTH_EAST_PILE.ordinal())), drawPile);
+		addCardTo(piles.get(Integer.toString(PileIds.SOUTH_PILE.ordinal())), piles.get(Integer.toString(PileIds.SOUTH_WEST_PILE.ordinal())), drawPile);
+		addCardTo(piles.get(Integer.toString(PileIds.WEST_PILE.ordinal())), piles.get(Integer.toString(PileIds.SOUTH_EAST_PILE.ordinal())), drawPile);
 	}
 
 	private void addCardTo(Pile notKing, Pile isKing, Pile drawPile) {
@@ -68,18 +74,18 @@ public class KCGameState extends GameState {
 	}
 
 	private void initializePiles() {
-		piles = new HashMap<Integer, Pile>();
+		piles = new HashMap<String, Pile>();
 		Pile drawPile = Pile.makeDeck("Draw Pile");
 		Pile.shuffle(drawPile);
-		piles.put(PileIds.DRAW_PILE.ordinal(), drawPile);
-		piles.put(PileIds.EAST_PILE.ordinal(), new Pile("East Pile"));
-		piles.put(PileIds.NORTH_PILE.ordinal(), new Pile("North Pile"));
-		piles.put(PileIds.SOUTH_PILE.ordinal(), new Pile("South Pile"));
-		piles.put(PileIds.WEST_PILE.ordinal(), new Pile("West Pile"));
-		piles.put(PileIds.NORTH_EAST_PILE.ordinal(), new Pile("Northeast Pile"));
-		piles.put(PileIds.NORTH_WEST_PILE.ordinal(), new Pile("Northwest Pile"));
-		piles.put(PileIds.SOUTH_EAST_PILE.ordinal(), new Pile("Southeast Pile"));
-		piles.put(PileIds.SOUTH_WEST_PILE.ordinal(), new Pile("Southwest Pile"));
+		piles.put(Integer.toString(PileIds.DRAW_PILE.ordinal()), drawPile);
+		piles.put(Integer.toString(PileIds.EAST_PILE.ordinal()), new Pile("East Pile"));
+		piles.put(Integer.toString(PileIds.NORTH_PILE.ordinal()), new Pile("North Pile"));
+		piles.put(Integer.toString(PileIds.SOUTH_PILE.ordinal()), new Pile("South Pile"));
+		piles.put(Integer.toString(PileIds.WEST_PILE.ordinal()), new Pile("West Pile"));
+		piles.put(Integer.toString(PileIds.NORTH_EAST_PILE.ordinal()), new Pile("Northeast Pile"));
+		piles.put(Integer.toString(PileIds.NORTH_WEST_PILE.ordinal()), new Pile("Northwest Pile"));
+		piles.put(Integer.toString(PileIds.SOUTH_EAST_PILE.ordinal()), new Pile("Southeast Pile"));
+		piles.put(Integer.toString(PileIds.SOUTH_WEST_PILE.ordinal()), new Pile("Southwest Pile"));
 	}
 	
 	public class Test{
