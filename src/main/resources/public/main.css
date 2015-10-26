@@ -2,14 +2,25 @@
 	border-style: solid;
 	border-color: black;
 	border-width: 1px;
+	min-height: 30px;
+	text-align: center;
 }
 
 .emptyPile{
 	border-style: dashed;
 	border-color: black;
 	border-width: 1px;
+	min-height: 30px;
 }
 
 .pile{
 	margin: 1em;
+}
+
+.clicked {
+	background-color: darkgray;
+}
+
+.pileClicked{
+	background-color: azure;
 }

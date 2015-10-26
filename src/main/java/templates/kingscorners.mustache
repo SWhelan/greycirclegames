@@ -14,79 +14,91 @@
 </div>
 <div class="row">
 	<!-- The NorthWest, North, and North East Piles -->
-	<div class="pile col-md-3">
+	<div class="gamePile pile col-md-3">
 		{{#northWestPile}}
-			<div class="card col-md-3">
+			<div class="card">
 			{{number}} {{{suit.html}}}
 			</div>
 		{{/northWestPile}}
 		{{^northWestPile}}
-			<div class="emptyPile col-md-3"></div>
+			<div class="emptyPile"></div>
 		{{/northWestPile}}
 	</div>
-	<div class="pile col-md-3">
+	<div class="gamePile pile col-md-3">
 		{{#northPile}}
-			<div class="card col-md-3">
+			<div class="card">
 			{{number}} {{{suit.html}}}
 			</div>
 		{{/northPile}}
+		{{^northPile}}
+			<div class="emptyPil"></div>
+		{{/northPile}}
 	</div>
-	<div class="pile col-md-3">
+	<div class="gamePile pile col-md-3">
 		{{#northEastPile}}
-			<div class="card col-md-3">
+			<div class="card">
 			{{number}} {{{suit.html}}}
 			</div>
 		{{/northEastPile}}
 		{{^northEastPile}}
-			<div class="emptyPile col-md-3"></div>
+			<div class="emptyPile"></div>
 		{{/northEastPile}}
 	</div>
 </div>
 <div class="row">
 	<!-- The West, Draw, and East Piles -->
-	<div class="pile col-md-3">
+	<div class="gamePile pile col-md-3">
 		{{#westPile}}
-			<div class="card col-md-3">
+			<div class="card">
 			{{number}} {{{suit.html}}}
 			</div>
 		{{/westPile}}
+		{{^westPile}}
+			<div class="emptyPile"></div>
+		{{/westPile}}
 	</div>
-	<div class="card col-md-3">Draw Pile has {{drawPile.size}} cards remaining.</div>
-	<div class="pile col-md-3">
+	<div class="pile card col-md-3">Draw Pile - {{drawPile.size}}</div>
+	<div class="gamePile pile col-md-3">
 		{{#eastPile}}
-			<div class="card col-md-3">
+			<div class="card">
 			{{number}} {{{suit.html}}}
 			</div>
+		{{/eastPile}}
+		{{^eastPile}}
+			<div class="emptyPile"></div>
 		{{/eastPile}}
 	</div>
 </div>
 <div class="row">
 	<!-- The SouthWest, South, and SouthEast Pile -->
-	<div class="pile col-md-3">
+	<div class="gamePile pile col-md-3">
 		{{#southWestPile}}
-			<div class="card col-md-3">
+			<div class="card">
 			{{number}} {{{suit.html}}}
 			</div>
 		{{/southWestPile}}
 		{{^southWestPile}}
-			<div class="emptyPile col-md-3"></div>
+			<div class="emptyPile"></div>
 		{{/southWestPile}}
 	</div>
-	<div class="pile col-md-3">
+	<div class="gamePile pile col-md-3">
 		{{#southPile}}
-			<div class="card col-md-3">
+			<div class="card">
 			{{number}} {{{suit.html}}}
 			</div>
 		{{/southPile}}
+		{{^southPile}}
+			<div class="emptyPile"></div>
+		{{/southPile}}
 	</div>
-	<div class="pile col-md-3">
+	<div class="gamePile pile col-md-3">
 		{{#southEastPile}}
-			<div class="card col-md-3">
+			<div class="card">
 			{{number}} {{{suit.html}}}
 			</div>
 		{{/southEastPile}}
 		{{^southEastPile}}
-			<div class="emptyPile col-md-3"></div>
+			<div class="emptyPile"></div>
 		{{/southEastPile}}		
 	</div>
 </div>
@@ -94,11 +106,42 @@
 Your hand:
 <div class="viewingHand">
 	{{#userHand}}
-		<div class="card col-md-3">
+		<div class="userCard card col-md-3">
 		{{number}} {{{suit.html}}}
 		</div>
 	{{/userHand}}
 </div>
 </div>
 {{/game}}
+
+<script type = text/javascript>
+	var selectedCard;
+	$(".userCard").click(function (){
+		if($(this).hasClass("clicked")){
+			$(this).removeClass("clicked");
+			selectedCard = null;
+		} else if(!selectedCard){
+			$(this).addClass("clicked");
+			selectedCard = $(this);
+		} else {
+			selectedCard.removeClass("clicked");
+			$(this).addClass("clicked");
+			selectedCard = $(this);
+		}
+	});
+	
+	$(".gamePile").click(function (){
+		if($(this).hasClass("pileClicked")){
+			$(this).removeClass("pileClicked");
+		} else {
+			$(this).addClass("pileClicked");
+		}
+		
+		if(selectedCard){
+			//ajax to validate and make move
+			
+		}
+	});
+	
+</script>
 {{> footer}}
