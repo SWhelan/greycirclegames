@@ -64,7 +64,6 @@ public abstract class Game extends ReflectionDBObject{
 	public final List<Player> getPlayers() {
 		return players;
 	}
-
 	//Set the _id
 	public void set_id(int _id) {
 		this._id = _id;

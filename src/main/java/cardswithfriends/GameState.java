@@ -8,7 +8,8 @@ import com.mongodb.ReflectionDBObject;
 public abstract class GameState extends ReflectionDBObject {
 	//The current turn
 	public int turnNumber;
-	public Map<Player, Pile> userHands;
+	//Use the player _id rather than the player
+	public Map<String, Pile> userHands;
 	
 	public int getTurnNumber() {
 		return turnNumber;
@@ -16,10 +17,10 @@ public abstract class GameState extends ReflectionDBObject {
 	public void setTurnNumber(int turnNumber) {
 		this.turnNumber = turnNumber;
 	}
-	public Map<Player, Pile> getUserHands() {
+	public Map<String, Pile> getUserHands() {
 		return userHands;
 	}
-	public void setUserHands(Map<Player, Pile> userHands) {
+	public void setUserHands(Map<String, Pile> userHands) {
 		this.userHands = userHands;
 	}
 

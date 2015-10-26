@@ -33,15 +33,12 @@ public class KingsCorner extends Game{
 	public int getCurrentPlayer(){
 		return currentPlayer;
 	}
-	
 	public void setCurrentPlayer(int currentPlayer){
 		this.currentPlayer = currentPlayer;
 	}
-	
 	public List<Player> getTurnOrder(){
 		return turnOrder;
 	}
-	
 	public void setTurnOrder(List<Player> turnOrder){
 		this.turnOrder = turnOrder;
 	}
@@ -61,7 +58,7 @@ public class KingsCorner extends Game{
 			return false;
 		}
 		KCGameState gs = getGameState();
-		Pile curUserHand = gs.userHands.get(getCurrentPlayer());
+		Pile curUserHand = gs.userHands.get(Integer.toString(getCurrentPlayer()));
 		Pile drawPile = gs.piles.get(Integer.toString(PileIds.DRAW_PILE.ordinal()));
 		if(!drawPile.isEmpty()){
 			curUserHand.add(drawPile.removeTop());

@@ -24,11 +24,11 @@ public class KCGameState extends GameState {
 		super();
 	}
 
-	public Map<Player, Pile> getPlayerHands() {
+	public Map<String, Pile> getPlayerHands() {
 		return userHands;
 	}
 
-	public void setPlayerHands(Map<Player, Pile> userHands) {
+	public void setPlayerHands(Map<String, Pile> userHands) {
 		this.userHands = userHands;
 	}
 
@@ -42,9 +42,9 @@ public class KCGameState extends GameState {
 	@Override
 	protected void initializeToNewGameState(List<Player> players) {
 		initializePiles();
-		userHands = new HashMap<Player, Pile>();
+		userHands = new HashMap<String, Pile>();
 		for(Player p : players){
-			userHands.put(p, new Pile(p.getUserName()+"'s Pile"));
+			userHands.put(Integer.toString(p.get_id()), new Pile(p.getUserName()+"'s Pile"));
 		}
 		
 		Pile drawPile = piles.get(Integer.toString(PileIds.DRAW_PILE.ordinal()));
