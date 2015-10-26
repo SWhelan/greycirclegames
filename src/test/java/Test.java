@@ -4,7 +4,16 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import cardswithfriends.*;
+import cardswithfriends.Card;
+import cardswithfriends.GlobalConstants;
+import cardswithfriends.KCGameState;
+import cardswithfriends.KCMove;
+import cardswithfriends.KingsCorner;
+import cardswithfriends.Move;
+import cardswithfriends.Pile;
+import cardswithfriends.PileIds;
+import cardswithfriends.Player;
+import cardswithfriends.User;
 import spark.utils.Assert;
 
 public class Test {
@@ -76,8 +85,8 @@ public class Test {
     	
     	//Test user hands
     	for(Player p: players){
-    		Assert.isTrue(kc.userHands.get(p).size() == 7, "Initial hand should be size 7");
-    		allCards.addAll(kc.userHands.get(p).getCards());
+    		Assert.isTrue(kc.userHands.get(Integer.toString(p.get_id())).size() == GlobalConstants.INITIAL_NUM_CARDS, "Initial hand should be size 7");
+    		allCards.addAll(kc.userHands.get(Integer.toString(p.get_id())).getCards());
     	}
     	
     	int numCardsPlayed = 0;
@@ -200,7 +209,7 @@ public class Test {
     	Card topCard = drawPile.getTop();
     	
     	Player currentPlayer = kc.getCurrentPlayerObject();
-    	Pile currentPlayerHand = gs.userHands.get(currentPlayer);
+    	Pile currentPlayerHand = gs.userHands.get(Integer.toString(currentPlayer.get_id()));
     	Assert.isTrue(!currentPlayerHand.contains(topCard), "The card in the draw pile should not be in a player's hand.");
     	kc.endTurn();
     	Assert.isTrue(currentPlayerHand.size() == 8, "Ending a turn should draw a card.");
