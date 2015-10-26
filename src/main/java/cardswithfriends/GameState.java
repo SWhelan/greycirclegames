@@ -21,7 +21,7 @@ public abstract class GameState extends ReflectionDBObject {
 		return userHands;
 	}
 	public void setUserHands(Map<String, Pile> userHands) {
-		this.userHands = userHands;
+		this.userHands = userHands; 
 	}
 
 	protected abstract void initializeToNewGameState(List<Player> players);
