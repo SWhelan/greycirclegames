@@ -2,7 +2,6 @@ import static spark.SparkBase.port;
 
 import spark.Spark;
 import templates.TemplateHandler;
-import cardswithfriends.DBHandler;
 
 
 public class Main {
