@@ -34,16 +34,16 @@ public class GameView {
 			}
 		});	
 		Map<String, Pile> piles = game.getGameState().piles;
-		drawPile = piles.get(PileIds.DRAW_PILE.ordinal()).getCards();
+		drawPile = piles.get(Integer.toString(PileIds.DRAW_PILE.ordinal())).getCards();
 		
-		northPile = piles.get(PileIds.NORTH_PILE.ordinal()).getCards();
-		eastPile = piles.get(PileIds.EAST_PILE.ordinal()).getCards();
-		southPile = piles.get(PileIds.SOUTH_PILE.ordinal()).getCards();
-		westPile = piles.get(PileIds.WEST_PILE.ordinal()).getCards();
+		northPile = piles.get(Integer.toString(PileIds.NORTH_PILE.ordinal())).getCards();
+		eastPile = piles.get(Integer.toString(PileIds.EAST_PILE.ordinal())).getCards();
+		southPile = piles.get(Integer.toString(PileIds.SOUTH_PILE.ordinal())).getCards();
+		westPile = piles.get(Integer.toString(PileIds.WEST_PILE.ordinal())).getCards();
 		
-		northEastPile = piles.get(PileIds.NORTH_EAST_PILE.ordinal()).getCards();
-		southEastPile = piles.get(PileIds.SOUTH_EAST_PILE.ordinal()).getCards();
-		southWestPile = piles.get(PileIds.SOUTH_WEST_PILE.ordinal()).getCards();
-		northWestPile = piles.get(PileIds.NORTH_WEST_PILE.ordinal()).getCards();
+		northEastPile = piles.get(Integer.toString(PileIds.NORTH_EAST_PILE.ordinal())).getCards();
+		southEastPile = piles.get(Integer.toString(PileIds.SOUTH_EAST_PILE.ordinal())).getCards();
+		southWestPile = piles.get(Integer.toString(PileIds.SOUTH_WEST_PILE.ordinal())).getCards();
+		northWestPile = piles.get(Integer.toString(PileIds.NORTH_WEST_PILE.ordinal())).getCards();
 	}
 }

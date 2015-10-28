@@ -8,12 +8,16 @@ public class Card extends ReflectionDBObject {
 	//The ordinal vlaue of the suit (index, e.g. Spade is 1, Diamond is 2 ...)
 	//need to do this for enum to go into the db, mongo sucks with enums
 	//just use the decodeSuit/encodeSuit to access the enum
-	int suitOrdinal;	
+	int suitOrdinal;
+	
+	//Still need to keep the suit on the class to access from mustache templates
+	private Suit suit;
 	
 	private Card(int number, Suit suit) {
 		super();
 		this.number = number;
 		this.suitOrdinal = suit.ordinal();
+		this.setSuit(suit);
 	}
 	
 	public static Card make(int number, Suit suit) throws IllegalArgumentException {
@@ -54,6 +58,14 @@ public class Card extends ReflectionDBObject {
 			return other.getNumber() == this.getNumber() && other.decodeSuit() == this.decodeSuit();
 		}
 		return false;
+	}
+
+	public Suit getSuit() {
+		return suit;
+	}
+
+	public void setSuit(Suit suit) {
+		this.suit = suit;
 	}
 
 	public enum Suit {

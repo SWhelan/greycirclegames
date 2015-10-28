@@ -50,7 +50,7 @@ public class KCGameState extends GameState {
 		Pile drawPile = piles.get(Integer.toString(PileIds.DRAW_PILE.ordinal()));
 		
 		//Deal cards to users
-		for(int i = 0; i < GlobalConstants.MAX_PLAYERS; i++){
+		for(int i = 0; i < GlobalConstants.INITIAL_NUM_CARDS; i++){
 			for(Pile p : userHands.values()){
 				p.add(drawPile.removeTop());
 			}
