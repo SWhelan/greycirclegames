@@ -119,7 +119,7 @@ public class TemplateHandler {
 		List<Player> players = new LinkedList<Player>();
 		players.add(getUserFromCookies(rq));
 		players.add(new ArtificialPlayer(-1));
-		KingsCorner game = new KingsCorner(KingsCorner.getNewGameId(), players);
+		KingsCorner game = new KingsCorner(DBHandler.getNextKCGameID(), players);
 		DBHandler.createKCGame(game);
 		return renderGameList(rq, rs);
 	}
@@ -198,7 +198,7 @@ public class TemplateHandler {
 			return renderRegister(rq, rs);
 		}
 		
-		User newUser = new User(20, email);
+		User newUser = new User(DBHandler.getNextUserID(), email);
 		String salt = User.generateSalt();
 		newUser.setSalt(salt);
 		newUser.setPassword(User.hashPassword(salt, password));

@@ -13,10 +13,6 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-/**
- * @author Thomas
- *
- */
 public class DBHandler {
 	//CRUD operations for java classes
 	
@@ -32,7 +28,7 @@ public class DBHandler {
 		DB db = DatabaseConnector.getMongoDB();
     	DBCollection coll = db.getCollection("kcgames");
     	coll.save(game);
-	}
+	}	
 	
 	//READ
 	////////////////////////////////////////////////////////////
@@ -51,15 +47,15 @@ public class DBHandler {
 	
 	public static User getUserByEmail(String email){
 		DB db = DatabaseConnector.getMongoDB();
-    	DBCollection coll = db.getCollection("users");
-    	DBObject query = new BasicDBObject("email", email);
-    	DBCursor cursor = coll.find(query);
-    	try {
-    		DBObject obj = cursor.next();
-    		return new User(obj);
-    	} catch (NoSuchElementException e){
-    		return null;
-    	}
+		DBCollection coll = db.getCollection("users");
+		DBObject query = new BasicDBObject("email", email);
+		DBCursor cursor = coll.find(query);
+		try {
+			DBObject obj = cursor.next();
+			return new User(obj);
+		} catch (NoSuchElementException e){
+			return null;
+		}
 	}
 	
 	public static KingsCorner getKCGame(int gameID) {
@@ -93,6 +89,45 @@ public class DBHandler {
 	public static void replaceLeaderBoard(Leaderboard leaderBoard) {
 	}
 	
+	//in the update section because it creates/updates and gets
+	private static int getNextID(String idName) {
+		DB db = DatabaseConnector.getMongoDB();
+    	DBCollection coll = db.getCollection("ids");
+    	DBObject query = new BasicDBObject("name", idName);
+    	DBCursor cursor = coll.find(query);
+    	DBObject obj;
+    	
+    	try {
+    		obj = cursor.next();
+    	}
+    	catch (NoSuchElementException e) {
+    		///create the id if it does not exist (start at 1)
+    		obj = new BasicDBObject("name",idName).append("nextID", 1);
+    		coll.save(obj);
+    	}
+    	
+    	int nextID = (Integer)obj.get("nextID");
+    	obj.put("nextID", nextID + 1);
+    	coll.save(obj);
+    	
+    	return nextID;
+	}
+	
+	public static int getNextUserID() {
+		return getNextID("nextUserID");
+	}
+	
+	public static int getNextKCGameID() {
+		return getNextID("nextKCGameID");
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	//DELETE
 	////////////////////////////////////////////////////////////
 	public static void deleteUser(int userID) {
@@ -108,7 +143,11 @@ public class DBHandler {
     public static void runTJsTestCode() {
     	
     	System.out.println("TEST");
-    	    
+
+    	
+    	
+    	
+    	
 //        User user = new User(42,"goduser", "word", "salt", "email@gmail.com");
 //    	DBHandler.createUser(user);
 //    	User u = getUser(42);
@@ -132,10 +171,6 @@ public class DBHandler {
     	kc.turnOrder = null;
     	updateKCGame(kc);
     	deleteKCGame(143);
-
-  
-    	
-
     	
     	int c = 7;
     	
