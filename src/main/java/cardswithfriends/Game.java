@@ -21,8 +21,6 @@ public abstract class Game extends ReflectionDBObject{
 	private List<Move> moves;
 	//The list of players
 	private List<Player> players;
-	//keeps track of game id's
-	private static int nextID = 0;
 	
 	//Make a completely new game
 	public Game(int _id, List<Player> players){
@@ -95,8 +93,4 @@ public abstract class Game extends ReflectionDBObject{
 	
 	public abstract boolean gameIsOver();
 	
-	//Get a valid new game id -- will use database
-	public final static int getNewGameId(){
-		return nextID++;
-	}
 }
