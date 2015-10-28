@@ -1,6 +1,7 @@
 package templates;
 
 import static spark.Spark.before;
+import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
@@ -8,8 +9,15 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import cardswithfriends.ArtificialPlayer;
+import cardswithfriends.Card;
+import cardswithfriends.Card.Suit;
 import cardswithfriends.DBHandler;
+import cardswithfriends.GlobalConstants;
+import cardswithfriends.KCMove;
 import cardswithfriends.KingsCorner;
+import cardswithfriends.Move;
+import cardswithfriends.Pile;
 import cardswithfriends.Player;
 import cardswithfriends.User;
 import cardswithfriends.views.GameView;
@@ -23,7 +31,7 @@ public class TemplateHandler {
 	private static final String HOME_TEMPLATE = "home.mustache";
 	private static final String LOGIN_TEMPLATE = "login.mustache";
 	private static final String REGISTER_TEMPLATE = "register.mustache";
-	private static final String CREATE_GAME_TEMPLATE = "createGame.mustche";
+	private static final String CREATE_GAME_TEMPLATE = "createGame.mustache";
 	private static final String FRIENDS_TEMPLATE = "friends.mustache";
 	private static final String FRIEND_INFO_TEMPLATE = "friendInfo.mustache";
 	private static final String GAME_LIST_TEMPLATE = "gameList.mustache";
@@ -37,48 +45,103 @@ public class TemplateHandler {
         get("/logout", 		(rq, rs) -> logout(rq, rs), 			new MustacheTemplateEngine());
         get("/register", 	(rq, rs) -> renderRegister(rq, rs), 	new MustacheTemplateEngine());
         get("/new", 		(rq, rs) -> renderCreateGame(rq, rs), 	new MustacheTemplateEngine());
-        get("/game/:id", 	(rq, rs) -> renderGame(rq, rs), 		new MustacheTemplateEngine());
+        get("/game/:id",	(rq, rs) -> renderGame(rq, rs), 		new MustacheTemplateEngine());
         get("/friends", 	(rq, rs) -> renderFriends(rq, rs), 		new MustacheTemplateEngine());
         get("/games", 		(rq, rs) -> renderGameList(rq, rs), 	new MustacheTemplateEngine());
         get("/tutorial", 	(rq, rs) -> renderTutorial(rq, rs), 	new MustacheTemplateEngine());
         get("/leaderboard", (rq, rs) -> renderLeaderboard(rq, rs), 	new MustacheTemplateEngine());
         before((rq, rs) -> {
         	String path = rq.pathInfo();
-            if (requiresAuthentication(path) && rq.cookie("id") == null) {
+            if (requiresAuthentication(path) && !isLoggedIn(rq)) {
             	rs.redirect("/");
             }
         });
         //TODO
         post("/login", (rq, rs) -> postLogin(rq, rs), 	new MustacheTemplateEngine());
         post("/register", (rq, rs) -> postRegister(rq, rs), new MustacheTemplateEngine());
+        post("/makeMove", (rq, rs) -> postMove(rq, rs), new MustacheTemplateEngine());
+        post("/new", (rq, rs) -> postCreateGame(rq, rs), new MustacheTemplateEngine());
+        post("/addFriend", (rq, rs) -> postAddFriend(rq, rs), new MustacheTemplateEngine());
+        post("/removeFriend", (rq, rs) -> postRemoveFriend(rq, rs), new MustacheTemplateEngine());
+        get("/*", (rq, rs) -> {
+            throw new Exception();
+        });
+        exception(Exception.class, (e, rq, rs) -> {
+            rs.status(404);
+            rs.redirect("/");
+        });
+        
         /*
         post("/login")
-        post("/new")
-        post("/makeMove")
+        
         post("/turn")
         
-        post("/removeFriend")
-        post("/addFriend")
+        post("/removeFriend")       
         get("/friends/:name")
-        get("/friends/search/:name")
         
-        6.6.12 private static ModelAndView postLogin(Request rq, Response rs) 
-		Checks the login and if it is valid will redirect to the gameList otherwise it will re-render the login template.
-		6.6.13 private static ModelAndView postCreateGame(Request rq, Response rs) 
-		Will create a new game with the players/parameters passed into the post.
-		6.6.14 private static ModelAndView postMove(Request rq, Response rs)
-		Attempt to create and validate a move from the request parameters. Re-renders the game with an update state or an error.
-		6.6.15 private static ModelAndView postTurn(Request rq, Response rs)
+        6.6.15 private static ModelAndView postTurn(Request rq, Response rs)
 		Attempt to post an entire turn and move the game forward by switching turns and saving game state. Re-renders the game view.
-		6.6.16 private static ModelAndView postRegister(Request rq, Response rs) 
-		Attempts to create a new user if the username is already taken will display an error otherwise will redirect to the login page.
 		6.6.17 private static ModelAndView postRemoveFriend(Request rq, Response rs) 
-		Attempts to remove a friend and will return to the friends management page.
 		6.6.18 private static ModelAndView postAddFriend(Request rq, Response rs) 
-		Attempts to add a friend and will return to the friends managment page with success/failure information.
 		6.6.19 private static ModelAndView renderFriendInfo(Request rq, Response rs) 
-		Renders a page of info about a friend containing how many game won against that friend.
-        */
+		*/
+	}
+	
+	private static ModelAndView postAddFriend(Request rq, Response rs){
+		String searchValue = rq.queryParams("searchValue");
+		Player user2 = DBHandler.getUserByEmail(searchValue);
+		if(user2 == null){
+			rs.header(GlobalConstants.DISPLAY_ERROR, "No user was found with that search.");
+		} else {
+			//TODO Are we just going to let people add friends or send emails to accept? Probably need an intermediary pending status as well.
+			DBHandler.addFriend(getUserFromCookies(rq), user2);
+			rs.header(GlobalConstants.DISPLAY_SUCCESS, "A friend request was sent to that user.");
+		}
+		return renderFriends(rq, rs);
+	}
+	
+	private static ModelAndView postRemoveFriend(Request rq, Response rs){
+		Integer friendToRemoveId = Integer.parseInt(rq.queryParams("friendId"));
+		Player user2 = DBHandler.getUser(friendToRemoveId);
+		if(user2 == null){
+			rs.header(GlobalConstants.DISPLAY_ERROR, "No user was found with that id to remove.");
+		} else {
+			if(DBHandler.removeFriend(getUserFromCookies(rq), user2)){
+				rs.header(GlobalConstants.DISPLAY_SUCCESS, "Friend was successfully removed.");
+			} else {
+				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
+			}
+		}
+		return renderFriends(rq, rs);
+	}
+
+	private static ModelAndView postCreateGame(Request rq, Response rs) {
+		List<Player> players = new LinkedList<Player>();
+		players.add(getUserFromCookies(rq));
+		players.add(new ArtificialPlayer(-1));
+		KingsCorner game = new KingsCorner(KingsCorner.getNewGameId(), players);
+		DBHandler.createKCGame(game);
+		return renderGameList(rq, rs);
+	}
+
+	private static ModelAndView postMove(Request rq, Response rs) {
+		Integer number = Integer.parseInt(rq.queryParams("number"));
+		String suit = rq.queryParams("suit");
+		String pile = rq.queryParams("pile");
+		Integer gameId = Integer.parseInt(rq.queryParams("gameId"));
+		KingsCorner game = DBHandler.getKCGame(gameId);
+		Pile destination = game.getGameState().piles.get(Integer.parseInt(pile));
+		Pile moving = new Pile("moving");
+		moving.add(new Card(number, Suit.valueOf(suit)));
+		Player player = getUserFromCookies(rq);
+		Pile origin = game.getGameState().userHands.get(player.get_id());
+		Move move = new KCMove(player, origin, moving, destination);
+		if(game.applyMove(move)){
+			rs.header(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied succefully.");
+		} else {
+			rs.header(GlobalConstants.DISPLAY_ERROR, "Move was invalid and and not applied.");
+		}
+		return renderGame(rq, rs);
 	}
 
 	private static boolean requiresAuthentication(String path) {
@@ -98,17 +161,26 @@ public class TemplateHandler {
 		String password = rq.queryParams("password");
 		User user = DBHandler.getUserByEmail(email);
 		if(checkLogin(user, password)){
-			if(user == null){
-				//TODO remove once we are saving users.
-				rs.cookie("id", "10");
-			} else {
-				rs.cookie("id", user.get_id().toString());
-			}
-			return renderHome(rq, rs);
+			rs.header(GlobalConstants.DISPLAY_SUCCESS, "Successfully logged in.");
+			rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(user.get_id()));
+			return renderGameList(rq, rs);
 		} else {
-			// "There was an error. Try again.";
+			rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(20));
+			rs.header(GlobalConstants.DISPLAY_ERROR, "Your username or password is incorrect.");
 			return renderLogin(rq, rs);
 		}
+	}
+	
+	private static boolean isLoggedIn(Request rq){
+		return rq.cookie(GlobalConstants.USER_COOKIE_KEY) != null;
+	}
+	
+	private static int getUserIdFromCookies(Request rq){
+		return Integer.parseInt(rq.cookie(GlobalConstants.USER_COOKIE_KEY));
+	}
+	
+	private static User getUserFromCookies(Request rq){
+		return DBHandler.getUser(getUserIdFromCookies(rq));
 	}
 	
 	private static ModelAndView postRegister(Request rq, Response rs) {
@@ -117,100 +189,129 @@ public class TemplateHandler {
 		String passwordAgain = rq.queryParams("password-again");
 		
 		if(DBHandler.getUserByEmail(email) != null){
-			//Error email already in use.
+			rs.header(GlobalConstants.DISPLAY_ERROR, "Email already in use.");
 			return renderRegister(rq, rs);
 		}
 		
 		if(!password.equals(passwordAgain)){
-			//Error passwords don't match
+			rs.header(GlobalConstants.DISPLAY_ERROR, "Passwords do not match.");
 			return renderRegister(rq, rs);
 		}
 		
-		//Make the new user
-		User newUser = new User(0, email);
+		User newUser = new User(20, email);
+		String salt = User.generateSalt();
+		newUser.setSalt(salt);
+		newUser.setPassword(User.hashPassword(salt, password));
+		newUser.setUserName(email);
 		DBHandler.createUser(newUser);
+		rs.header(GlobalConstants.DISPLAY_SUCCESS, "New user succesfully created.");
 		return renderLogin(rq, rs);
 	}
 
 	private static boolean checkLogin(User user, String password) {
-		if(user == null || user.checkPassword(password)){
-			//return false
+		if(user == null || !user.passwordMatches(password)){
+			return false;
 		}		
 		return true;
 	}
 
 	private static ModelAndView renderHome(Request rq, Response rs) {
-		return new ModelAndView(new HashMap<String, String>(), HOME_TEMPLATE);
+		if(rq.cookie(GlobalConstants.USER_COOKIE_KEY) != null){
+			return renderGameList(rq, rs);
+		}
+		return getModelAndView(new HashMap<String, Object>(), HOME_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView renderLogin(Request rq, Response rs) {
+		HashMap<String, Object> info = new HashMap<String, Object>();
 		String email = rq.queryParams("email");
 		String password = rq.queryParams("password");
-		HashMap<String, String> info = new HashMap<String, String>();
 		info.put("email", email);
 		info.put("password", password);
-		return new ModelAndView(info, LOGIN_TEMPLATE);
+		return getModelAndView(info, LOGIN_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView logout(Request rq, Response rs) {
-		// TODO Auto-generated method stub
-		rs.redirect("/");
-		return null;
+		rs.header(GlobalConstants.DISPLAY_SUCCESS, "Successfully logged out.");
+		rs.removeCookie(GlobalConstants.USER_COOKIE_KEY);
+		return renderHome(rq, rs);
 	}
 
 	private static ModelAndView renderRegister(Request rq, Response rs) {
-		// TODO Auto-generated method stub
-		return new ModelAndView(new HashMap<String, String>(), REGISTER_TEMPLATE);
+		return getModelAndView(new HashMap<String, Object>(), REGISTER_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView renderTutorial(Request rq, Response rs) {
-		// TODO Auto-generated method stub
-		return new ModelAndView(new HashMap<String, String>(), TUTORIAL_TEMPLATE);
+		//TODO make this template
+		return getModelAndView(new HashMap<String, Object>(), TUTORIAL_TEMPLATE, rq, rs);
 	}
 
 	private static ModelAndView renderGameList(Request rq, Response rs) {
+		HashMap<String, Object> info = new HashMap<String, Object>();
 		// real thing 
-		//List<KingsCorner> games = DBHandler.getKCGamesforUser(Integer.parseInt(rq.cookie("id")));
-		//testing
+		//List<KingsCorner> games = DBHandler.getKCGamesforUser(getUserIdFromCookies(rq));
+		// fake thing
 		List<Player> players = new LinkedList<Player>();
 		players.add(new User(10, "sdlfkjsd"));
 		players.add(new User(11, "asdfadsfkj"));
 		KingsCorner game1 = new KingsCorner(1, players);
 		KingsCorner game2 = new KingsCorner(2, players);
 		KingsCorner game3 = new KingsCorner(3, players);
-		HashMap<String, Object> info = new HashMap<String, Object>();
 		List<KingsCornerView> games = new LinkedList<KingsCornerView>();
 		games.add(new KingsCornerView(game1));
 		games.add(new KingsCornerView(game2));
 		games.add(new KingsCornerView(game3));
 		info.put("games", games);
-		return new ModelAndView(info, GAME_LIST_TEMPLATE);
+		return getModelAndView(info, GAME_LIST_TEMPLATE, rq, rs);
 	}
+	
+
 
 	private static ModelAndView renderFriends(Request rq, Response rs) {
-		// TODO Auto-generated method stub
-		return new ModelAndView(new HashMap<String, String>(), FRIENDS_TEMPLATE);
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		List<Player> players = DBHandler.getFriendsForUser(getUserIdFromCookies(rq));
+		info.put("friends", players);
+		return getModelAndView(info, FRIENDS_TEMPLATE, rq, rs);
 	}
 
 	private static ModelAndView renderGame(Request rq, Response rs) {
-		List<Player> players = new LinkedList<Player>();
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		/*List<Player> players = new LinkedList<Player>();
 		User user = new User(10, "sdlfkjsd");
 		players.add(user);
 		players.add(new User(11, "asdfadsfkj"));
-		KingsCorner game1 = new KingsCorner(1, players);
-		HashMap<String, Object> info = new HashMap<String, Object>();
-		info.put("game", new GameView(game1, user));
-		return new ModelAndView(info, KINGS_CORNERS_TEMPLATE);
+		KingsCorner game1 = new KingsCorner(1, players);*/
+		int gameId;
+		try {
+			gameId = Integer.parseInt(rq.queryParams("gameId"));
+		} catch (NumberFormatException e){
+			gameId = Integer.parseInt(rq.params(":id"));
+		}
+		info.put("game", new GameView(DBHandler.getKCGame(gameId), getUserFromCookies(rq)));
+		return getModelAndView(info, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
 
 	private static ModelAndView renderCreateGame(Request rq, Response rs) {
-		// TODO Auto-generated method stub
-		return new ModelAndView(new HashMap<String, String>(), CREATE_GAME_TEMPLATE);
+		//TODO fill out this template
+		return getModelAndView(new HashMap<String, Object>(), CREATE_GAME_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView renderLeaderboard(Request rq, Response rs) {
 		// TODO Auto-generated method stub
-		return new ModelAndView(new HashMap<String, String>(), LEADERBOARD_TEMPLATE);
+		return getModelAndView(new HashMap<String, Object>(), LEADERBOARD_TEMPLATE, rq, rs);
+	}
+	
+	private static ModelAndView getModelAndView(HashMap<String, Object> info, String templateName, Request rq, Response rs){
+		if(isLoggedIn(rq)){
+			info.put("loggedIn", true);
+		}
+		if(rs.raw().containsHeader(GlobalConstants.DISPLAY_ERROR)){
+			info.put(GlobalConstants.DISPLAY_ERROR, rs.raw().getHeader(GlobalConstants.DISPLAY_ERROR));
+		}
+		if(rs.raw().containsHeader(GlobalConstants.DISPLAY_SUCCESS)){
+			info.put(GlobalConstants.DISPLAY_SUCCESS, rs.raw().getHeader(GlobalConstants.DISPLAY_SUCCESS));
+		}
+		return new ModelAndView(info, templateName);
 	}
 
 }

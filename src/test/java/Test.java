@@ -35,8 +35,8 @@ public class Test {
     	User user = new User(1, "Test");
     	user.setSalt(User.generateSalt());
     	user.setPassword(User.hashPassword(user.getSalt(), "password"));
-    	Assert.isTrue(user.checkPassword("password"), "Method should return true for password matches.");
-    	Assert.isTrue(!user.checkPassword("not the right password"), "Method should return false for incorrect passwords.");
+    	Assert.isTrue(user.passwordMatches("password"), "Method should return true for password matches.");
+    	Assert.isTrue(!user.passwordMatches("not the right password"), "Method should return false for incorrect passwords.");
     }
     
     /*

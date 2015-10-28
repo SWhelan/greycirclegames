@@ -1,3 +1,11 @@
 {{> header}}
-
+<form class="form-horizontal" action="/addFriend" method="post">
+  <div class="form-group">
+    <label for="email" class="col-sm-2 control-label">Friend Email or Username:</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" name="searchValue" id="searchValue" placeholder="Email or Username" value="{{searchValue}}">
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary btn-lg btn-block">Add a New Friend</button>
+</form>
 {{> footer}}

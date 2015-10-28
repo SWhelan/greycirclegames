@@ -13,7 +13,7 @@ public class Card extends ReflectionDBObject {
 	//Still need to keep the suit on the class to access from mustache templates
 	private Suit suit;
 	
-	private Card(int number, Suit suit) {
+	public Card(int number, Suit suit) {
 		super();
 		this.number = number;
 		this.suitOrdinal = suit.ordinal();

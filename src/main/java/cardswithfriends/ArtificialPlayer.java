@@ -2,6 +2,11 @@ package cardswithfriends;
 public class ArtificialPlayer implements Player {
 	private int playerID;
 
+	public ArtificialPlayer(int playerID) {
+		super();
+		this.playerID = playerID;
+	}
+	
 	public Integer getPlayerID() {
 		return playerID;
 	}

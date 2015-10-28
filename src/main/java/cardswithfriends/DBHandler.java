@@ -5,13 +5,13 @@ package cardswithfriends;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.ReflectionDBObject;
 
 /**
  * @author Thomas
@@ -41,12 +41,25 @@ public class DBHandler {
     	DBCollection coll = db.getCollection("users");
     	DBObject query = new BasicDBObject("_id", userID);
     	DBCursor cursor = coll.find(query);
-    	DBObject obj = cursor.next();
-    	return new User(obj);
+    	try {
+    		DBObject obj = cursor.next();
+    		return new User(obj);
+    	} catch (NoSuchElementException e) {
+    		return null;
+    	}
 	}
 	
 	public static User getUserByEmail(String email){
-		return null;
+		DB db = DatabaseConnector.getMongoDB();
+    	DBCollection coll = db.getCollection("users");
+    	DBObject query = new BasicDBObject("email", email);
+    	DBCursor cursor = coll.find(query);
+    	try {
+    		DBObject obj = cursor.next();
+    		return new User(obj);
+    	} catch (NoSuchElementException e){
+    		return null;
+    	}
 	}
 	
 	public static KingsCorner getKCGame(int gameID) {
@@ -138,9 +151,21 @@ public class DBHandler {
 //    	User getUserByEmail(String email
 //    	List<KingsCorner> getKCGamesforUser(int userId
     	
-    	
-    	
-    	
 
     }
+
+	public static List<Player> getFriendsForUser(int userId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public static boolean addFriend(Player user1, Player user2){
+		// TODO Auto-generated method stub
+		return true;
+	}
+	
+	public static boolean removeFriend(Player user1, Player user2) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }
