@@ -4,6 +4,7 @@
 package cardswithfriends;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -48,7 +49,7 @@ public class DBHandler {
 	public static User getUserByEmail(String email){
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("users");
-		DBObject query = new BasicDBObject("email", email);
+		DBObject query = new BasicDBObject("Email", email);
 		DBCursor cursor = coll.find(query);
 		try {
 			DBObject obj = cursor.next();
@@ -191,7 +192,7 @@ public class DBHandler {
 
 	public static List<Player> getFriendsForUser(int userId) {
 		// TODO Auto-generated method stub
-		return null;
+		return new LinkedList<Player>();
 	}
 
 	public static boolean addFriend(Player user1, Player user2){

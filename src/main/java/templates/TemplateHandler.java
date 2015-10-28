@@ -10,14 +10,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import cardswithfriends.ArtificialPlayer;
-import cardswithfriends.Card;
-import cardswithfriends.Card.Suit;
 import cardswithfriends.DBHandler;
 import cardswithfriends.GlobalConstants;
-import cardswithfriends.KCMove;
 import cardswithfriends.KingsCorner;
-import cardswithfriends.Move;
-import cardswithfriends.Pile;
 import cardswithfriends.Player;
 import cardswithfriends.User;
 import cardswithfriends.views.GameView;
@@ -56,13 +51,14 @@ public class TemplateHandler {
             	rs.redirect("/");
             }
         });
-        //TODO
         post("/login", (rq, rs) -> postLogin(rq, rs), 	new MustacheTemplateEngine());
         post("/register", (rq, rs) -> postRegister(rq, rs), new MustacheTemplateEngine());
         post("/makeMove", (rq, rs) -> postMove(rq, rs), new MustacheTemplateEngine());
         post("/new", (rq, rs) -> postCreateGame(rq, rs), new MustacheTemplateEngine());
         post("/addFriend", (rq, rs) -> postAddFriend(rq, rs), new MustacheTemplateEngine());
         post("/removeFriend", (rq, rs) -> postRemoveFriend(rq, rs), new MustacheTemplateEngine());
+        get("/friends/:id", (rq, rs) -> renderFriendInfo(rq, rs), new MustacheTemplateEngine());
+        post("/turn", (rq, rs) -> postTurn(rq, rs), new MustacheTemplateEngine());
         get("/*", (rq, rs) -> {
             throw new Exception();
         });
@@ -70,23 +66,31 @@ public class TemplateHandler {
             rs.status(404);
             rs.redirect("/");
         });
-        
-        /*
-        post("/login")
-        
-        post("/turn")
-        
-        post("/removeFriend")       
-        get("/friends/:name")
-        
-        6.6.15 private static ModelAndView postTurn(Request rq, Response rs)
-		Attempt to post an entire turn and move the game forward by switching turns and saving game state. Re-renders the game view.
-		6.6.17 private static ModelAndView postRemoveFriend(Request rq, Response rs) 
-		6.6.18 private static ModelAndView postAddFriend(Request rq, Response rs) 
-		6.6.19 private static ModelAndView renderFriendInfo(Request rq, Response rs) 
-		*/
 	}
 	
+	private static ModelAndView postTurn(Request rq, Response rs) {
+		// TODO Auto-generated method stub
+		//DBHandler.getKCGame(gameID);
+		rs.header(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
+		return renderGame(rq, rs);
+	}
+
+	private static ModelAndView renderFriendInfo(Request rq, Response rs) {
+		List<Player> friends = DBHandler.getFriendsForUser(getUserIdFromCookies(rq));
+		Player friend = null;
+		for(Player p : friends){
+			if(p.get_id() == Integer.parseInt(rq.params(":id"))){
+				friend = p;
+			}
+		}
+		if(friend == null){
+			rs.header(GlobalConstants.DISPLAY_ERROR, "You are not friends with the requested user or the requested user does not exist. If you have just sent them a friend request they may have not accepted yet.");
+		}
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		info.put("friend", friend);
+		return getModelAndView(info, FRIEND_INFO_TEMPLATE, rq, rs);
+	}
+
 	private static ModelAndView postAddFriend(Request rq, Response rs){
 		String searchValue = rq.queryParams("searchValue");
 		Player user2 = DBHandler.getUserByEmail(searchValue);
@@ -125,7 +129,8 @@ public class TemplateHandler {
 	}
 
 	private static ModelAndView postMove(Request rq, Response rs) {
-		Integer number = Integer.parseInt(rq.queryParams("number"));
+	/* This is the real stuff:
+	 * 	Integer number = Integer.parseInt(rq.queryParams("number"));
 		String suit = rq.queryParams("suit");
 		String pile = rq.queryParams("pile");
 		Integer gameId = Integer.parseInt(rq.queryParams("gameId"));
@@ -136,11 +141,11 @@ public class TemplateHandler {
 		Player player = getUserFromCookies(rq);
 		Pile origin = game.getGameState().userHands.get(player.get_id());
 		Move move = new KCMove(player, origin, moving, destination);
-		if(game.applyMove(move)){
+		if(game.applyMove(move)){*/
 			rs.header(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied succefully.");
-		} else {
-			rs.header(GlobalConstants.DISPLAY_ERROR, "Move was invalid and and not applied.");
-		}
+		//} else {
+			//rs.header(GlobalConstants.DISPLAY_ERROR, "Move was invalid and and not applied.");
+		//}
 		return renderGame(rq, rs);
 	}
 
@@ -161,14 +166,11 @@ public class TemplateHandler {
 		String password = rq.queryParams("password");
 		User user = DBHandler.getUserByEmail(email);
 		if(checkLogin(user, password)){
-			rs.header(GlobalConstants.DISPLAY_SUCCESS, "Successfully logged in.");
 			rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(user.get_id()));
-			return renderGameList(rq, rs);
-		} else {
-			rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(20));
-			rs.header(GlobalConstants.DISPLAY_ERROR, "Your username or password is incorrect.");
-			return renderLogin(rq, rs);
+			rs.redirect("/games");
 		}
+		rs.header(GlobalConstants.DISPLAY_ERROR, "Your username or password is incorrect.");
+		return renderLogin(rq, rs);		
 	}
 	
 	private static boolean isLoggedIn(Request rq){
@@ -187,8 +189,8 @@ public class TemplateHandler {
 		String email = rq.queryParams("email");
 		String password = rq.queryParams("password");
 		String passwordAgain = rq.queryParams("password-again");
-		
-		if(DBHandler.getUserByEmail(email) != null){
+		User user = DBHandler.getUserByEmail(email); 
+		if(user != null){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Email already in use.");
 			return renderRegister(rq, rs);
 		}
@@ -234,7 +236,7 @@ public class TemplateHandler {
 	private static ModelAndView logout(Request rq, Response rs) {
 		rs.header(GlobalConstants.DISPLAY_SUCCESS, "Successfully logged out.");
 		rs.removeCookie(GlobalConstants.USER_COOKIE_KEY);
-		return renderHome(rq, rs);
+		return getModelAndView(new HashMap<String, Object>(), HOME_TEMPLATE, rq, rs);
 	}
 
 	private static ModelAndView renderRegister(Request rq, Response rs) {
@@ -242,7 +244,6 @@ public class TemplateHandler {
 	}
 	
 	private static ModelAndView renderTutorial(Request rq, Response rs) {
-		//TODO make this template
 		return getModelAndView(new HashMap<String, Object>(), TUTORIAL_TEMPLATE, rq, rs);
 	}
 
@@ -252,6 +253,7 @@ public class TemplateHandler {
 		//List<KingsCorner> games = DBHandler.getKCGamesforUser(getUserIdFromCookies(rq));
 		// fake thing
 		List<Player> players = new LinkedList<Player>();
+		players.add(getUserFromCookies(rq));
 		players.add(new User(10, "sdlfkjsd"));
 		players.add(new User(11, "asdfadsfkj"));
 		KingsCorner game1 = new KingsCorner(1, players);
@@ -270,24 +272,28 @@ public class TemplateHandler {
 	private static ModelAndView renderFriends(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
 		List<Player> players = DBHandler.getFriendsForUser(getUserIdFromCookies(rq));
+		players.add(new User(10, "sdlkfjsd"));
+		players.add(new User(12, "sdlfkjsdlfkjlkkjsdf"));
 		info.put("friends", players);
 		return getModelAndView(info, FRIENDS_TEMPLATE, rq, rs);
 	}
 
 	private static ModelAndView renderGame(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		/*List<Player> players = new LinkedList<Player>();
-		User user = new User(10, "sdlfkjsd");
-		players.add(user);
-		players.add(new User(11, "asdfadsfkj"));
-		KingsCorner game1 = new KingsCorner(1, players);*/
-		int gameId;
+		List<Player> players = new LinkedList<Player>();
+		/*int gameId;
 		try {
 			gameId = Integer.parseInt(rq.queryParams("gameId"));
 		} catch (NumberFormatException e){
 			gameId = Integer.parseInt(rq.params(":id"));
-		}
-		info.put("game", new GameView(DBHandler.getKCGame(gameId), getUserFromCookies(rq)));
+		}*/
+		//info.put("game", new GameView(DBHandler.getKCGame(gameId), getUserFromCookies(rq)));
+		User user = new User(20, "sdlfkjsd");
+		players.add(user);
+		players.add(getUserFromCookies(rq));
+		players.add(new User(11, "asdfadsfkj"));
+		KingsCorner game1 = new KingsCorner(1, players);
+		info.put("game", new GameView(game1, getUserFromCookies(rq)));
 		return getModelAndView(info, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
 
