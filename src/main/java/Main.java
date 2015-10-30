@@ -1,7 +1,7 @@
 import static spark.SparkBase.port;
 
+import cardswithfriends.TemplateHandler;
 import spark.Spark;
-import templates.TemplateHandler;
 
 
 public class Main {
