@@ -57,7 +57,7 @@
 			<div class="emptyPile"></div>
 		{{/westPile}}
 	</div>
-	<div class="pile card col-md-3" pile="DRAW_PILE">Draw Pile - {{drawPile.size}}</div>
+	<div id="drawPile" class="pile card col-md-3" pile="DRAW_PILE">Draw Pile - {{drawPile.size}}</div>
 	<div class="gamePile pile col-md-3" pile="EAST_PILE">
 		{{#eastPile}}
 			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
@@ -114,6 +114,20 @@ Your hand:
 </div>
 
 <script type = text/javascript>
+	$("#drawPile").click(function (){
+		turnForm=document.createElement('FORM');
+		turnForm.name='turn';
+		turnForm.method='POST';
+		turnForm.action='/turn';
+		
+		hiddenElement=document.createElement('INPUT');
+		hiddenElement.type='HIDDEN';
+		hiddenElement.name='gameId';
+		hiddenElement.value={{gameId}}
+		turnForm.appendChild(hiddenElement);
+		turnForm.submit();
+	});
+
 	var selectedCard;
 	$(".userCard").click(function (){
 		if($(this).hasClass("clicked")){

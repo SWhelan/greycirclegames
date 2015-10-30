@@ -1,5 +1,6 @@
 {{> header}}
-<form class="form-horizontal" action="/addFriend" method="post">
+<form class="form-horizontal" action="
+" method="post">
   <div class="form-group">
     <label for="email" class="col-sm-2 control-label">Friend Email or Username:</label>
     <div class="col-sm-10">
@@ -8,4 +9,14 @@
   </div>
   <button type="submit" class="btn btn-primary btn-lg btn-block">Add a New Friend</button>
 </form>
+
+{{#friends}}
+	<a href="/friends/{{_id}}">
+		<div>
+			<h3>{{email}}</h3>
+			<h4>{{_id}}</h4>
+			<hr>
+		</div>
+	</a>
+{{/friends}}
 {{> footer}}
