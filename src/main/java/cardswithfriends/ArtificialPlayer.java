@@ -1,4 +1,8 @@
 package cardswithfriends;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class ArtificialPlayer implements Player {
 	private int playerID;
 
@@ -13,11 +17,11 @@ public class ArtificialPlayer implements Player {
 
 	public Move createMove(KCGameState gamestate) {
 		//Let compatibleCards be all the possible cards that can be used to place a card this turn. (findCompatibleCards)
-		Set<Card> compatibleCards = findCompatibleCards(gamestate);
+		Pile compatibleCards = findCompatibleCards(gamestate);
 		//Let AIHand be the pile of cards in the AI's hand
 		Pile hand = retrieveAIHand(gamestate);
 		//Let compatibleHand be the cards in the AI's hand that can be placed(findCompatibleHand)
-		Set<Card> compatibleHand = findCompatibleHand(hand, compatibleCards);
+		Pile compatibleHand = findCompatibleHand(hand, compatibleCards);
 		//If compatibleHand is not an empty pile
 		if (!compatibleHand.isEmpty())
 			//determine the BEST move the AI should make (determineMove) and return it
@@ -25,7 +29,7 @@ public class ArtificialPlayer implements Player {
 		//otherwise
 		else
 			//do nothing (end the turn and draw a card)
-			return new KCMove(playerID, null, null, null);
+			return new KCMove(DBHandler.getUser(playerID), null, null, null);
 	}
 
 	//perhaps move to KCGameState?
@@ -37,17 +41,17 @@ public class ArtificialPlayer implements Player {
 	private Map<String, Pile> retrieveTablePiles(KCGameState gameState) {
 		Map<String, Pile> tablePiles = new HashMap<String, Pile>();
 		Map<String, Pile> allPiles = gameState.getPiles();
-		tablePiles.put(PileIds.EAST_PILE.ordinal(), allPiles.get(PileIds.EAST_PILE.ordinal()));
-		tablePiles.put(PileIds.NORTH_PILE.ordinal(), allPiles.get(PileIds.NORTH_PILE.ordinal()));
-		tablePiles.put(PileIds.WEST_PILE.ordinal(), allPiles.get(PileIds.WEST_PILE.ordinal()));
-		tablePiles.put(PileIds.SOUTH_PILE.ordinal(), allPiles.get(PileIds.SOUTH_PILE.ordinal()));
-		tablePiles.put(PileIds.NORTH_EAST_PILE.ordinal(), allPiles.get(PileIds.NORTH_EAST_PILE.ordinal()));
-		tablePiles.put(PileIds.NORTH_WEST_PILE.ordinal(), allPiles.get(PileIds.NORTH_WEST_PILE.ordinal()));
-		tablePiles.put(PileIds.SOUTH_EAST_PILE.ordinal(), allPiles.get(PileIds.SOUTH_EAST_PILE.ordinal()));
-		tablePiles.put(PileIds.SOUTH_WEST_PILE.ordinal(), allPiles.get(PileIds.SOUTH_WEST_PILE.ordinal()));
+		tablePiles.put(Integer.toString(PileIds.EAST_PILE.ordinal()), allPiles.get(PileIds.EAST_PILE.ordinal()));
+		tablePiles.put(Integer.toString(PileIds.NORTH_PILE.ordinal()), allPiles.get(PileIds.NORTH_PILE.ordinal()));
+		tablePiles.put(Integer.toString(PileIds.WEST_PILE.ordinal()), allPiles.get(PileIds.WEST_PILE.ordinal()));
+		tablePiles.put(Integer.toString(PileIds.SOUTH_PILE.ordinal()), allPiles.get(PileIds.SOUTH_PILE.ordinal()));
+		tablePiles.put(Integer.toString(PileIds.NORTH_EAST_PILE.ordinal()), allPiles.get(PileIds.NORTH_EAST_PILE.ordinal()));
+		tablePiles.put(Integer.toString(PileIds.NORTH_WEST_PILE.ordinal()), allPiles.get(PileIds.NORTH_WEST_PILE.ordinal()));
+		tablePiles.put(Integer.toString(PileIds.SOUTH_EAST_PILE.ordinal()), allPiles.get(PileIds.SOUTH_EAST_PILE.ordinal()));
+		tablePiles.put(Integer.toString(PileIds.SOUTH_WEST_PILE.ordinal()), allPiles.get(PileIds.SOUTH_WEST_PILE.ordinal()));
 		return tablePiles;
 	}
-	private KOMove determineMove(KCGameState gamestate, Pile hand) {
+	private KCMove determineMove(KCGameState gamestate, Pile hand) {
 		//TODO: make more intelligent move
 		//Select a random card from the hand
 		Pile.shuffle(hand);
@@ -55,18 +59,18 @@ public class ArtificialPlayer implements Player {
 		//Find a table pile in the gamestate to place the card
 
 		//Create a move with these piles and return
-		return new KOMove(playerID, null, null, null);
+		return new KCMove(DBHandler.getUser(playerID), null, null, null);
 	}
-	private boolean findCompatibleHand(Pile hand, Set<Card> compatibles) {
+	private Pile findCompatibleHand(Pile hand, Pile compatibles) {
 		//let compatibleHand be the sub-pile of the AI's hand that can be placed this turn
 		//for each card in the AI's hand
 			//if the compatibles set contains the card
 				//Add the AI's card to compatibleHand pile
 		//Return the compatibleHand 
-		return false;
+		return null;
 	}
 
-	private Set<Card> findCompatibleCards(KCGameState gamestate) {
+	private Pile findCompatibleCards(KCGameState gamestate) {
 		//Let compCards be the set of compatible cards for the next move
 		Map<String, Pile> tablePiles = retrieveTablePiles(gamestate);
 
