@@ -240,7 +240,7 @@ public class Test {
     	Move move = new KCMove(players.get(0), user0Hand, moving, spoof);
     	
     	Assert.isTrue(move.isValid(), "This should be a valid move.");
-    	kc.applyMove(move);
+    	Assert.isTrue(kc.applyMove(move), "This is a valid move and the game should not be over, so return should be true.");
     	
     	Assert.isTrue(!user0Hand.contains(toMove), "Card should not be in user hand.");
     	Assert.isTrue(!user0Hand.containsAll(moving), "Card should not be in user hand.");

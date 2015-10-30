@@ -21,7 +21,7 @@ public class Card extends ReflectionDBObject {
 	}
 	
 	public static Card make(int number, Suit suit) throws IllegalArgumentException {
-		if(number > 0 && number < 14){
+		if(suit != null && number > 0 && number < 14){
 			return new Card(number, suit);
 		} else {
 			throw new IllegalArgumentException();
