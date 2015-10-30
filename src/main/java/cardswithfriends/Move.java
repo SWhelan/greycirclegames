@@ -23,6 +23,22 @@ public abstract class Move implements Serializable{
 		this.destination = destination;
 	}
 	
+	public String getPlayerName() {
+		return player.getUserName();
+	}
+
+	public String getOriginName() {
+		return origin.getName();
+	}
+
+	public String getMovingName() {
+		return moving.getName();
+	}
+
+	public String getDestinationName() {
+		return destination.getName();
+	}
+	
 	public abstract boolean isValid();
 	
 	public abstract void apply();
@@ -30,6 +46,15 @@ public abstract class Move implements Serializable{
 	@Override
 	public String toString(){
 		//Player # placed card on pile X or Moved PIle X onto Pile Y
-		return this.player.getUserName() + " moved " + this.moving.toString() + " from " + this.origin.toString() + " onto " + this.destination.toString();
+		return this.player.getUserName() + " moved " + this.moving.getName() + " from " + this.origin.getName() + " onto " + this.destination.getName();
+	}
+	
+	public class Test{
+		public boolean namesEqual(String userName, String originName, String movingName, String destinationName){
+			return userName.equals(player.getUserName()) &&
+					origin.getName().equals(originName) &&
+					moving.getName().equals(movingName) &&
+					destination.getName().equals(movingName);
+		}
 	}
 }

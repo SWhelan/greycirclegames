@@ -216,4 +216,45 @@ public class Test {
     	Assert.isTrue(currentPlayerHand.contains(topCard), "The top card in the draw pile should be drawn.");
     	
     }
+    
+    public void testApplyMove(){
+    	List<Player> players = new LinkedList<Player>();
+    	players.add(new User(0, "Test user 0"));
+    	players.add(new User(1, "Test user 1"));
+    	players.add(new User(2, "Test user 2"));
+    	KingsCorner kc = new KingsCorner(0, players);
+    	KCGameState gs = (KCGameState) kc.getGameState();
+    	
+    	Pile spoof = new Pile("Spoof North Pile");
+    	spoof.addOn(Card.make(8, Card.Suit.CLUB));
+    	gs.piles.put(Integer.toString(PileIds.NORTH_PILE.ordinal()), spoof);
+    	Pile user0Hand = gs.userHands.get(Integer.toString(players.get(0).get_id()));
+    	Card toMove = Card.make(7, Card.Suit.DIAMOND);
+    	if(!user0Hand.contains(toMove)){
+    		user0Hand.add(toMove);
+    	}
+    	
+    	Pile moving = new Pile("Moving Pile");
+    	moving.add(toMove);
+    	
+    	Move move = new KCMove(players.get(0), user0Hand, moving, spoof);
+    	
+    	Assert.isTrue(move.isValid(), "This should be a valid move.");
+    	kc.applyMove(move);
+    	
+    	Assert.isTrue(!user0Hand.contains(toMove), "Card should not be in user hand.");
+    	Assert.isTrue(!user0Hand.containsAll(moving), "Card should not be in user hand.");
+    	
+    	Pile expected = new Pile("Expected pile.");
+    	expected.addOn(Card.make(8, Card.Suit.CLUB));
+    	expected.addOn(toMove);
+    	Assert.isTrue(expected.equals(spoof), "We expect this pile.");
+    	List<Move> moves = kc.getMoves();
+    	Move mostRecent = moves.get(moves.size()-1);
+    	
+    	Assert.isTrue(mostRecent.getPlayerName().equals("Test user 0"), "Most recent's player is 0.");
+    	Assert.isTrue(mostRecent.getOriginName().equals(user0Hand.getName()), "Most recent origin is user 0 hand.");
+    	Assert.isTrue(mostRecent.getMovingName().equals("Moving Pile"), "Most recent moving pile.");
+    	Assert.isTrue(mostRecent.getDestinationName().equals(spoof.getName()), "Most recent destination");
+    }
 }
