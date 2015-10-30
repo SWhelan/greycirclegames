@@ -1,7 +1,6 @@
 package templates;
 
 import static spark.Spark.before;
-import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
@@ -59,13 +58,13 @@ public class TemplateHandler {
         post("/removeFriend", (rq, rs) -> postRemoveFriend(rq, rs), new MustacheTemplateEngine());
         get("/friends/:id", (rq, rs) -> renderFriendInfo(rq, rs), new MustacheTemplateEngine());
         post("/turn", (rq, rs) -> postTurn(rq, rs), new MustacheTemplateEngine());
-        get("/*", (rq, rs) -> {
+        /*get("/*", (rq, rs) -> {
             throw new Exception();
         });
         exception(Exception.class, (e, rq, rs) -> {
             rs.status(404);
             rs.redirect("/");
-        });
+        });*/
 	}
 	
 	private static ModelAndView postTurn(Request rq, Response rs) {
@@ -76,7 +75,7 @@ public class TemplateHandler {
 	}
 
 	private static ModelAndView renderFriendInfo(Request rq, Response rs) {
-		List<Player> friends = DBHandler.getFriendsForUser(getUserIdFromCookies(rq));
+		/*List<Player> friends = DBHandler.getFriendsForUser(getUserIdFromCookies(rq));
 		Player friend = null;
 		for(Player p : friends){
 			if(p.get_id() == Integer.parseInt(rq.params(":id"))){
@@ -85,7 +84,8 @@ public class TemplateHandler {
 		}
 		if(friend == null){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "You are not friends with the requested user or the requested user does not exist. If you have just sent them a friend request they may have not accepted yet.");
-		}
+		}*/
+		Player friend = new User(4, "Friend 4");
 		HashMap<String, Object> info = new HashMap<String, Object>();
 		info.put("friend", friend);
 		return getModelAndView(info, FRIEND_INFO_TEMPLATE, rq, rs);
@@ -254,8 +254,8 @@ public class TemplateHandler {
 		// fake thing
 		List<Player> players = new LinkedList<Player>();
 		players.add(getUserFromCookies(rq));
-		players.add(new User(10, "sdlfkjsd"));
-		players.add(new User(11, "asdfadsfkj"));
+		players.add(new User(10, "opponent1@test.com"));
+		players.add(new User(11, "opponent2@test.com"));
 		KingsCorner game1 = new KingsCorner(1, players);
 		KingsCorner game2 = new KingsCorner(2, players);
 		KingsCorner game3 = new KingsCorner(3, players);
@@ -272,8 +272,10 @@ public class TemplateHandler {
 	private static ModelAndView renderFriends(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
 		List<Player> players = DBHandler.getFriendsForUser(getUserIdFromCookies(rq));
-		players.add(new User(10, "sdlkfjsd"));
-		players.add(new User(12, "sdlfkjsdlfkjlkkjsdf"));
+		players.add(new User(10, "A really good friend"));
+		players.add(new User(12, "Also like an okay friend"));
+		players.add(new User(3, "Friend 3"));
+		players.add(new User(4, "Friend 4"));
 		info.put("friends", players);
 		return getModelAndView(info, FRIENDS_TEMPLATE, rq, rs);
 	}
@@ -303,8 +305,14 @@ public class TemplateHandler {
 	}
 	
 	private static ModelAndView renderLeaderboard(Request rq, Response rs) {
-		// TODO Auto-generated method stub
-		return getModelAndView(new HashMap<String, Object>(), LEADERBOARD_TEMPLATE, rq, rs);
+		// TODO real things
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		List<Player> players = new LinkedList<Player>();
+		players.add(new User(3, "ImNumberOne@test.com"));
+		players.add(new User(4, "two@email.com"));
+		players.add(new User(5, "thirdistheonewiththetreasurechest@gmail.com"));
+		info.put("players", players);
+		return getModelAndView(info, LEADERBOARD_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView getModelAndView(HashMap<String, Object> info, String templateName, Request rq, Response rs){
