@@ -257,4 +257,45 @@ public class Test {
     	Assert.isTrue(mostRecent.getMovingName().equals("Moving Pile"), "Most recent moving pile.");
     	Assert.isTrue(mostRecent.getDestinationName().equals(spoof.getName()), "Most recent destination");
     }
+    
+    public void testApplyMoveInvalidMove(){
+    	List<Player> players = new LinkedList<Player>();
+    	players.add(new User(0, "Test user 0"));
+    	players.add(new User(1, "Test user 1"));
+    	players.add(new User(2, "Test user 2"));
+    	KingsCorner kc = new KingsCorner(0, players);
+    	KCGameState gs = (KCGameState) kc.getGameState();
+    	
+    	Pile spoof = new Pile("Spoof North Pile");
+    	spoof.addOn(Card.make(10, Card.Suit.CLUB));
+    	gs.piles.put(Integer.toString(PileIds.NORTH_PILE.ordinal()), spoof);
+    	Pile user0Hand = gs.userHands.get(Integer.toString(players.get(0).get_id()));
+    	Card toMove = Card.make(7, Card.Suit.DIAMOND);
+    	if(!user0Hand.contains(toMove)){
+    		user0Hand.add(toMove);
+    	}
+    	
+    	Pile moving = new Pile("Moving Pile");
+    	moving.add(toMove);
+    	
+    	Move move = new KCMove(players.get(0), user0Hand, moving, spoof);
+    	
+    	Assert.isTrue(!move.isValid(), "This should be an invalid move.");
+    	Assert.isTrue(!kc.applyMove(move), "This is not a valid move, so return should be false.");
+    }
+    
+    public void testGameOverConditions(){
+    	List<Player> players = new LinkedList<Player>();
+    	players.add(new User(0, "Test user 0"));
+    	players.add(new User(1, "Test user 1"));
+    	players.add(new User(2, "Test user 2"));
+    	KingsCorner kc = new KingsCorner(0, players);
+    	KCGameState gs = kc.getGameState();
+
+    	Assert.isTrue(!kc.gameIsOver(), "The intial game should not be over");
+    	
+    	gs.userHands.put(Integer.toString(players.get(0).get_id()), new Pile("Empty Pile"));
+    	
+    	Assert.isTrue(kc.gameIsOver(), "The game should be over");
+    }
 }
