@@ -1,4 +1,4 @@
-package templates;
+package cardswithfriends;
 
 import static spark.Spark.before;
 import static spark.Spark.get;
@@ -8,12 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import cardswithfriends.ArtificialPlayer;
-import cardswithfriends.DBHandler;
-import cardswithfriends.GlobalConstants;
-import cardswithfriends.KingsCorner;
-import cardswithfriends.Player;
-import cardswithfriends.User;
 import cardswithfriends.views.GameView;
 import cardswithfriends.views.KingsCornerView;
 import spark.ModelAndView;
