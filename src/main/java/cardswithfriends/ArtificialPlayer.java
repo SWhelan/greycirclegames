@@ -29,12 +29,12 @@ public class ArtificialPlayer implements Player {
 	}
 
 	//perhaps move to KCGameState?
-	public Pile retrieveAIHand(KCGameState gamestate) {
-		Map<String, Pile) allPiles = gamestate.getPiles();
+	private Pile retrieveAIHand(KCGameState gamestate) {
+		Map<String, Pile> allPiles = gamestate.getPiles();
 		return allPiles.get(Integer.toString(playerID));
 	}
 	//perhaps move to KCGameState?
-	public Map<String, Pile> retrieveTablePiles(KCGameState gameState) {
+	private Map<String, Pile> retrieveTablePiles(KCGameState gameState) {
 		Map<String, Pile> tablePiles = new HashMap<String, Pile>();
 		Map<String, Pile> allPiles = gameState.getPiles();
 		tablePiles.put(PileIds.EAST_PILE.ordinal(), allPiles.get(PileIds.EAST_PILE.ordinal()));
