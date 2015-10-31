@@ -39,7 +39,7 @@ public class Card extends ReflectionDBObject {
 	}
 	public void encodeSuit(Suit suit) {
 		this.suitOrdinal = suit.ordinal();
-	};
+	}
 	public int getSuitOrdinal() {
 		return suitOrdinal;
 	}
