@@ -1,0 +1,184 @@
+{{> header}}
+{{#game}}
+<div class="row">
+	<!-- The Other Player's Piles -->
+	{{#otherPlayers}}
+		{{this}}
+			<div class="pile col-md-3">
+				<div class="card" number="{{number}}" suit="{{suit.displayName}}">
+					This player has {{size}} cards left.
+				</div>
+			</div>
+		{{this}}
+	{{/otherPlayers}}
+</div>
+<div class="row">
+	<!-- The NorthWest, North, and North East Piles -->
+	<div class="gamePile pile col-md-3" pile="NORTH_WEST_PILE">
+		{{#northWestPile}}
+			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
+			{{number}} {{{suit.html}}}
+			</div>
+		{{/northWestPile}}
+		{{^northWestPile}}
+			<div class="emptyPile"></div>
+		{{/northWestPile}}
+	</div>
+	<div class="gamePile pile col-md-3" pile="NORTH_PILE">
+		{{#northPile}}
+			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
+			{{number}} {{{suit.html}}}
+			</div>
+		{{/northPile}}
+		{{^northPile}}
+			<div class="emptyPile"></div>
+		{{/northPile}}
+	</div>
+	<div class="gamePile pile col-md-3" pile="NORTH_EAST_PILE">
+		{{#northEastPile}}
+			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
+			{{number}} {{{suit.html}}}
+			</div>
+		{{/northEastPile}}
+		{{^northEastPile}}
+			<div class="emptyPile"></div>
+		{{/northEastPile}}
+	</div>
+</div>
+<div class="row">
+	<!-- The West, Draw, and East Piles -->
+	<div class="gamePile pile col-md-3" pile="WEST_PILE">
+		{{#westPile}}
+			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
+			{{number}} {{{suit.html}}}
+			</div>
+		{{/westPile}}
+		{{^westPile}}
+			<div class="emptyPile"></div>
+		{{/westPile}}
+	</div>
+	<div id="drawPile" class="pile card col-md-3" pile="DRAW_PILE">Draw Pile - {{drawPile.size}}</div>
+	<div class="gamePile pile col-md-3" pile="EAST_PILE">
+		{{#eastPile}}
+			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
+			{{number}} {{{suit.html}}}
+			</div>
+		{{/eastPile}}
+		{{^eastPile}}
+			<div class="emptyPile"></div>
+		{{/eastPile}}
+	</div>
+</div>
+<div class="row">
+	<!-- The SouthWest, South, and SouthEast Pile -->
+	<div class="gamePile pile col-md-3" pile="SOUTH_WEST_PILE">
+		{{#southWestPile}}
+			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
+			{{number}} {{{suit.html}}}
+			</div>
+		{{/southWestPile}}
+		{{^southWestPile}}
+			<div class="emptyPile"></div>
+		{{/southWestPile}}
+	</div>
+	<div class="gamePile pile col-md-3" pile="SOUTH_PILE">
+		{{#southPile}}
+			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
+			{{number}} {{{suit.html}}}
+			</div>
+		{{/southPile}}
+		{{^southPile}}
+			<div class="emptyPile"></div>
+		{{/southPile}}
+	</div>
+	<div class="gamePile pile col-md-3" pile="SOUTH_EAST_PILE">
+		{{#southEastPile}}
+			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
+			{{number}} {{{suit.html}}}
+			</div>
+		{{/southEastPile}}
+		{{^southEastPile}}
+			<div class="emptyPile"></div>
+		{{/southEastPile}}		
+	</div>
+</div>
+<div class="row">
+Your hand:
+<div class="viewingHand">
+	{{#userHand}}
+		<div class="userCard card col-md-3" number="{{number}}" suit="{{suit.displayName}}">
+		{{number}} {{{suit.html}}}
+		</div>
+	{{/userHand}}
+</div>
+</div>
+
+<script type = text/javascript>
+	$("#drawPile").click(function (){
+		turnForm=document.createElement('FORM');
+		turnForm.name='turn';
+		turnForm.method='POST';
+		turnForm.action='/turn';
+		
+		hiddenElement=document.createElement('INPUT');
+		hiddenElement.type='HIDDEN';
+		hiddenElement.name='gameId';
+		hiddenElement.value={{gameId}}
+		turnForm.appendChild(hiddenElement);
+		turnForm.submit();
+	});
+
+	var selectedCard;
+	$(".userCard").click(function (){
+		if($(this).hasClass("clicked")){
+			$(this).removeClass("clicked");
+			selectedCard = null;
+		} else if(!selectedCard){
+			$(this).addClass("clicked");
+			selectedCard = $(this);
+		} else {
+			selectedCard.removeClass("clicked");
+			$(this).addClass("clicked");
+			selectedCard = $(this);
+		}
+	});
+	
+	$(".gamePile").click(function (){
+		if($(this).hasClass("pileClicked")){
+			$(this).removeClass("pileClicked");
+		} else {
+			$(this).addClass("pileClicked");
+		}
+		
+		if(selectedCard){
+			moveForm=document.createElement('FORM');
+			moveForm.name='makeMove';
+			moveForm.method='POST';
+			moveForm.action='/makeMove';
+
+			hiddenElement=document.createElement('INPUT');
+			hiddenElement.type='HIDDEN';
+			hiddenElement.name='number';
+			hiddenElement.value=selectedCard.attr("number");
+			moveForm.appendChild(hiddenElement);
+			hiddenElement=document.createElement('INPUT');
+			hiddenElement.type='HIDDEN';
+			hiddenElement.name='suit';
+			hiddenElement.value=selectedCard.attr("suit");
+			moveForm.appendChild(hiddenElement);
+			hiddenElement=document.createElement('INPUT');
+			hiddenElement.type='HIDDEN';
+			hiddenElement.name='pile';
+			hiddenElement.value=$(this).attr("pile");
+			moveForm.appendChild(hiddenElement);
+			hiddenElement=document.createElement('INPUT');
+			hiddenElement.type='HIDDEN';
+			hiddenElement.name='gameId';
+			hiddenElement.value={{gameId}}
+			moveForm.appendChild(hiddenElement);
+			moveForm.submit();
+		}
+	});	
+</script>
+{{/game}}
+{{> footer}}

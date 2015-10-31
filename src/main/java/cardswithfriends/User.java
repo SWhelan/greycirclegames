@@ -28,8 +28,8 @@ public class User extends ReflectionDBObject implements Player {
 		this.email = email;
 	}
 	
-	public User(int _id, String userName) {
-		this(_id, userName, null, null, null);
+	public User(int _id, String email) {
+		this(_id, email, null, null, email);
 	}
 
 	public User(DBObject obj) {
@@ -170,7 +170,7 @@ public class User extends ReflectionDBObject implements Player {
 		}
 	}
 	
-	public boolean checkPassword(String password) {
+	public boolean passwordMatches(String password) {
 		return this.password.equals(hashPassword(this.salt, password));
 	}
 }

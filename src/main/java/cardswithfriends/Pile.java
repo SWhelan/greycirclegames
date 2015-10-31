@@ -96,9 +96,17 @@ public class Pile extends ReflectionDBObject {
 	public boolean equals(Object o){
 		if(o instanceof Pile){
 			Pile p = (Pile) o;
-			return p.cards.equals(this.cards);
+			return this.cardsAreEqual(p);
 		}
 		return false;
+	}
+	
+	public boolean cardsAreEqual(Pile p){
+		return p.cards.equals((this.cards));
+	}
+	
+	public boolean namesAreEqual(Pile p){
+		return p.getName().equals(this.getName());
 	}
 	
 }

@@ -35,8 +35,8 @@ public class Test {
     	User user = new User(1, "Test");
     	user.setSalt(User.generateSalt());
     	user.setPassword(User.hashPassword(user.getSalt(), "password"));
-    	Assert.isTrue(user.checkPassword("password"), "Method should return true for password matches.");
-    	Assert.isTrue(!user.checkPassword("not the right password"), "Method should return false for incorrect passwords.");
+    	Assert.isTrue(user.passwordMatches("password"), "Method should return true for password matches.");
+    	Assert.isTrue(!user.passwordMatches("not the right password"), "Method should return false for incorrect passwords.");
     }
     
     /*
@@ -215,5 +215,87 @@ public class Test {
     	Assert.isTrue(currentPlayerHand.size() == 8, "Ending a turn should draw a card.");
     	Assert.isTrue(currentPlayerHand.contains(topCard), "The top card in the draw pile should be drawn.");
     	
+    }
+    
+    public void testApplyMove(){
+    	List<Player> players = new LinkedList<Player>();
+    	players.add(new User(0, "Test user 0"));
+    	players.add(new User(1, "Test user 1"));
+    	players.add(new User(2, "Test user 2"));
+    	KingsCorner kc = new KingsCorner(0, players);
+    	KCGameState gs = (KCGameState) kc.getGameState();
+    	
+    	Pile spoof = new Pile("Spoof North Pile");
+    	spoof.addOn(Card.make(8, Card.Suit.CLUB));
+    	gs.piles.put(Integer.toString(PileIds.NORTH_PILE.ordinal()), spoof);
+    	Pile user0Hand = gs.userHands.get(Integer.toString(players.get(0).get_id()));
+    	Card toMove = Card.make(7, Card.Suit.DIAMOND);
+    	if(!user0Hand.contains(toMove)){
+    		user0Hand.add(toMove);
+    	}
+    	
+    	Pile moving = new Pile("Moving Pile");
+    	moving.add(toMove);
+    	
+    	Move move = new KCMove(players.get(0), user0Hand, moving, spoof);
+    	
+    	Assert.isTrue(move.isValid(), "This should be a valid move.");
+    	Assert.isTrue(kc.applyMove(move), "This is a valid move and the game should not be over, so return should be true.");
+    	
+    	Assert.isTrue(!user0Hand.contains(toMove), "Card should not be in user hand.");
+    	Assert.isTrue(!user0Hand.containsAll(moving), "Card should not be in user hand.");
+    	
+    	Pile expected = new Pile("Expected pile.");
+    	expected.addOn(Card.make(8, Card.Suit.CLUB));
+    	expected.addOn(toMove);
+    	Assert.isTrue(expected.equals(spoof), "We expect this pile.");
+    	List<Move> moves = kc.getMoves();
+    	Move mostRecent = moves.get(moves.size()-1);
+    	
+    	Assert.isTrue(mostRecent.getPlayerName().equals("Test user 0"), "Most recent's player is 0.");
+    	Assert.isTrue(mostRecent.getOriginName().equals(user0Hand.getName()), "Most recent origin is user 0 hand.");
+    	Assert.isTrue(mostRecent.getMovingName().equals("Moving Pile"), "Most recent moving pile.");
+    	Assert.isTrue(mostRecent.getDestinationName().equals(spoof.getName()), "Most recent destination");
+    }
+    
+    public void testApplyMoveInvalidMove(){
+    	List<Player> players = new LinkedList<Player>();
+    	players.add(new User(0, "Test user 0"));
+    	players.add(new User(1, "Test user 1"));
+    	players.add(new User(2, "Test user 2"));
+    	KingsCorner kc = new KingsCorner(0, players);
+    	KCGameState gs = (KCGameState) kc.getGameState();
+    	
+    	Pile spoof = new Pile("Spoof North Pile");
+    	spoof.addOn(Card.make(10, Card.Suit.CLUB));
+    	gs.piles.put(Integer.toString(PileIds.NORTH_PILE.ordinal()), spoof);
+    	Pile user0Hand = gs.userHands.get(Integer.toString(players.get(0).get_id()));
+    	Card toMove = Card.make(7, Card.Suit.DIAMOND);
+    	if(!user0Hand.contains(toMove)){
+    		user0Hand.add(toMove);
+    	}
+    	
+    	Pile moving = new Pile("Moving Pile");
+    	moving.add(toMove);
+    	
+    	Move move = new KCMove(players.get(0), user0Hand, moving, spoof);
+    	
+    	Assert.isTrue(!move.isValid(), "This should be an invalid move.");
+    	Assert.isTrue(!kc.applyMove(move), "This is not a valid move, so return should be false.");
+    }
+    
+    public void testGameOverConditions(){
+    	List<Player> players = new LinkedList<Player>();
+    	players.add(new User(0, "Test user 0"));
+    	players.add(new User(1, "Test user 1"));
+    	players.add(new User(2, "Test user 2"));
+    	KingsCorner kc = new KingsCorner(0, players);
+    	KCGameState gs = kc.getGameState();
+
+    	Assert.isTrue(!kc.gameIsOver(), "The intial game should not be over");
+    	
+    	gs.userHands.put(Integer.toString(players.get(0).get_id()), new Pile("Empty Pile"));
+    	
+    	Assert.isTrue(kc.gameIsOver(), "The game should be over");
     }
 }

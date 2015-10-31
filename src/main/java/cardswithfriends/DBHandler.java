@@ -4,6 +4,7 @@
 package cardswithfriends;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -12,7 +13,6 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.ReflectionDBObject;
 
 public class DBHandler {
 	//CRUD operations for java classes
@@ -38,14 +38,18 @@ public class DBHandler {
     	DBCollection coll = db.getCollection("users");
     	DBObject query = new BasicDBObject("_id", userID);
     	DBCursor cursor = coll.find(query);
-    	DBObject obj = cursor.next();
-    	return new User(obj);
+    	try {
+    		DBObject obj = cursor.next();
+    		return new User(obj);
+    	} catch (NoSuchElementException e) {
+    		return null;
+    	}
 	}
 	
 	public static User getUserByEmail(String email){
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("users");
-		DBObject query = new BasicDBObject("email", email);
+		DBObject query = new BasicDBObject("Email", email);
 		DBCursor cursor = coll.find(query);
 		try {
 			DBObject obj = cursor.next();
@@ -87,7 +91,7 @@ public class DBHandler {
 	}
 	
 	//in the update section because it creates/updates and gets
-	public static int getNextID(String idName) {
+	private static int getNextID(String idName) {
 		DB db = DatabaseConnector.getMongoDB();
     	DBCollection coll = db.getCollection("ids");
     	DBObject query = new BasicDBObject("name", idName);
@@ -183,9 +187,21 @@ public class DBHandler {
 //    	User getUserByEmail(String email
 //    	List<KingsCorner> getKCGamesforUser(int userId
     	
-    	
-    	
-    	
 
     }
+
+	public static List<Player> getFriendsForUser(int userId) {
+		// TODO Auto-generated method stub
+		return new LinkedList<Player>();
+	}
+
+	public static boolean addFriend(Player user1, Player user2){
+		// TODO Auto-generated method stub
+		return true;
+	}
+	
+	public static boolean removeFriend(Player user1, Player user2) {
+		// TODO Auto-generated method stub
+		return true;
+	}
 }

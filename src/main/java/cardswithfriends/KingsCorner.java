@@ -3,8 +3,6 @@ package cardswithfriends;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mongodb.DBObject;
-
 public class KingsCorner extends Game{
 	public List<Player> turnOrder;
 	private int currentPlayer;

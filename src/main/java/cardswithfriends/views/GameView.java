@@ -11,6 +11,7 @@ import cardswithfriends.PileIds;
 import cardswithfriends.Player;
 
 public class GameView {
+	Integer gameId;
 	List<Card> userHand;
 	List<List<Card>> otherPlayers = new LinkedList<List<Card>>();
 	List<Card> drawPile;
@@ -26,6 +27,7 @@ public class GameView {
 	List<Card> northWestPile;
 	
 	public GameView(KingsCorner game, Player viewingPlayer){
+		gameId = game.get_id();
 		game.getPlayers().stream().forEach((e) -> { 
 			if(e.equals(viewingPlayer)){
 				userHand = game.getGameState().userHands.get(Integer.toString(viewingPlayer.get_id())).getCards();

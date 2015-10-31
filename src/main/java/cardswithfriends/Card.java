@@ -13,7 +13,7 @@ public class Card extends ReflectionDBObject {
 	//Still need to keep the suit on the class to access from mustache templates
 	private Suit suit;
 	
-	private Card(int number, Suit suit) {
+	public Card(int number, Suit suit) {
 		super();
 		this.number = number;
 		this.suitOrdinal = suit.ordinal();
@@ -21,7 +21,7 @@ public class Card extends ReflectionDBObject {
 	}
 	
 	public static Card make(int number, Suit suit) throws IllegalArgumentException {
-		if(number > 0 && number < 14){
+		if(suit != null && number > 0 && number < 14){
 			return new Card(number, suit);
 		} else {
 			throw new IllegalArgumentException();

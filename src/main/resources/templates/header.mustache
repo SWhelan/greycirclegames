@@ -26,17 +26,29 @@
           <ul class="nav navbar-nav">
             <li><a href="/">Home</a></li>
             <li><a href="/tutorial">About</a></li>
+            {{#loggedIn}}
+            	<li><a href="/games">Current Games</a></li>
+            	<li><a href="/new">New Game</a></li>
+            	<li><a href="/friends">Friends</a></li>
+            	<li><a href="/leaderboard">Leaderboard</a></li>
+            {{/loggedIn}}
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/login">Login</a></li>
+          	{{#loggedIn}}
+          		<li><a href="/logout">Logout</a></li>
+          	{{/loggedIn}}
+          	{{^loggedIn}}
+          		<li><a href="/register">Register</a></li>
+            	<li><a href="/login">Login</a></li>
+            {{/loggedIn}}
           </ul>
         </div><!--/.nav-collapse -->
       </div>
     </nav>
     <div class="container">
-    {{#error}}
-    <div class="alert alert-danger" role="alert">{{error}}</div>
-    {{/error}}
+    {{#failure}}
+    <div class="alert alert-danger" role="alert">{{.}}</div>
+    {{/failure}}
     {{#success}}
-    <div class="alert alert-success" role="alert">{{success}}</div>
+    <div class="alert alert-success" role="alert">{{.}}</div>
     {{/success}}
