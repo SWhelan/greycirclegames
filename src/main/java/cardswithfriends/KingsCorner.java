@@ -15,7 +15,7 @@ public class KingsCorner extends Game{
 	}
 	
 	private KingsCorner(KingsCornerGenerator kc){
-		super(kc.gameId, kc.gs, kc.moves, kc.players);
+		super(kc.gameId, kc.gs, kc.moves, kc.players, kc.active);
 		turnOrder = kc.getTurnOrder();
 		currentPlayer = kc.currentPlayer;
 	}
@@ -87,8 +87,13 @@ public class KingsCorner extends Game{
 		public List<Move> moves;
 		public List<Player> players;
 		public int currentPlayer;
+		public boolean active;
 		public List<Player> getTurnOrder(){
 			return null;
+		}
+		
+		public KingsCorner build(){
+			return new KingsCorner(this);
 		}
 	}
 
@@ -106,5 +111,12 @@ public class KingsCorner extends Game{
 			}
 		}
 		return false;
+	}
+	
+	public Player getWinner(){
+		if(gameIsOver()){
+			return getCurrentPlayerObject();
+		}
+		return null;
 	}
 }

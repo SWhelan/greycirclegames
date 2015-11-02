@@ -21,6 +21,7 @@ public abstract class Game extends ReflectionDBObject{
 	private List<Move> moves;
 	//The list of players
 	private List<Player> players;
+	protected boolean isActive;
 	
 	//Make a completely new game
 	public Game(int _id, List<Player> players){
@@ -28,14 +29,16 @@ public abstract class Game extends ReflectionDBObject{
 		this.gameState = newGameState(players);
 		this.moves = new LinkedList<Move>();
 		this.players = players;
+		isActive = true;
 	}
 	
 	//Make a pre-existing game
-	public Game(int _id, GameState gameState, List<Move> moves, List<Player> players){
+	public Game(int _id, GameState gameState, List<Move> moves, List<Player> players, boolean active){
 		this._id = _id;
 		this.gameState = gameState;
 		this.moves = moves;
 		this.players = players;
+		this.isActive = active;
 	}
 
 	//A game state for a completely new game
