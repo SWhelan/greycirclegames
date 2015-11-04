@@ -52,12 +52,28 @@ public class Card extends ReflectionDBObject {
 	}
 	
 	@Override
-	public boolean equals(Object o){
-		if(o instanceof Card){
-			Card other = (Card) o;
-			return other.getNumber() == this.getNumber() && other.decodeSuit() == this.decodeSuit();
-		}
-		return false;
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Card other = (Card) obj;
+		if (number != other.number)
+			return false;
+		if (suit != other.suit)
+			return false;
+		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + number;
+		result = prime * result + ((suit == null) ? 0 : suit.hashCode());
+		return result;
 	}
 
 	//The two must have different names since we don't want ReflectionDBObject to try to put in the db.
