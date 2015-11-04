@@ -1,6 +1,7 @@
 package cardswithfriends;
 
 import static spark.Spark.before;
+import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
@@ -30,7 +31,7 @@ public class TemplateHandler {
 	public static void registerTemplates(){
 		get("/", 			(rq, rs) -> renderHome(rq, rs), 		new MustacheTemplateEngine());
         get("/login", 		(rq, rs) -> renderLogin(rq, rs), 		new MustacheTemplateEngine());
-        get("/logout", 		(rq, rs) -> logout(rq, rs), 			new MustacheTemplateEngine());
+        get("/logout", 		(rq, rs) -> logout(rq, rs));
         get("/register", 	(rq, rs) -> renderRegister(rq, rs), 	new MustacheTemplateEngine());
         get("/new", 		(rq, rs) -> renderCreateGame(rq, rs), 	new MustacheTemplateEngine());
         get("/game/:id",	(rq, rs) -> renderGame(rq, rs), 		new MustacheTemplateEngine());
@@ -52,13 +53,17 @@ public class TemplateHandler {
         post("/removeFriend", (rq, rs) -> postRemoveFriend(rq, rs), new MustacheTemplateEngine());
         get("/friends/:id", (rq, rs) -> renderFriendInfo(rq, rs), new MustacheTemplateEngine());
         post("/turn", (rq, rs) -> postTurn(rq, rs), new MustacheTemplateEngine());
-        /*get("/*", (rq, rs) -> {
-            throw new Exception();
+        get("/*", (rq, rs) -> {
+        	if(!rq.pathInfo().contains("main.css")){
+        		throw new Exception();
+        	} else {
+        		return null;
+        	}
         });
         exception(Exception.class, (e, rq, rs) -> {
             rs.status(404);
             rs.redirect("/");
-        });*/
+        });
 	}
 	
 	private static ModelAndView postTurn(Request rq, Response rs) {
@@ -164,7 +169,7 @@ public class TemplateHandler {
 			rs.redirect("/games");
 		}
 		rs.header(GlobalConstants.DISPLAY_ERROR, "Your username or password is incorrect.");
-		return renderLogin(rq, rs);		
+		return renderLogin(rq, rs);
 	}
 	
 	private static boolean isLoggedIn(Request rq){
@@ -228,9 +233,9 @@ public class TemplateHandler {
 	}
 	
 	private static ModelAndView logout(Request rq, Response rs) {
-		rs.header(GlobalConstants.DISPLAY_SUCCESS, "Successfully logged out.");
 		rs.removeCookie(GlobalConstants.USER_COOKIE_KEY);
-		return getModelAndView(new HashMap<String, Object>(), HOME_TEMPLATE, rq, rs);
+		rs.redirect("/");
+		return null;
 	}
 
 	private static ModelAndView renderRegister(Request rq, Response rs) {

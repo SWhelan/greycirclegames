@@ -19,14 +19,6 @@ public class KingsCorner extends Game{
 		turnOrder = kc.getTurnOrder();
 		currentPlayer = kc.currentPlayer;
 	}
-
-//	public KingsCorner(DBObject obj) {
-//		this((Integer)obj.get("_id"),
-//				(String)obj.get("UserName"),
-//				(String)obj.get("Password"),
-//				(String)obj.get("Salt"),
-//				(String)obj.get("Email"));	
-//		}
 	
 	public int getCurrentPlayer(){
 		return currentPlayer;

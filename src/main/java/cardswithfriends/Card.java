@@ -4,6 +4,7 @@ import com.mongodb.ReflectionDBObject;
 
 public class Card extends ReflectionDBObject {
 	private int number;
+	private String displayNumber;
 	
 	//The ordinal vlaue of the suit (index, e.g. Spade is 1, Diamond is 2 ...)
 	//need to do this for enum to go into the db, mongo sucks with enums
@@ -18,6 +19,7 @@ public class Card extends ReflectionDBObject {
 		this.number = number;
 		this.suitOrdinal = suit.ordinal();
 		this.setSuit(suit);
+		setDisplayNumber();
 	}
 	
 	public static Card make(int number, Suit suit) throws IllegalArgumentException {
@@ -34,6 +36,23 @@ public class Card extends ReflectionDBObject {
 	public void setNumber(int number) {
 		this.number = number;
 	}
+	
+	private void setDisplayNumber(){
+		switch (number){
+			case 13: displayNumber = "K";
+				break;
+			case 12: displayNumber = "Q";
+				break;
+			case 11: displayNumber = "J";
+				break;
+			default: displayNumber = Integer.toString(number);
+		}
+	}
+	
+	public String getDisplayNumber(){
+		return this.displayNumber;
+	}
+	
 	public Suit decodeSuit() {
 		return Suit.values()[suitOrdinal];
 	}
