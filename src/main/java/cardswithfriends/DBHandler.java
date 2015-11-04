@@ -65,14 +65,14 @@ public class DBHandler {
     	DBObject query = new BasicDBObject("_id", gameID);
     	DBCursor cursor = coll.find(query);
     	DBObject obj = cursor.next();
-    	return null;//new KingsCorner(obj);
+    	return new KingsCorner(obj);
 	}
 	
 	public static List<KingsCorner> getKCGamesforUser(int userId){
 		return null;
 	}
 
-	public static Leaderboard getLeadBoard() {
+	public static Leaderboard getLeadboard() {
 		return new Leaderboard();
 	}
 	
@@ -85,9 +85,12 @@ public class DBHandler {
 	}
 	
 	public static void updateKCGame(KingsCorner game) {
+		DB db = DatabaseConnector.getMongoDB();
+    	DBCollection coll = db.getCollection("kcgames");
+    	coll.save(game);
 	}
 
-	public static void replaceLeaderBoard(Leaderboard leaderBoard) {
+	public static void replaceLeaderboard(Leaderboard leaderboard) {
 	}
 	
 	//in the update section because it creates/updates and gets
@@ -139,6 +142,10 @@ public class DBHandler {
 	}
 	
 	public static void deleteKCGame(int gameID) {
+		DB db = DatabaseConnector.getMongoDB();
+    	DBCollection coll = db.getCollection("kcgames");
+    	DBObject query = new BasicDBObject("_id", gameID);
+    	coll.remove(query);
 	}
 
     public static void runTJsTestCode() {

@@ -3,6 +3,9 @@ package cardswithfriends;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+
 public class KingsCorner extends Game{
 	public List<Player> turnOrder;
 	private int currentPlayer;
@@ -20,14 +23,41 @@ public class KingsCorner extends Game{
 		currentPlayer = kc.currentPlayer;
 	}
 
-//	public KingsCorner(DBObject obj) {
+	public KingsCorner(DBObject obj) {
+		//TODO replace with call to constructor below
+		this(69, new ArrayList<Player>());
+		
+		int id = (Integer)obj.get("_id");
+		int cp = (Integer)obj.get("CurrentPlayer");
+		
+		BasicDBObject b = (BasicDBObject)obj.get("GameState");
+		GameState gs = new KCGameState(b);
+//		(GameState)obj.get("Moves"),
+//		(GameState)obj.get("Players"),
+//		(GameState)obj.get("TurnOrder")
+		
+		int c = 7;
+		
+		
 //		this((Integer)obj.get("_id"),
-//				(String)obj.get("UserName"),
-//				(String)obj.get("Password"),
-//				(String)obj.get("Salt"),
-//				(String)obj.get("Email"));	
-//		}
+//				(Integer)obj.get("CurrentPlayer"),
+//				(GameState)obj.get("GameState"),
+//				(GameState)obj.get("Moves"),
+//				(GameState)obj.get("Players"),
+//				(GameState)obj.get("TurnOrder"));
+	}
+
 	
+	//TODO USE KC GENERATOR!
+	
+	
+	
+//	public KingsCorner(Integer _id, Integer currentPlayer, GameState gameState) {
+//		super(_id, gameState, moves, players);
+//		
+//		
+//	}
+
 	public int getCurrentPlayer(){
 		return currentPlayer;
 	}

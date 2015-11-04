@@ -17,7 +17,7 @@ public class Card extends ReflectionDBObject {
 		super();
 		this.number = number;
 		this.suitOrdinal = suit.ordinal();
-		this.setSuit(suit);
+		this.setEnumSuit(suit);
 	}
 	
 	public static Card make(int number, Suit suit) throws IllegalArgumentException {
@@ -60,11 +60,11 @@ public class Card extends ReflectionDBObject {
 		return false;
 	}
 
+	//The two must have different names since we don't want ReflectionDBObject to try to put in the db.
 	public Suit getSuit() {
 		return suit;
 	}
-
-	public void setSuit(Suit suit) {
+	public void setEnumSuit(Suit suit) {
 		this.suit = suit;
 	}
 

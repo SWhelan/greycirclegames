@@ -3,6 +3,9 @@ package cardswithfriends;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import com.mongodb.BasicDBObject;
 
 public class KCGameState extends GameState {
 	public Map<String, Pile> piles;
@@ -24,6 +27,20 @@ public class KCGameState extends GameState {
 		super();
 	}
 
+	public KCGameState(BasicDBObject obj) {
+		
+		BasicDBObject b = (BasicDBObject)obj.get("Piles");
+		
+		for (Entry<String, Object> entry : b.entrySet()) {
+			piles = new HashMap<String, Pile>();
+			
+			
+		}
+		
+		int c = 7;
+		
+		
+	}
 	public Map<String, Pile> getPlayerHands() {
 		return userHands;
 	}
