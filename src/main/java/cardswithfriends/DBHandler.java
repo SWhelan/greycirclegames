@@ -125,13 +125,6 @@ public class DBHandler {
 		return getNextID("nextKCGameID");
 	}
 	
-	
-	
-	
-	
-	
-	
-	
 	//DELETE
 	////////////////////////////////////////////////////////////
 	public static void deleteUser(int userID) {
@@ -150,43 +143,62 @@ public class DBHandler {
 
     public static void runTJsTestCode() {
     	
-    	System.out.println("TEST");
-
+    	System.out.println("Running jank db test code");
     	
-    	
-    	
-    	
+//Test user
+//////////////////////////////////////////////////////////////////////////////////////
 //        User user = new User(42,"goduser", "word", "salt", "email@gmail.com");
 //    	DBHandler.createUser(user);
 //    	User u = getUser(42);
 //    	u.setUserName("user2");
 //    	updateUser(u);
 //    	deleteUser(42);
+//////////////////////////////////////////////////////////////////////////////////////
 
-    	ArrayList<Player> playerList = new ArrayList<Player>();
-    	playerList.add(new User(43,"username", "word", "salt", "43email@gmail.com"));
-    	playerList.add(new User(44,"username", "word", "salt", "44email@gmail.com"));
-    	playerList.add(new User(45,"username", "word", "salt", "45email@gmail.com"));
-    	
-    	KingsCorner game = new KingsCorner(142, playerList);
-    	DBHandler.createKCGame(game);
-    	try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-    	KingsCorner kc = getKCGame(142);
-    	kc.turnOrder = null;
-    	updateKCGame(kc);
-    	deleteKCGame(143);
-    	
-    	int c = 7;
-    	
+//Test kcgame
+//////////////////////////////////////////////////////////////////////////////////////
+//    	ArrayList<Player> playerList = new ArrayList<Player>();
+//    	Player p1 = new User(43,"username", "word", "salt", "43email@gmail.com");
+//    	playerList.add(p1);
+//    	playerList.add(new User(44,"username", "word", "salt", "44email@gmail.com"));
+//    	playerList.add(new User(45,"username", "word", "salt", "45email@gmail.com"));
 //    	
+//    	Pile pile1 = new Pile("pile one");
+//    	Pile pile2 = new Pile("pile two");
+//    	Pile pile3 = new Pile("pile three");
+//
+//    	KingsCorner game = new KingsCorner(142, playerList);
+//    	game.addMove(new KCMove(p1, pile1, pile2, pile3));
+//    	
+//    	DBHandler.createKCGame(game);
+//    	try {
+//			Thread.sleep(3000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+//    	KingsCorner kc = getKCGame(142);
+//    	kc.turnOrder = null;
+//    	updateKCGame(kc);
+//    	deleteKCGame(142);
+//////////////////////////////////////////////////////////////////////////////////////
+
+    	
+    	
+    	
+//Test Leaderboard
+//////////////////////////////////////////////////////////////////////////////////////
+
 //    	createLeadBoard(LeaderBoard leaderBoard);
 //    	LeaderBoard getLeadBoard()
 //    	updateLeaderBoard(LeaderBoard leaderBoard) 
 //    	deleteLeaderBoard() 
+    	
+    	
+    	
+    	int c = 7;
+    	int x = c;
+//////////////////////////////////////////////////////////////////////////////////////
+
 
     	
     	

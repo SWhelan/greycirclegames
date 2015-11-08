@@ -1,8 +1,10 @@
 package cardswithfriends;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
@@ -23,40 +25,34 @@ public class KingsCorner extends Game{
 		currentPlayer = kc.currentPlayer;
 	}
 
+	//for creating a new kcgame from the mongo object
 	public KingsCorner(DBObject obj) {
-		//TODO replace with call to constructor below
-		this(69, new ArrayList<Player>());
 		
-		int id = (Integer)obj.get("_id");
-		int cp = (Integer)obj.get("CurrentPlayer");
+		this.currentPlayer = (Integer)obj.get("CurrentPlayer");
 		
-		BasicDBObject b = (BasicDBObject)obj.get("GameState");
-		GameState gs = new KCGameState(b);
-//		(GameState)obj.get("Moves"),
-//		(GameState)obj.get("Players"),
-//		(GameState)obj.get("TurnOrder")
+		BasicDBList turnOrder = (BasicDBList)obj.get("TurnOrder");
+		this.turnOrder = new LinkedList<Player>();
+		for (Object player : turnOrder) {
+			this.turnOrder.add(new User((BasicDBObject)player));
+		}
 		
-		int c = 7;
+		this._id = (Integer)obj.get("_id");
+		this.gameState = new KCGameState((BasicDBObject)obj.get("GameState"));
 		
+		BasicDBList moves = (BasicDBList)obj.get("Moves");
+		this.moves = new LinkedList<Move>();
+		for (Object move : moves) {
+			this.moves.add(new KCMove((BasicDBObject)move));
+		}
 		
-//		this((Integer)obj.get("_id"),
-//				(Integer)obj.get("CurrentPlayer"),
-//				(GameState)obj.get("GameState"),
-//				(GameState)obj.get("Moves"),
-//				(GameState)obj.get("Players"),
-//				(GameState)obj.get("TurnOrder"));
+		BasicDBList players = (BasicDBList)obj.get("Players");
+		this.players = new LinkedList<Player>();
+		for (Object player : players) {
+			this.players.add(new User((BasicDBObject)player));
+		}
+		
+		this.isActive = (Boolean)obj.get("IsActive");
 	}
-
-	
-	//TODO USE KC GENERATOR!
-	
-	
-	
-//	public KingsCorner(Integer _id, Integer currentPlayer, GameState gameState) {
-//		super(_id, gameState, moves, players);
-//		
-//		
-//	}
 
 	public int getCurrentPlayer(){
 		return currentPlayer;

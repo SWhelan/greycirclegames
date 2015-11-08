@@ -29,24 +29,19 @@ public class KCGameState extends GameState {
 
 	public KCGameState(BasicDBObject obj) {
 		
-		BasicDBObject b = (BasicDBObject)obj.get("Piles");
-		
-		for (Entry<String, Object> entry : b.entrySet()) {
-			piles = new HashMap<String, Pile>();
-			
-			
+		BasicDBObject piles = (BasicDBObject)obj.get("Piles");
+		this.piles = new HashMap<String, Pile>();
+		for (Entry<String, Object> entry : piles.entrySet()) {
+			this.piles.put(entry.getKey(), new Pile((BasicDBObject)entry.getValue()));
 		}
 		
-		int c = 7;
+		BasicDBObject userHands = (BasicDBObject)obj.get("UserHands");
+		this.userHands = new HashMap<String, Pile>();
+		for (Entry<String, Object> entry : userHands.entrySet()) {
+			this.userHands.put(entry.getKey(), new Pile((BasicDBObject)entry.getValue()));
+		}
 		
-		
-	}
-	public Map<String, Pile> getPlayerHands() {
-		return userHands;
-	}
-
-	public void setPlayerHands(Map<String, Pile> userHands) {
-		this.userHands = userHands;
+		this.turnNumber = (Integer)obj.get("TurnNumber");
 	}
 
 	public static class KCGameStateGenerator{

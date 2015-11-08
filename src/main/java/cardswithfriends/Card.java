@@ -1,5 +1,7 @@
 package cardswithfriends;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.ReflectionDBObject;
 
 public class Card extends ReflectionDBObject {
@@ -8,7 +10,7 @@ public class Card extends ReflectionDBObject {
 	//The ordinal vlaue of the suit (index, e.g. Spade is 1, Diamond is 2 ...)
 	//need to do this for enum to go into the db, mongo sucks with enums
 	//just use the decodeSuit/encodeSuit to access the enum
-	int suitOrdinal;
+	private int suitOrdinal;
 	
 	//Still need to keep the suit on the class to access from mustache templates
 	private Suit suit;
@@ -20,6 +22,12 @@ public class Card extends ReflectionDBObject {
 		this.setEnumSuit(suit);
 	}
 	
+	public Card(BasicDBObject obj) {
+		this.number = (Integer)obj.get("Number");
+		this.suitOrdinal = (Integer)obj.get("SuitOrdinal");
+		this.suit = decodeSuit();
+	}
+
 	public static Card make(int number, Suit suit) throws IllegalArgumentException {
 		if(suit != null && number > 0 && number < 14){
 			return new Card(number, suit);
