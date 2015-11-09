@@ -12,7 +12,7 @@
 	background-color: white;
 }
 
-.card:nth-child(1){
+.bottom{
 	margin-bottom: -60px;
 }
 
@@ -46,4 +46,12 @@
 
 .userCard{
 	margin: 10px;
+}
+
+.red {
+	color: red;
+}
+
+.hidden {
+	display: none;
 }

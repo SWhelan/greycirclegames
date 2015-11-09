@@ -9,4 +9,5 @@ public class GlobalConstants {
 	public static final String DISPLAY_ERROR = "failure";
 	public static final String DISPLAY_SUCCESS = "success";
 	public static final String USER_COOKIE_KEY = "id";
+	
 }

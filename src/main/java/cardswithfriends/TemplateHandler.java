@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import cardswithfriends.Card.Suit;
 import cardswithfriends.views.GameView;
+import cardswithfriends.views.KingsCornerView;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -49,8 +50,8 @@ public class TemplateHandler {
         });
         
         // Handle the GET requests by rendering the mustache template
-		get("/", 			(rq, rs) -> renderHome(rq, rs), 		new MustacheTemplateEngine());
-		get("/register", 	(rq, rs) -> renderRegister(rq, rs), 	new MustacheTemplateEngine());
+        get("/", 			(rq, rs) -> renderHome(rq, rs), 		new MustacheTemplateEngine());
+        get("/register", 	(rq, rs) -> renderRegister(rq, rs), 	new MustacheTemplateEngine());
         get("/login", 		(rq, rs) -> renderLogin(rq, rs), 		new MustacheTemplateEngine());
         get("/games", 		(rq, rs) -> renderGameList(rq, rs), 	new MustacheTemplateEngine());
         get("/game/:id",	(rq, rs) -> renderGame(rq, rs), 		new MustacheTemplateEngine());
@@ -65,8 +66,8 @@ public class TemplateHandler {
         post("/register", (rq, rs) -> postRegister(rq, rs), new MustacheTemplateEngine());
         post("/login", (rq, rs) -> postLogin(rq, rs), 	new MustacheTemplateEngine());
         post("/new", (rq, rs) -> postCreateGame(rq, rs), new MustacheTemplateEngine());        
-        post("/game/:id/move", (rq, rs) -> postMove(rq, rs), new MustacheTemplateEngine());
-        post("/game/:id/turn", (rq, rs) -> postTurn(rq, rs), new MustacheTemplateEngine());
+        post("/move", (rq, rs) -> postMove(rq, rs), new MustacheTemplateEngine());
+        post("/turn", (rq, rs) -> postTurn(rq, rs), new MustacheTemplateEngine());
         post("/addFriend", (rq, rs) -> postAddFriend(rq, rs), new MustacheTemplateEngine());
         post("/removeFriend", (rq, rs) -> postRemoveFriend(rq, rs), new MustacheTemplateEngine());
         
@@ -110,13 +111,21 @@ public class TemplateHandler {
 	
 	private static ModelAndView renderGameList(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		info.put("games", DBHandler.getKCGamesforUser(getUserIdFromCookies(rq)));
+		info.put("games", DBHandler.getKCGamesforUser(getUserIdFromCookies(rq))
+								.stream()
+								.map(e -> new KingsCornerView(e))
+								.collect(Collectors.toList()));
 		return getModelAndView(info, GAME_LIST_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView renderGame(Request rq, Response rs) {
-		HashMap<String, Object> info = new HashMap<String, Object>();
-		int gameId = Integer.parseInt(rq.params(":id"));
+		HashMap<String, Object> info = new HashMap<String, Object>();		
+		int gameId;
+		try {
+			gameId = Integer.parseInt(rq.queryParams("gameId"));
+		} catch (NumberFormatException e){
+			gameId = Integer.parseInt(rq.params(":id"));
+		}
 		info.put("game", new GameView(DBHandler.getKCGame(gameId), getUserFromCookies(rq)));
 		return getModelAndView(info, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
@@ -243,24 +252,36 @@ public class TemplateHandler {
 			// We are moving a player's card onto a game pile
 			Integer number = Integer.parseInt(rq.queryParams("number"));
 			String suit = rq.queryParams("suit");
-			moving.add(new Card(number, Suit.valueOf(suit)));
-			destination = game.getGameState().piles.get(Integer.parseInt(pile));
-			origin = game.getGameState().userHands.get(player.get_id());
+			moving.add(new Card(number, Arrays.stream(Suit.values())
+											.filter(e -> e.getDisplayName().equals(suit))
+											.collect(Collectors.toList())
+											.get(0)));
+			destination = game.getGameState().piles.get(getPileKeyFromString(pile));
+			origin = game.getGameState().userHands.get(Integer.toString(player.get_id()));
 		} else {
 			// We are moving a game pile to another game pile
-			Pile pile1 = game.getGameState().piles.get(Integer.parseInt(pile));
+			Pile pile1 = game.getGameState().piles.get(getPileKeyFromString(pile));
 			String pile2 = rq.queryParams("pile2");
-			destination = game.getGameState().piles.get(Integer.parseInt(pile2));
+			destination = game.getGameState().piles.get(getPileKeyFromString(pile2));
 			origin = pile1;
 			moving.addAll(pile1);
 		}
 		Move move = new KCMove(player, origin, moving, destination);
 		if(game.applyMove(move)){
-			rs.header(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied succefully.");
+			if(!game.getIsActive()){
+				rs.header(GlobalConstants.DISPLAY_SUCCESS, "The game is over and you won!");
+			} else {
+				rs.header(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied succefully.");
+			}
 		} else {
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Move was invalid and and not applied.");
 		}
+		DBHandler.updateKCGame(game);
 		return renderGame(rq, rs);
+	}
+	
+	private static String getPileKeyFromString(String name){
+		return Integer.toString(Arrays.stream(PileIds.values()).filter(e -> e.name().equals(name)).collect(Collectors.toList()).get(0).ordinal());
 	}
 	
 	private static ModelAndView postTurn(Request rq, Response rs) {
