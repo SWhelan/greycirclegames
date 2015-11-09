@@ -2,4 +2,4 @@
 *.log
 *.prefs
 target/*
-.DS_Store
+*.DS_Store
