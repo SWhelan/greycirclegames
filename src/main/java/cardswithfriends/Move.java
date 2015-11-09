@@ -1,14 +1,16 @@
 package cardswithfriends;
 
-import java.io.Serializable;
+import com.mongodb.ReflectionDBObject;
 
-public abstract class Move implements Serializable{
-	private static final long serialVersionUID = 1L;
-	private final Player player;
-	protected final Pile origin;
-	protected final Pile moving;
-	protected final Pile destination;
+public abstract class Move extends ReflectionDBObject {
+	protected Player player;
+	protected Pile origin;
+	protected Pile moving;
+	protected Pile destination;
 
+	//default constructor
+	public Move(){}
+	
 	/**
 	 * 
 	 * @param user
@@ -23,6 +25,31 @@ public abstract class Move implements Serializable{
 		this.destination = destination;
 	}
 	
+	public Player getPlayer() {
+		return player;
+	}
+	public void setPlayer(Player player) {
+		this.player = player;
+	}
+	public Pile getOrigin() {
+		return origin;
+	}
+	public void setOrigin(Pile origin) {
+		this.origin = origin;
+	}
+	public Pile getMoving() {
+		return moving;
+	}
+	public void setMoving(Pile moving) {
+		this.moving = moving;
+	}
+	public Pile getDestination() {
+		return destination;
+	}
+	public void setDestination(Pile destination) {
+		this.destination = destination;
+	}
+
 	public String getPlayerName() {
 		return player.getUserName();
 	}

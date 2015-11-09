@@ -1,10 +1,18 @@
 package cardswithfriends;
 
+import com.mongodb.BasicDBObject;
+
 public class KCMove extends Move {
-	private static final long serialVersionUID = 1L;
 
 	public KCMove(Player player, Pile origin, Pile moving, Pile destination){
 		super(player, origin, moving, destination);
+	}
+
+	public KCMove(BasicDBObject obj) {
+		this.origin = new Pile((BasicDBObject)obj.get("Origin"));
+		this.moving = new Pile((BasicDBObject)obj.get("Moving"));
+		this.destination = new Pile((BasicDBObject)obj.get("Destination"));
+		this.player = new User((BasicDBObject)obj.get("Player"));
 	}
 
 	@Override

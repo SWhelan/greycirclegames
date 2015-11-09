@@ -1,7 +1,12 @@
 package cardswithfriends;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 
 public class KingsCorner extends Game{
 	public List<Player> turnOrder;
@@ -19,7 +24,36 @@ public class KingsCorner extends Game{
 		turnOrder = kc.getTurnOrder();
 		currentPlayer = kc.currentPlayer;
 	}
-	
+
+	//for creating a new kcgame from the mongo object
+	public KingsCorner(DBObject obj) {
+		
+		this.currentPlayer = (Integer)obj.get("CurrentPlayer");
+		
+		BasicDBList turnOrder = (BasicDBList)obj.get("TurnOrder");
+		this.turnOrder = new LinkedList<Player>();
+		for (Object player : turnOrder) {
+			this.turnOrder.add(new User((BasicDBObject)player));
+		}
+		
+		this._id = (Integer)obj.get("_id");
+		this.gameState = new KCGameState((BasicDBObject)obj.get("GameState"));
+		
+		BasicDBList moves = (BasicDBList)obj.get("Moves");
+		this.moves = new LinkedList<Move>();
+		for (Object move : moves) {
+			this.moves.add(new KCMove((BasicDBObject)move));
+		}
+		
+		BasicDBList players = (BasicDBList)obj.get("Players");
+		this.players = new LinkedList<Player>();
+		for (Object player : players) {
+			this.players.add(new User((BasicDBObject)player));
+		}
+		
+		this.isActive = (Boolean)obj.get("IsActive");
+	}
+
 	public int getCurrentPlayer(){
 		return currentPlayer;
 	}

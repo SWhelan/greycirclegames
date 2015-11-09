@@ -1,9 +1,13 @@
 package cardswithfriends;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.ReflectionDBObject;
 
 public class Pile extends ReflectionDBObject {
@@ -15,6 +19,15 @@ public class Pile extends ReflectionDBObject {
 		cards = new LinkedList<Card>();
 	}
 	
+	public Pile(BasicDBObject obj) {
+		BasicDBList cards = (BasicDBList)obj.get("Cards");
+		this.cards = new LinkedList<Card>();
+		for (Object card : cards) {
+			this.cards.add(new Card((BasicDBObject)card));
+		}
+		this.name = (String)obj.get("Name");
+	}
+
 	public String getName() {
 		return name;
 	}

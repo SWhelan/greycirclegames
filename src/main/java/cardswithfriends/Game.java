@@ -1,6 +1,5 @@
 package cardswithfriends;
 
-import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -14,14 +13,17 @@ import com.mongodb.ReflectionDBObject;
 public abstract class Game extends ReflectionDBObject{
 	
 	//The id of a game
-	private int _id;
+	protected int _id;
 	//The game state
-	private GameState gameState;
+	protected GameState gameState;
 	//The list of moves
-	private List<Move> moves;
+	protected List<Move> moves;
 	//The list of players
-	private List<Player> players;
+	protected List<Player> players;
 	protected boolean isActive;
+
+	//default constructor, only used when reinitializing from the database
+	public Game(){}
 	
 	//Make a completely new game
 	public Game(int _id, List<Player> players){
@@ -39,6 +41,14 @@ public abstract class Game extends ReflectionDBObject{
 		this.moves = moves;
 		this.players = players;
 		this.isActive = active;
+	}
+	
+	public boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 
 	//A game state for a completely new game

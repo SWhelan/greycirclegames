@@ -3,6 +3,9 @@ package cardswithfriends;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import com.mongodb.BasicDBObject;
 
 public class KCGameState extends GameState {
 	public Map<String, Pile> piles;
@@ -24,12 +27,21 @@ public class KCGameState extends GameState {
 		super();
 	}
 
-	public Map<String, Pile> getPlayerHands() {
-		return userHands;
-	}
-
-	public void setPlayerHands(Map<String, Pile> userHands) {
-		this.userHands = userHands;
+	public KCGameState(BasicDBObject obj) {
+		
+		BasicDBObject piles = (BasicDBObject)obj.get("Piles");
+		this.piles = new HashMap<String, Pile>();
+		for (Entry<String, Object> entry : piles.entrySet()) {
+			this.piles.put(entry.getKey(), new Pile((BasicDBObject)entry.getValue()));
+		}
+		
+		BasicDBObject userHands = (BasicDBObject)obj.get("UserHands");
+		this.userHands = new HashMap<String, Pile>();
+		for (Entry<String, Object> entry : userHands.entrySet()) {
+			this.userHands.put(entry.getKey(), new Pile((BasicDBObject)entry.getValue()));
+		}
+		
+		this.turnNumber = (Integer)obj.get("TurnNumber");
 	}
 
 	public static class KCGameStateGenerator{

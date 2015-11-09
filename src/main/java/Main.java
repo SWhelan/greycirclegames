@@ -1,5 +1,5 @@
 import static spark.SparkBase.port;
-
+import cardswithfriends.DBHandler;
 import cardswithfriends.TemplateHandler;
 import spark.Spark;
 
@@ -10,7 +10,7 @@ public class Main {
     	Spark.staticFileLocation("/public");
         port(getHerokuAssignedPort());
         TemplateHandler.registerTemplates();
-        //DBHandler.runTJsTestCode();
+        DBHandler.runTJsTestCode();
     }
 
     static int getHerokuAssignedPort() {
