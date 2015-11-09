@@ -3,7 +3,6 @@
  */
 package cardswithfriends;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -29,7 +28,7 @@ public class DBHandler {
 		DB db = DatabaseConnector.getMongoDB();
     	DBCollection coll = db.getCollection("kcgames");
     	coll.save(game);
-	}	
+	}
 	
 	//READ
 	////////////////////////////////////////////////////////////
