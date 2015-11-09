@@ -294,6 +294,28 @@ public class TemplateHandler {
 		players.add(getUserFromCookies(rq));
 		players.add(new User(11, "asdfadsfkj"));
 		KingsCorner game1 = new KingsCorner(1, players);
+		
+    	KCGameState gs = (KCGameState) game1.getGameState();
+    	
+    	Pile spoof = new Pile("Spoof North Pile");
+    	spoof.addOn(Card.make(8, Card.Suit.CLUB));
+    	gs.piles.put(Integer.toString(PileIds.NORTH_PILE.ordinal()), spoof);
+    	Pile user0Hand = gs.userHands.get(Integer.toString(players.get(0).get_id()));
+    	Card toMove = Card.make(7, Card.Suit.DIAMOND);
+    	if(!user0Hand.contains(toMove)){
+    		user0Hand.add(toMove);
+    	}
+    	
+    	Pile moving = new Pile("Moving Pile");
+    	moving.add(toMove);
+    	
+    	Move move = new KCMove(players.get(0), user0Hand, moving, spoof);
+    	
+    	game1.applyMove(move);
+		
+		
+		
+		
 		info.put("game", new GameView(game1, getUserFromCookies(rq)));
 		return getModelAndView(info, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}

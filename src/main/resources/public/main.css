@@ -2,15 +2,26 @@
 	border-style: solid;
 	border-color: black;
 	border-width: 1px;
-	min-height: 30px;
+	min-height: 100px;
 	text-align: center;
+	border-radius: 15px;
+	max-width: 75px;
+	padding-top: 15px;
+	margin-left: 35%;
+	font-size: large;
+	background-color: white;
 }
 
 .emptyPile{
 	border-style: dashed;
 	border-color: black;
 	border-width: 1px;
-	min-height: 30px;
+	min-height: 100px;
+	border-radius: 15px;
+	max-width: 75px;
+	padding-top: 15px;
+	margin-left: 35%;
+	background-color: white;
 }
 
 .pile{
@@ -23,4 +34,8 @@
 
 .pileClicked{
 	background-color: azure;
+}
+
+.userCard{
+	margin: 10px;
 }

@@ -4,9 +4,9 @@
 	<!-- The Other Player's Piles -->
 	{{#otherPlayers}}
 		{{this}}
-			<div class="pile col-md-3">
+			<div class="pile col-md-3">	
 				<div class="card" number="{{number}}" suit="{{suit.displayName}}">
-					This player has {{size}} cards left.
+					Player ({{size}})
 				</div>
 			</div>
 		{{this}}
@@ -57,7 +57,9 @@
 			<div class="emptyPile"></div>
 		{{/westPile}}
 	</div>
-	<div id="drawPile" class="pile card col-md-3" pile="DRAW_PILE">Draw Pile - {{drawPile.size}}</div>
+	<div class="gamePile pile col-md-3">
+		<div id="drawPile" class="card" pile="DRAW_PILE">Draw ({{drawPile.size}})</div>
+	</div>
 	<div class="gamePile pile col-md-3" pile="EAST_PILE">
 		{{#eastPile}}
 			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
@@ -114,6 +116,16 @@ Your hand:
 </div>
 
 <script type = text/javascript>
+
+	window.onload = function (){
+		$(".gamePile").each(function (index){
+			console.log($(this)[0]);
+			if($(this)[0].children().length > 1){
+				$(this)[0].children().first().css("margin-bottom: -60px");
+			}
+		});
+				
+	}
 
 	$("#drawPile").click(function (){
 		turnForm=document.createElement('FORM');

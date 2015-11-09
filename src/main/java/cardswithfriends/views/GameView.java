@@ -47,5 +47,22 @@ public class GameView {
 		southEastPile = piles.get(Integer.toString(PileIds.SOUTH_EAST_PILE.ordinal())).getCards();
 		southWestPile = piles.get(Integer.toString(PileIds.SOUTH_WEST_PILE.ordinal())).getCards();
 		northWestPile = piles.get(Integer.toString(PileIds.NORTH_WEST_PILE.ordinal())).getCards();
+		
+		removeMiddle(northPile);
+		removeMiddle(eastPile);
+		removeMiddle(southPile);
+		removeMiddle(westPile);
+		removeMiddle(northEastPile);
+		removeMiddle(southEastPile);
+		removeMiddle(southWestPile);
+		removeMiddle(northWestPile);
 	}
+	
+	private List<Card> removeMiddle(List<Card> pile){
+		for(int i = pile.size()-2; i > 1; i--){
+			pile.remove(i);
+		}
+		return pile;
+	}
+
 }
