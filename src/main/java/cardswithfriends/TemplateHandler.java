@@ -5,6 +5,7 @@ import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -122,20 +123,20 @@ public class TemplateHandler {
 	
 	private static ModelAndView renderCreateGame(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		info.put("friends", DBHandler.getFriendsForUser(getUserIdFromCookies(rq)));
+		info.put("friends", getFriendsFromDB(getUserIdFromCookies(rq)));
 		return getModelAndView(info, CREATE_GAME_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView renderFriends(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		info.put("friends", DBHandler.getFriendsForUser(getUserIdFromCookies(rq)));
+		info.put("friends", getFriendsFromDB(getUserIdFromCookies(rq)));
 		return getModelAndView(info, FRIENDS_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView renderFriendInfo(Request rq, Response rs) {
-		List<Player> friends = DBHandler.getFriendsForUser(getUserIdFromCookies(rq))
+		List<Player> friends = getFriendsFromDB(getUserIdFromCookies(rq))
 								.stream()
-								.filter(e -> e.get_id() != Integer.parseInt(rq.params(":id")))
+								.filter(e -> e.get_id() == Integer.parseInt(rq.params(":id")))
 								.collect(Collectors.toList());
 		if(friends.isEmpty()){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "You are not friends with the requested user or the requested user does not exist. If you have just sent them a friend request they may have not accepted yet.");
@@ -208,17 +209,23 @@ public class TemplateHandler {
 	}
 	
 	private static ModelAndView postCreateGame(Request rq, Response rs) {
-		Integer numAiPlayers = Integer.parseInt(rq.queryParams("ai"));
-		String friends = rq.queryParams("friends");
+		Integer numAiPlayers = Integer.parseInt(rq.queryParams("ai"));		
 		List<Player> players = new LinkedList<Player>();
+		
 		// Add the user that created the game as the first player
 		players.add(getUserFromCookies(rq));
-		// TODO Add the selected friends to the player list
+		
+		// Add the selected friends to the player list
+		Arrays.stream(rq.queryMap("friends").values())
+				.map(e -> DBHandler.getUser(Integer.parseInt(e)))
+				.forEach(e -> players.add(e));
 		
 		// Add the specified number of AI players to the list
 		for(int i = 0; i < numAiPlayers; i++){
 			players.add(new ArtificialPlayer(i * -1));
 		}
+		
+		// Create the game
 		KingsCorner game = new KingsCorner(DBHandler.getNextKCGameID(), players);
 		DBHandler.createKCGame(game);
 		return renderGameList(rq, rs);
@@ -274,8 +281,13 @@ public class TemplateHandler {
 		if(user2 == null){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "No user was found with that search.");
 		} else {
-			DBHandler.addFriend(getUserFromCookies(rq), user2);
-			rs.header(GlobalConstants.DISPLAY_SUCCESS, "A friend request was sent to that user.");
+			if(!DBHandler.addFriend(getUserIdFromCookies(rq), user2.get_id())){
+				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
+			} else if(!DBHandler.addFriend(user2.get_id(), getUserIdFromCookies(rq))){
+				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
+			} else {
+				rs.header(GlobalConstants.DISPLAY_SUCCESS, "The requested friend has been added.");
+			}
 		}
 		return renderFriends(rq, rs);
 	}
@@ -286,7 +298,7 @@ public class TemplateHandler {
 		if(user2 == null){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "No user was found with that id to remove.");
 		} else {
-			if(DBHandler.removeFriend(getUserFromCookies(rq), user2)){
+			if(DBHandler.removeFriend(getUserFromCookies(rq).get_id(), user2.get_id())){
 				rs.header(GlobalConstants.DISPLAY_SUCCESS, "Friend was successfully removed.");
 			} else {
 				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
@@ -329,6 +341,14 @@ public class TemplateHandler {
 	 */
 	private static User getUserFromCookies(Request rq){
 		return DBHandler.getUser(getUserIdFromCookies(rq));
+	}
+	
+	// The database returns a list of ids get the list of Players
+	private static List<Player> getFriendsFromDB(int userId){
+		return DBHandler.getFriendsForUser(userId)
+					.stream()
+					.map(e -> DBHandler.getUser((Integer)e))
+					.collect(Collectors.toList());
 	}
 	
 	/**
