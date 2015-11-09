@@ -4,9 +4,9 @@
 	<!-- The Other Player's Piles -->
 	{{#otherPlayers}}
 		{{this}}
-			<div class="pile col-md-3">
+			<div class="pile col-md-3">	
 				<div class="card" number="{{number}}" suit="{{suit.displayName}}">
-					This player has {{size}} cards left.
+					Player ({{size}})
 				</div>
 			</div>
 		{{this}}
@@ -17,7 +17,7 @@
 	<div class="gamePile pile col-md-3" pile="NORTH_WEST_PILE">
 		{{#northWestPile}}
 			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
-			{{number}} {{{suit.html}}}
+			{{displayNumber}} {{{suit.html}}}
 			</div>
 		{{/northWestPile}}
 		{{^northWestPile}}
@@ -27,7 +27,7 @@
 	<div class="gamePile pile col-md-3" pile="NORTH_PILE">
 		{{#northPile}}
 			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
-			{{number}} {{{suit.html}}}
+			{{displayNumber}} {{{suit.html}}}
 			</div>
 		{{/northPile}}
 		{{^northPile}}
@@ -37,7 +37,7 @@
 	<div class="gamePile pile col-md-3" pile="NORTH_EAST_PILE">
 		{{#northEastPile}}
 			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
-			{{number}} {{{suit.html}}}
+			{{displayNumber}} {{{suit.html}}}
 			</div>
 		{{/northEastPile}}
 		{{^northEastPile}}
@@ -50,18 +50,20 @@
 	<div class="gamePile pile col-md-3" pile="WEST_PILE">
 		{{#westPile}}
 			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
-			{{number}} {{{suit.html}}}
+			{{displayNumber}} {{{suit.html}}}
 			</div>
 		{{/westPile}}
 		{{^westPile}}
 			<div class="emptyPile"></div>
 		{{/westPile}}
 	</div>
-	<div id="drawPile" class="pile card col-md-3" pile="DRAW_PILE">Draw Pile - {{drawPile.size}}</div>
+	<div class="gamePile pile col-md-3">
+		<div id="drawPile" class="card" pile="DRAW_PILE">Draw ({{drawPile.size}})</div>
+	</div>
 	<div class="gamePile pile col-md-3" pile="EAST_PILE">
 		{{#eastPile}}
 			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
-			{{number}} {{{suit.html}}}
+			{{displayNumber}} {{{suit.html}}}
 			</div>
 		{{/eastPile}}
 		{{^eastPile}}
@@ -74,7 +76,7 @@
 	<div class="gamePile pile col-md-3" pile="SOUTH_WEST_PILE">
 		{{#southWestPile}}
 			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
-			{{number}} {{{suit.html}}}
+			{{displayNumber}} {{{suit.html}}}
 			</div>
 		{{/southWestPile}}
 		{{^southWestPile}}
@@ -84,7 +86,7 @@
 	<div class="gamePile pile col-md-3" pile="SOUTH_PILE">
 		{{#southPile}}
 			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
-			{{number}} {{{suit.html}}}
+			{{displayNumber}} {{{suit.html}}}
 			</div>
 		{{/southPile}}
 		{{^southPile}}
@@ -94,7 +96,7 @@
 	<div class="gamePile pile col-md-3" pile="SOUTH_EAST_PILE">
 		{{#southEastPile}}
 			<div class="card" number="{{number}}" suit="{{suit.displayName}}">
-			{{number}} {{{suit.html}}}
+			{{displayNumber}} {{{suit.html}}}
 			</div>
 		{{/southEastPile}}
 		{{^southEastPile}}
@@ -107,13 +109,23 @@ Your hand:
 <div class="viewingHand">
 	{{#userHand}}
 		<div class="userCard card col-md-3" number="{{number}}" suit="{{suit.displayName}}">
-		{{number}} {{{suit.html}}}
+		{{displayNumber}} {{{suit.html}}}
 		</div>
 	{{/userHand}}
 </div>
 </div>
 
 <script type = text/javascript>
+
+	window.onload = function (){
+		$(".gamePile").each(function (index){
+			console.log($(this)[0]);
+			if($(this)[0].children().length > 1){
+				$(this)[0].children().first().css("margin-bottom: -60px");
+			}
+		});
+	}
+
 	$("#drawPile").click(function (){
 		turnForm=document.createElement('FORM');
 		turnForm.name='turn';
