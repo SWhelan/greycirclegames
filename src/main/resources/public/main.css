@@ -12,6 +12,10 @@
 	background-color: white;
 }
 
+.card:nth-child(1){
+	margin-bottom: -60px;
+}
+
 .emptyPile{
 	border-style: dashed;
 	border-color: black;
@@ -30,6 +34,10 @@
 
 .clicked {
 	background-color: darkgray;
+}
+
+.greyedOut {
+	background-color: lightgray;
 }
 
 .pileClicked{

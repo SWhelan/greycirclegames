@@ -12,6 +12,7 @@ import cardswithfriends.Player;
 
 public class GameView {
 	Integer gameId;
+	boolean isTurn;
 	List<Card> userHand;
 	List<List<Card>> otherPlayers = new LinkedList<List<Card>>();
 	List<Card> drawPile;
@@ -56,6 +57,7 @@ public class GameView {
 		removeMiddle(southEastPile);
 		removeMiddle(southWestPile);
 		removeMiddle(northWestPile);
+		isTurn = game.getCurrentPlayer() == viewingPlayer.get_id();
 	}
 	
 	private List<Card> removeMiddle(List<Card> pile){
