@@ -4,10 +4,12 @@
 package cardswithfriends;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -68,8 +70,24 @@ public class DBHandler {
     	return new KingsCorner(obj);
 	}
 	
-	public static List<KingsCorner> getKCGamesforUser(int userId){
-		return null;
+	public static List<KingsCorner> getKCGamesforUser(int userId) {
+		DB db = DatabaseConnector.getMongoDB();
+    	DBCollection coll = db.getCollection("kcgames");
+    	DBObject query = new BasicDBObject("Players._id", userId);
+
+    	DBCursor cursor = coll.find(query);
+    	
+    	LinkedList<KingsCorner> gamesList = new LinkedList<>();
+    	while(cursor.hasNext()) {
+    		System.out.println("Found a game for user: " + userId);
+        	BasicDBObject obj = (BasicDBObject)cursor.next();
+        	gamesList.add(new KingsCorner(obj));
+    	}
+    	
+    	if (gamesList.isEmpty()) {
+    		System.out.println("No games found for user: " + userId);
+    	}
+    	return gamesList;
 	}
 
 	public static Leaderboard getLeadboard() {
@@ -140,6 +158,37 @@ public class DBHandler {
     	DBObject query = new BasicDBObject("_id", gameID);
     	coll.remove(query);
 	}
+	
+	//OTHER
+	////////////////////////////////////////////////////////////
+	/**
+	 * @param userId the id of the user to get friends from
+	 * @return a list of userID's indicating who the user is friends with
+	 */
+	public static BasicDBList getFriendsForUser(int userId) {
+		User user = getUser(userId);
+		return user.getFriends();
+	}
+
+	
+	/**
+	 * adds user2 to user1's friend list
+	 * 
+	 * @param userID1
+	 * @param userID2
+	 * @return
+	 */
+	public static void addFriend(int userID1, int userID2){
+		User u1 = getUser(userID1);
+		u1.addFriend(userID2);
+		updateUser(u1);
+	}
+	
+	public static void removeFriend(int userID1, int userID2) {
+		User u1 = getUser(userID1);
+		u1.destroyFriendship(userID2);
+		updateUser(u1);
+	}
 
     public static void runTJsTestCode() {
     	
@@ -147,21 +196,32 @@ public class DBHandler {
     	
 //Test user
 //////////////////////////////////////////////////////////////////////////////////////
-//        User user = new User(42,"goduser", "word", "salt", "email@gmail.com");
+//    	BasicDBList frands = new BasicDBList();
+//    	frands.add(6);
+//    	frands.add(7);
+//    	frands.add(42);
+//    	
+//    	User user = new User(43,"goduser", "word", "salt", "email@gmail.com", frands);
 //    	DBHandler.createUser(user);
-//    	User u = getUser(42);
+//    	User u = getUser(43);
 //    	u.setUserName("user2");
 //    	updateUser(u);
-//    	deleteUser(42);
+//    	deleteUser(43);
 //////////////////////////////////////////////////////////////////////////////////////
 
 //Test kcgame
 //////////////////////////////////////////////////////////////////////////////////////
 //    	ArrayList<Player> playerList = new ArrayList<Player>();
-//    	Player p1 = new User(43,"username", "word", "salt", "43email@gmail.com");
+//    	BasicDBList frands = new BasicDBList();
+//    	frands.add(6);
+//    	frands.add(7);
+//    	frands.add(8);
+//    	
+//    	Player p1 = new User(43,"username", "word", "salt", "43email@gmail.com", new BasicDBList());    	
+//    	
 //    	playerList.add(p1);
-//    	playerList.add(new User(44,"username", "word", "salt", "44email@gmail.com"));
-//    	playerList.add(new User(45,"username", "word", "salt", "45email@gmail.com"));
+//    	playerList.add(new User(44,"username", "word", "salt", "44email@gmail.com", frands));
+//    	playerList.add(new User(45,"username", "word", "salt", "45email@gmail.com", frands));
 //    	
 //    	Pile pile1 = new Pile("pile one");
 //    	Pile pile2 = new Pile("pile two");
@@ -176,24 +236,24 @@ public class DBHandler {
 //		} catch (InterruptedException e) {
 //			e.printStackTrace();
 //		}
+//    	
+//    	LinkedList<KingsCorner> l = (LinkedList<KingsCorner>) getKCGamesforUser(45);
+//    	
 //    	KingsCorner kc = getKCGame(142);
-//    	kc.turnOrder = null;
+//    	kc.setIsActive(false);
 //    	updateKCGame(kc);
 //    	deleteKCGame(142);
-//////////////////////////////////////////////////////////////////////////////////////
-
-    	
+//////////////////////////////////////////////////////////////////////////////////////    	
     	
     	
 //Test Leaderboard
 //////////////////////////////////////////////////////////////////////////////////////
 
-//    	createLeadBoard(LeaderBoard leaderBoard);
+//    	Leaderboard leaderboard = new Leaderboard();
+//    	replaceLeaderboard(leaderboard);
 //    	LeaderBoard getLeadBoard()
 //    	updateLeaderBoard(LeaderBoard leaderBoard) 
-//    	deleteLeaderBoard() 
-    	
-    	
+//    	deleteLeaderBoard() 	
     	
     	int c = 7;
     	int x = c;
@@ -202,25 +262,8 @@ public class DBHandler {
 
     	
     	
-    	
-//    	User getUserByEmail(String email
-//    	List<KingsCorner> getKCGamesforUser(int userId
+    
     	
 
     }
-
-	public static List<Player> getFriendsForUser(int userId) {
-		// TODO Auto-generated method stub
-		return new LinkedList<Player>();
-	}
-
-	public static boolean addFriend(Player user1, Player user2){
-		// TODO Auto-generated method stub
-		return true;
-	}
-	
-	public static boolean removeFriend(Player user1, Player user2) {
-		// TODO Auto-generated method stub
-		return true;
-	}
 }

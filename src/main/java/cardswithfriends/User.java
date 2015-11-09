@@ -4,9 +4,11 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
 import com.mongodb.ReflectionDBObject;
 	
@@ -19,17 +21,20 @@ public class User extends ReflectionDBObject implements Player {
 	private String password;
 	private String salt;
 	private String email;
+	private BasicDBList friends;
 	
-	public User(int _id, String userName, String password, String salt, String email){
+	public User(int _id, String userName, String password, String salt,
+			String email, BasicDBList friends){
 		this._id = _id;
 		this.userName = userName;
 		this.password = password;
 		this.salt = salt;
 		this.email = email;
+		this.friends = friends;
 	}
 	
 	public User(int _id, String email) {
-		this(_id, email, null, null, email);
+		this(_id, email, null, null, email, null);
 	}
 
 	public User(DBObject obj) {
@@ -37,7 +42,8 @@ public class User extends ReflectionDBObject implements Player {
 				(String)obj.get("UserName"),
 				(String)obj.get("Password"),
 				(String)obj.get("Salt"),
-				(String)obj.get("Email"));
+				(String)obj.get("Email"),
+				(BasicDBList)obj.get("Friends"));
 	}
 
 	public Integer get_id() {
@@ -80,8 +86,12 @@ public class User extends ReflectionDBObject implements Player {
 		this.email = email;
 	}
 
-	public Set<User> getFriends(){
-		return null;
+	public BasicDBList getFriends(){
+		return friends;
+	}
+	
+	public void setFriends(BasicDBList friends) {
+		this.friends = friends;
 	}
 	
 	public Leaderboard getLeaderboard(){
@@ -90,6 +100,15 @@ public class User extends ReflectionDBObject implements Player {
 	public List<Game> getCurrentGames(){
 		return null;
 	}
+	
+	public void addFriend(int friendID) {
+		this.friends.add(friendID);
+	}
+	
+	public void destroyFriendship(Integer friendID) {
+		this.friends.remove(friendID);
+	}
+	
 
 	@Override
 	public int hashCode() {
