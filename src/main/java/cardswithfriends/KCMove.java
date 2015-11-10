@@ -20,15 +20,29 @@ public class KCMove extends Move {
 		//If everything in moving is in origin, and if the bottom card of moving works with the top of destination, we good
 		if(origin.containsAll(moving)){
 			Card movingBottom = moving.getBottom();
-			Card destTop = destination.getTop();
-			if(cardsAreCompatible(movingBottom, destTop)){
+			Card destTop = null;
+			if(destination.size() > 0){
+				destTop = destination.getTop();
+			}
+			boolean destIsCorner = destIsCorner(destination);
+			if(cardsAreCompatible(movingBottom, destTop, destIsCorner)){
 				return true;
 			}
 		}
 		return false;
 	}
+	
+	private static boolean destIsCorner(Pile dest){
+		return 	dest.getName().equals("Northeast Pile") ||
+				dest.getName().equals("Northwest Pile") ||
+				dest.getName().equals("Southeast Pile") ||
+				dest.getName().equals("Southwest Pile");
+	}
 
-	private static boolean cardsAreCompatible(Card movingBottom, Card destTop) {
+	private static boolean cardsAreCompatible(Card movingBottom, Card destTop, Boolean destIsCorner) {
+		if(destTop == null){
+			return (!destIsCorner || (destIsCorner && movingBottom.getNumber() == GlobalConstants.KING));
+		}
 		boolean numbersCompatible = movingBottom.getNumber() == destTop.getNumber() - 1;
 		boolean suitsCompatible = movingBottom.isRed() ^ destTop.isRed();
 		return numbersCompatible && suitsCompatible;

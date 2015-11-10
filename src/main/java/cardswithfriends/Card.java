@@ -27,6 +27,8 @@ public class Card extends ReflectionDBObject {
 		this.number = (Integer)obj.get("Number");
 		this.suitOrdinal = (Integer)obj.get("SuitOrdinal");
 		this.suit = decodeSuit();
+		setDisplayNumber();
+		this.setEnumSuit(suit);
 	}
 
 	public static Card make(int number, Suit suit) throws IllegalArgumentException {

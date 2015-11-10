@@ -4,11 +4,8 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -58,7 +55,7 @@ public class User extends ReflectionDBObject implements Player {
 	}
 
 	public User(int _id, String email) {
-		this(_id, email, null, null, email, null);
+		this(_id, email, null, null, email, new BasicDBList());
 	}
 
 	public User(DBObject obj) {

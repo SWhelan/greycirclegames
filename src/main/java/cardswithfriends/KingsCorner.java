@@ -10,6 +10,7 @@ import com.mongodb.DBObject;
 
 public class KingsCorner extends Game{
 	public List<Player> turnOrder;
+	//The id of the current player not the number of turn order
 	private int currentPlayer;
 
 	public KingsCorner(int gameId, List<Player> players){
@@ -77,7 +78,7 @@ public class KingsCorner extends Game{
 			return false;
 		}
 		KCGameState gs = getGameState();
-		Pile curUserHand = gs.userHands.get(Integer.toString(getCurrentPlayer()));
+		Pile curUserHand = gs.userHands.get(Integer.toString(getCurrentPlayerObject().get_id()));
 		Pile drawPile = gs.piles.get(Integer.toString(PileIds.DRAW_PILE.ordinal()));
 		if(!drawPile.isEmpty()){
 			curUserHand.add(drawPile.removeTop());

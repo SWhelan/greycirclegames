@@ -12,6 +12,10 @@
 	background-color: white;
 }
 
+.bottom{
+	margin-bottom: -60px;
+}
+
 .emptyPile{
 	border-style: dashed;
 	border-color: black;
@@ -32,10 +36,22 @@
 	background-color: darkgray;
 }
 
+.greyedOut {
+	background-color: lightgray;
+}
+
 .pileClicked{
 	background-color: azure;
 }
 
 .userCard{
 	margin: 10px;
+}
+
+.red {
+	color: red;
+}
+
+.hidden {
+	display: none;
 }
