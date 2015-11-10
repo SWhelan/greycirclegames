@@ -6,6 +6,7 @@
 	text-align: left;
 	border-radius: 15px;
 	max-width: 75px;
+	min-width: 75px;
 	padding-top: 5px;
 	margin-left: 35%;
 	padding-left: 5px;
@@ -24,6 +25,7 @@
 	min-height: 100px;
 	border-radius: 15px;
 	max-width: 75px;
+	min-width: 75px;
 	padding-top: 15px;
 	margin-left: 35%;
 	background-color: white;
@@ -47,6 +49,7 @@
 
 .userCard{
 	margin: 10px;
+	float: left;
 }
 
 .red {
@@ -55,4 +58,8 @@
 
 .hidden {
 	display: none;
+}
+
+#gameTable {
+	width: 100%;
 }

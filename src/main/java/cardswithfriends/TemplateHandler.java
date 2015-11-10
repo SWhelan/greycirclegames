@@ -1,7 +1,6 @@
 package cardswithfriends;
 
 import static spark.Spark.before;
-import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
@@ -36,7 +35,7 @@ public class TemplateHandler {
 	private static final String FRIENDS_TEMPLATE = "friends.mustache";
 	private static final String FRIEND_INFO_TEMPLATE = "friendInfo.mustache";
 	private static final String GAME_LIST_TEMPLATE = "gameList.mustache";
-	private static final String KINGS_CORNERS_TEMPLATE = "kingsCorners.mustache";
+	private static final String KINGS_CORNERS_TEMPLATE = "kingscorners.mustache";
 	private static final String LEADERBOARD_TEMPLATE = "leaderboard.mustache";
 	private static final String TUTORIAL_TEMPLATE = "tutorial.mustache";
 
@@ -57,7 +56,7 @@ public class TemplateHandler {
         get("/game/:id",	(rq, rs) -> renderGame(rq, rs), 		new MustacheTemplateEngine());
         get("/new", 		(rq, rs) -> renderCreateGame(rq, rs), 	new MustacheTemplateEngine());
         get("/friends", 	(rq, rs) -> renderFriends(rq, rs), 		new MustacheTemplateEngine());
-        get("/friends/:id", (rq, rs) -> renderFriendInfo(rq, rs), new MustacheTemplateEngine());
+        get("/friends/:id", (rq, rs) -> renderFriendInfo(rq, rs), 	new MustacheTemplateEngine());
         get("/tutorial", 	(rq, rs) -> renderTutorial(rq, rs), 	new MustacheTemplateEngine());
         get("/leaderboard", (rq, rs) -> renderLeaderboard(rq, rs), 	new MustacheTemplateEngine());
         get("/logout", 		(rq, rs) -> logout(rq, rs));
@@ -87,6 +86,7 @@ public class TemplateHandler {
             rs.status(404);
             rs.redirect("/");
         });
+        
 	}
 	
 	private static ModelAndView renderHome(Request rq, Response rs) {
