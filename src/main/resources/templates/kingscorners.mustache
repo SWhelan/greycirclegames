@@ -2,18 +2,6 @@
 {{#game}}
 <div class="alert hidden" id="alert" role="alert"></div>
 <div class="row">
-	<!-- The Other Player's Piles -->
-	{{#otherPlayers}}
-		{{this}}
-			<div class="pile col-md-3">	
-				<div class="card" number="{{number}}" suit="{{suit.displayName}}">
-					Player ({{size}})
-				</div>
-			</div>
-		{{this}}
-	{{/otherPlayers}}
-</div>
-<div class="row">
 	<!-- The NorthWest, North, and North East Piles -->
 	<div class="gamePile pile col-md-3" pile="NORTH_WEST_PILE">
 		{{#northWestPile}}
@@ -106,15 +94,29 @@
 	</div>
 </div>
 <div class="row">
-Your hand:
-<div class="viewingHand">
-	{{#userHand}}
-		<div class="userCard card col-md-3 {{#isRed}}red{{/isRed}} {{^isTurn}}greyedOut{{/isTurn}}" number="{{number}}" suit="{{suit.displayName}}">
-		{{displayNumber}} {{{suit.html}}}
-		</div>
-	{{/userHand}}
+	Your hand ({{#userHand.size}}{{userHand.size}}{{/userHand.size}} Remaining Cards):
+	<div class="viewingHand">
+		{{#userHand}}
+			<div class="userCard card col-md-3 {{#isRed}}red{{/isRed}} {{^isTurn}}greyedOut{{/isTurn}}" number="{{number}}" suit="{{suit.displayName}}">
+			{{displayNumber}} {{{suit.html}}}
+			</div>
+		{{/userHand}}
+	</div>
 </div>
+
+<div class="row">
+	<!-- The Other Player's Piles -->
+	<h4>Other Players:</h4>
+	<ul>
+	{{#otherPlayers}}
+		{{this}}
+			<li>{{userName}} ({{cards.size}} Remaining Cards)</li>
+		{{this}}
+	{{/otherPlayers}}
+	</ul>
 </div>
+
+
 
 <script type = text/javascript>
 
@@ -127,7 +129,17 @@ Your hand:
 	isTurn = false;
 	{{/isTurn}}
 
+	window.onload = function (){
+		setTimeout(function (){
+			window.location.replace("/game/" + {{gameId}});
+		}, 10000);
+	}
+	
 	$("#drawPile").click(function (){
+		handleTurn();
+	});
+
+	function handleTurn(){
 		if(isTurn){
 			turnForm=document.createElement('FORM');
 			turnForm.name='turn';
@@ -137,14 +149,13 @@ Your hand:
 			hiddenElement=document.createElement('INPUT');
 			hiddenElement.type='HIDDEN';
 			hiddenElement.name='gameId';
-			hiddenElement.value={{gameId}}
+			hiddenElement.value={{gameId}};
 			turnForm.appendChild(hiddenElement);
 			turnForm.submit();
 		} else {
 			notTurnAlert();
 		}
-	});
-
+	}
 	var selectedCard;
 	var selectedPile;
 	var secondPile;
@@ -162,10 +173,14 @@ Your hand:
 					move();
 				}
 			} else {
-				// This is a different card from the one currently selected
-				selectedCard.removeClass("clicked");
-				$(this).addClass("clicked");
-				selectedCard = $(this);
+				if($(this).attr("id") == "drawPile"){
+					handleTurn()
+				} else {
+					// This is a different card from the one currently selected
+					selectedCard.removeClass("clicked");
+					$(this).addClass("clicked");
+					selectedCard = $(this);
+				}
 			}
 		} else {
 			notTurnAlert();
@@ -187,9 +202,11 @@ Your hand:
 				}			
 			} else {
 				// This is the second selected pile
-				$(this).children().first().addClass("pileClicked");
-				secondPile = $(this);
-				move();
+				if($(this).children().first().attr("id") != "drawPile"){
+					$(this).children().first().addClass("pileClicked");
+					secondPile = $(this);
+					move();
+				}
 			}
 		} else {
 			notTurnAlert();
@@ -239,7 +256,7 @@ Your hand:
 		hiddenElement=document.createElement('INPUT');
 		hiddenElement.type='HIDDEN';
 		hiddenElement.name='gameId';
-		hiddenElement.value={{gameId}}
+		hiddenElement.value={{gameId}};
 		moveForm.appendChild(hiddenElement);
 		moveForm.submit();	
 	}

@@ -3,11 +3,12 @@
 	border-color: black;
 	border-width: 1px;
 	min-height: 100px;
-	text-align: center;
+	text-align: left;
 	border-radius: 15px;
 	max-width: 75px;
-	padding-top: 15px;
+	padding-top: 5px;
 	margin-left: 35%;
+	padding-left: 5px;
 	font-size: large;
 	background-color: white;
 }

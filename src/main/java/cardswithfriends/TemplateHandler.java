@@ -280,10 +280,6 @@ public class TemplateHandler {
 		return renderGame(rq, rs);
 	}
 	
-	private static String getPileKeyFromString(String name){
-		return Integer.toString(Arrays.stream(PileIds.values()).filter(e -> e.name().equals(name)).collect(Collectors.toList()).get(0).ordinal());
-	}
-	
 	private static ModelAndView postTurn(Request rq, Response rs) {
 		int gameId = Integer.parseInt(rq.queryParams("gameId"));
 		KingsCorner game = DBHandler.getKCGame(gameId);
@@ -370,6 +366,11 @@ public class TemplateHandler {
 					.stream()
 					.map(e -> DBHandler.getUser((Integer)e))
 					.collect(Collectors.toList());
+	}
+	
+	// Get the key for the pile HashMap from the string name of the pile
+	private static String getPileKeyFromString(String name){
+		return Integer.toString(Arrays.stream(PileIds.values()).filter(e -> e.name().equals(name)).collect(Collectors.toList()).get(0).ordinal());
 	}
 	
 	/**

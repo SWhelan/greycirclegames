@@ -54,6 +54,8 @@ public class Card extends ReflectionDBObject {
 				break;
 			case 11: displayNumber = "J";
 				break;
+			case 1: displayNumber = "A";
+				break;
 			default: displayNumber = Integer.toString(number);
 		}
 	}
@@ -114,8 +116,8 @@ public class Card extends ReflectionDBObject {
 
 	public enum Suit {
 		SPADE("Spade", "&#9824;"),
-		DIAMOND("Diamond", "&#9826;"),
-		HEART("Heart", "&#9825;"),
+		DIAMOND("Diamond", "&#9830;"),
+		HEART("Heart", "&#9829;"),
 		CLUB("Club", "&#9827;");
 		
 		private String displayName;
