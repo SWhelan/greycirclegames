@@ -1,6 +1,7 @@
 package cardswithfriends;
 
 import static spark.Spark.before;
+import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
