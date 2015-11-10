@@ -102,4 +102,14 @@ public class ArtificialPlayer implements Player {
 	public String getUserName() {
 		return "Computer Player";
 	}
+
+	@Override
+	public void updateWin(String game) {
+		//Do nothing - we do not store stats for ai players currently
+	}
+
+	@Override
+	public void updateLoss(String game) {
+		//Do nothing - we do not store stats for ai players currently
+	}
 }

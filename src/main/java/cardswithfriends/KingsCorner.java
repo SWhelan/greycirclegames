@@ -11,18 +11,12 @@ import com.mongodb.DBObject;
 public class KingsCorner extends Game{
 	public List<Player> turnOrder;
 	private int currentPlayer;
-	
+
 	public KingsCorner(int gameId, List<Player> players){
 		super(gameId, players);
 		turnOrder = new ArrayList<Player>();
 		turnOrder.addAll(players);
 		currentPlayer = 0;
-	}
-	
-	private KingsCorner(KingsCornerGenerator kc){
-		super(kc.gameId, kc.gs, kc.moves, kc.players, kc.active);
-		turnOrder = kc.getTurnOrder();
-		currentPlayer = kc.currentPlayer;
 	}
 
 	//for creating a new kcgame from the mongo object
@@ -52,6 +46,7 @@ public class KingsCorner extends Game{
 		}
 		
 		this.isActive = (Boolean)obj.get("IsActive");
+		this.winner_id = (Integer)obj.get("winner_id");
 	}
 
 	public int getCurrentPlayer(){
@@ -89,9 +84,9 @@ public class KingsCorner extends Game{
 		}
 		currentPlayer = (currentPlayer + 1) % turnOrder.size();
 		
-		return save();
+		return true;
 	}
-
+	
 	public Player getCurrentPlayerObject(){
 		return turnOrder.get(currentPlayer);
 	}
@@ -107,32 +102,11 @@ public class KingsCorner extends Game{
 		return game;
 	}
 	
-	public static class KingsCornerGenerator{
-		public int gameId;
-		public GameState gs;
-		public List<Move> moves;
-		public List<Player> players;
-		public int currentPlayer;
-		public boolean active;
-		public List<Player> getTurnOrder(){
-			return null;
-		}
-		
-		public KingsCorner build(){
-			return new KingsCorner(this);
-		}
-	}
-
-	@Override
-	protected boolean save() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-	
 	@Override
 	public boolean gameIsOver(){
 		for(Pile p : getGameState().userHands.values()){
 			if(p.isEmpty()){
+				setToWinState();
 				return true;
 			}
 		}
@@ -144,5 +118,20 @@ public class KingsCorner extends Game{
 			return getCurrentPlayerObject();
 		}
 		return null;
+	}
+	
+	private void setToWinState(){
+		isActive = false;
+		winner_id = getCurrentPlayerObject().get_id();
+	}
+	
+	private void setToNonWinningEndState(){
+		isActive = false;
+		winner_id = null;
+	}
+
+	@Override
+	protected String getGameTypeIdentifier() {
+		return GlobalConstants.KINGS_CORNER;
 	}
 }

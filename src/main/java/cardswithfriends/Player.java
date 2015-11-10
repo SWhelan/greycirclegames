@@ -5,4 +5,6 @@ public interface Player {
 	public abstract int hashCode();
 	public abstract boolean equals(Object o);
 	public String getUserName();
+	public void updateWin(String game);
+	public void updateLoss(String game);
 }

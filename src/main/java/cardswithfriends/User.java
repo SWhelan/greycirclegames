@@ -4,11 +4,14 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.ReflectionDBObject;
 	
@@ -19,9 +22,13 @@ public class User extends ReflectionDBObject implements Player {
 	private int _id;
 	private String userName;
 	private String password;
+
 	private String salt;
 	private String email;
+	//List of ids of friends
 	private BasicDBList friends;
+	//Maps Game type ids to wins and losses
+	private BasicDBObject winsAndLosses;
 	
 	public User(int _id, String userName, String password, String salt,
 			String email, BasicDBList friends){
@@ -31,8 +38,25 @@ public class User extends ReflectionDBObject implements Player {
 		this.salt = salt;
 		this.email = email;
 		this.friends = friends;
+		intializeWinsAndLosses();
 	}
 	
+	private void intializeWinsAndLosses() {
+		winsAndLosses = new BasicDBObject();
+		winsAndLosses.append(GlobalConstants.KINGS_CORNER, new Integer[]{0,0});
+	}
+	
+	public User(int _id, String userName, String password, String salt,
+			String email, BasicDBList friends, BasicDBObject wlmap){
+		this._id = _id;
+		this.userName = userName;
+		this.password = password;
+		this.salt = salt;
+		this.email = email;
+		this.friends = friends;
+		this.winsAndLosses = wlmap;
+	}
+
 	public User(int _id, String email) {
 		this(_id, email, null, null, email, null);
 	}
@@ -43,7 +67,8 @@ public class User extends ReflectionDBObject implements Player {
 				(String)obj.get("Password"),
 				(String)obj.get("Salt"),
 				(String)obj.get("Email"),
-				(BasicDBList)obj.get("Friends"));
+				(BasicDBList)obj.get("Friends"),
+				(BasicDBObject)obj.get("WinsAndLosses"));
 	}
 
 	public Integer get_id() {
@@ -107,6 +132,14 @@ public class User extends ReflectionDBObject implements Player {
 	
 	public void destroyFriendship(Integer friendID) {
 		this.friends.remove(friendID);
+	}
+
+	public BasicDBObject getWinsAndLosses() {
+		return winsAndLosses;
+	}
+
+	public void setWinsAndLosses(BasicDBObject winsAndLosses) {
+		this.winsAndLosses = winsAndLosses;
 	}
 	
 
@@ -191,5 +224,27 @@ public class User extends ReflectionDBObject implements Player {
 	
 	public boolean passwordMatches(String password) {
 		return this.password.equals(hashPassword(this.salt, password));
+	}
+
+	@Override
+	public void updateWin(String game) {
+		((Integer[])winsAndLosses.get(game))[0]++;
+		DBHandler.updateUser(this);
+	}
+
+	@Override
+	public void updateLoss(String game) {
+		((Integer[])winsAndLosses.get(game))[1]++;
+		DBHandler.updateUser(this);
+	}
+
+	public List<User> getFriendsList() {
+		List<User> toReturn = new LinkedList<User>();
+		for(Object o : friends){
+			Integer friend_id = (Integer)o;
+			User f = DBHandler.getUser(friend_id);
+			toReturn.add(f);
+		}
+		return toReturn;
 	}
 }
