@@ -100,11 +100,12 @@ public class DBHandler {
 		}
 		return gamesList;
 	}
-
+	
 	public static Leaderboard getLeadboard() {
-		return new Leaderboard();
+		// TODO Auto-generated method stub
+		return null;
 	}
-
+	
 	//UPDATE
 	////////////////////////////////////////////////////////////
 	public static void updateUser(User user) {
@@ -117,9 +118,6 @@ public class DBHandler {
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("kcgames");
 		coll.save(game);
-	}
-
-	public static void replaceLeaderboard(Leaderboard leaderboard) {
 	}
 
 	//in the update section because it creates/updates and gets

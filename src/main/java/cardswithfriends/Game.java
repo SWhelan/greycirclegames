@@ -21,6 +21,8 @@ public abstract class Game extends ReflectionDBObject{
 	//The list of players
 	protected List<Player> players;
 	protected boolean isActive;
+	protected boolean updatedLeaderboard;
+	protected Integer winner_id;
 
 	//default constructor, only used when reinitializing from the database
 	public Game(){}
@@ -32,15 +34,18 @@ public abstract class Game extends ReflectionDBObject{
 		this.moves = new LinkedList<Move>();
 		this.players = players;
 		isActive = true;
+		updatedLeaderboard = false;
+		winner_id = null;
 	}
 	
 	//Make a pre-existing game
-	public Game(int _id, GameState gameState, List<Move> moves, List<Player> players, boolean active){
+	public Game(int _id, GameState gameState, List<Move> moves, List<Player> players, boolean active, boolean updatedLeaderboard){
 		this._id = _id;
 		this.gameState = gameState;
 		this.moves = moves;
 		this.players = players;
 		this.isActive = active;
+		this.updatedLeaderboard = updatedLeaderboard;
 	}
 	
 	public boolean getIsActive() {
@@ -53,9 +58,6 @@ public abstract class Game extends ReflectionDBObject{
 
 	//A game state for a completely new game
 	protected abstract GameState newGameState(List<Player> players);
-	
-	//Convert this game to the save format
-	protected abstract boolean save();
 
 	//Apply a move to the game
 	public abstract boolean applyMove(Move move);
@@ -97,9 +99,29 @@ public abstract class Game extends ReflectionDBObject{
 		this.players = players;
 	}
 		
+	public void updateLeaderboard(){
+		if(gameIsOver() && !updatedLeaderboard){
+			assert winner_id != null : "The winner id should not be null here.";
+			for(Player p : players){
+				if(p.get_id() == winner_id){
+					p.updateWin(getGameTypeIdentifier());
+				}else{
+					p.updateLoss(getGameTypeIdentifier());
+				}
+			}
+		}
+	}
 	
-	
-	
+	protected abstract String getGameTypeIdentifier();
+
+	public Integer getWinner_id() {
+		return winner_id;
+	}
+
+	public void setWinner_id(Integer winner_id) {
+		this.winner_id = winner_id;
+	}
+
 	public final void addMove(Move m){
 		moves.add(m);
 	}

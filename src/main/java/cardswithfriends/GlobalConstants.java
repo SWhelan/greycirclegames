@@ -10,4 +10,6 @@ public class GlobalConstants {
 	public static final String DISPLAY_SUCCESS = "success";
 	public static final String USER_COOKIE_KEY = "id";
 	
+	//Games
+	public static final String KINGS_CORNER = "King's Corner";
 }
