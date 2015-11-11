@@ -115,10 +115,10 @@ public class Card extends ReflectionDBObject {
 	}
 
 	public enum Suit {
-		SPADE("Spade", "&#9824;"),
+		SPADE("Spade", "&#9828;"),
 		DIAMOND("Diamond", "&#9826;"),
-		HEART("Heart", "&#9830;"),
-		CLUB("Club", "&#9827;");
+		HEART("Heart", "&#9825;"),
+		CLUB("Club", "&#9831;");
 		
 		private String displayName;
 		private String html;
