@@ -5,14 +5,15 @@ import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.post;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-
-import com.mongodb.BasicDBList;
+import java.util.stream.Collectors;
 
 import cardswithfriends.Card.Suit;
 import cardswithfriends.views.GameView;
+import cardswithfriends.views.KingsCornerView;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -35,7 +36,7 @@ public class TemplateHandler {
 	private static final String FRIENDS_TEMPLATE = "friends.mustache";
 	private static final String FRIEND_INFO_TEMPLATE = "friendInfo.mustache";
 	private static final String GAME_LIST_TEMPLATE = "gameList.mustache";
-	private static final String KINGS_CORNERS_TEMPLATE = "kingsCorners.mustache";
+	private static final String KINGS_CORNERS_TEMPLATE = "kingscorners.mustache";
 	private static final String LEADERBOARD_TEMPLATE = "leaderboard.mustache";
 	private static final String TUTORIAL_TEMPLATE = "tutorial.mustache";
 
@@ -49,14 +50,14 @@ public class TemplateHandler {
         });
         
         // Handle the GET requests by rendering the mustache template
-		get("/", 			(rq, rs) -> renderHome(rq, rs), 		new MustacheTemplateEngine());
-		get("/register", 	(rq, rs) -> renderRegister(rq, rs), 	new MustacheTemplateEngine());
+        get("/", 			(rq, rs) -> renderHome(rq, rs), 		new MustacheTemplateEngine());
+        get("/register", 	(rq, rs) -> renderRegister(rq, rs), 	new MustacheTemplateEngine());
         get("/login", 		(rq, rs) -> renderLogin(rq, rs), 		new MustacheTemplateEngine());
         get("/games", 		(rq, rs) -> renderGameList(rq, rs), 	new MustacheTemplateEngine());
         get("/game/:id",	(rq, rs) -> renderGame(rq, rs), 		new MustacheTemplateEngine());
         get("/new", 		(rq, rs) -> renderCreateGame(rq, rs), 	new MustacheTemplateEngine());
         get("/friends", 	(rq, rs) -> renderFriends(rq, rs), 		new MustacheTemplateEngine());
-        get("/friends/:id", (rq, rs) -> renderFriendInfo(rq, rs), new MustacheTemplateEngine());
+        get("/friends/:id", (rq, rs) -> renderFriendInfo(rq, rs), 	new MustacheTemplateEngine());
         get("/tutorial", 	(rq, rs) -> renderTutorial(rq, rs), 	new MustacheTemplateEngine());
         get("/leaderboard", (rq, rs) -> renderLeaderboard(rq, rs), 	new MustacheTemplateEngine());
         get("/logout", 		(rq, rs) -> logout(rq, rs));
@@ -65,7 +66,7 @@ public class TemplateHandler {
         post("/register", (rq, rs) -> postRegister(rq, rs), new MustacheTemplateEngine());
         post("/login", (rq, rs) -> postLogin(rq, rs), 	new MustacheTemplateEngine());
         post("/new", (rq, rs) -> postCreateGame(rq, rs), new MustacheTemplateEngine());        
-        post("/makeMove", (rq, rs) -> postMove(rq, rs), new MustacheTemplateEngine());
+        post("/move", (rq, rs) -> postMove(rq, rs), new MustacheTemplateEngine());
         post("/turn", (rq, rs) -> postTurn(rq, rs), new MustacheTemplateEngine());
         post("/addFriend", (rq, rs) -> postAddFriend(rq, rs), new MustacheTemplateEngine());
         post("/removeFriend", (rq, rs) -> postRemoveFriend(rq, rs), new MustacheTemplateEngine());
@@ -86,6 +87,7 @@ public class TemplateHandler {
             rs.status(404);
             rs.redirect("/");
         });
+        
 	}
 	
 	private static ModelAndView renderHome(Request rq, Response rs) {
@@ -110,14 +112,15 @@ public class TemplateHandler {
 	
 	private static ModelAndView renderGameList(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		List<KingsCorner> games = DBHandler.getKCGamesforUser(getUserIdFromCookies(rq));
-		info.put("games", games);
+		info.put("games", DBHandler.getKCGamesforUser(getUserIdFromCookies(rq))
+								.stream()
+								.map(e -> new KingsCornerView(e))
+								.collect(Collectors.toList()));
 		return getModelAndView(info, GAME_LIST_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView renderGame(Request rq, Response rs) {
-		HashMap<String, Object> info = new HashMap<String, Object>();
-		List<Player> players = new LinkedList<Player>();
+		HashMap<String, Object> info = new HashMap<String, Object>();		
 		int gameId;
 		try {
 			gameId = Integer.parseInt(rq.queryParams("gameId"));
@@ -125,61 +128,32 @@ public class TemplateHandler {
 			gameId = Integer.parseInt(rq.params(":id"));
 		}
 		info.put("game", new GameView(DBHandler.getKCGame(gameId), getUserFromCookies(rq)));
-		KingsCorner game1 = new KingsCorner(1, players);
-		
-    	KCGameState gs = (KCGameState) game1.getGameState();
-    	
-    	Pile spoof = new Pile("Spoof North Pile");
-    	spoof.addOn(Card.make(8, Card.Suit.CLUB));
-    	gs.piles.put(Integer.toString(PileIds.NORTH_PILE.ordinal()), spoof);
-    	Pile user0Hand = gs.userHands.get(Integer.toString(players.get(0).get_id()));
-    	Card toMove = Card.make(7, Card.Suit.DIAMOND);
-    	if(!user0Hand.contains(toMove)){
-    		user0Hand.add(toMove);
-    	}
-    	
-    	Pile moving = new Pile("Moving Pile");
-    	moving.add(toMove);
-    	
-    	Move move = new KCMove(players.get(0), user0Hand, moving, spoof);
-    	
-    	game1.applyMove(move);
-		
-		
-		info.put("game", new GameView(game1, getUserFromCookies(rq)));
 		return getModelAndView(info, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView renderCreateGame(Request rq, Response rs) {
-		//TODO fill out this template
-		return getModelAndView(new HashMap<String, Object>(), CREATE_GAME_TEMPLATE, rq, rs);
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		info.put("friends", getFriendsFromDB(getUserIdFromCookies(rq)));
+		return getModelAndView(info, CREATE_GAME_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView renderFriends(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		BasicDBList players = DBHandler.getFriendsForUser(getUserIdFromCookies(rq));
-		players.add(new User(10, "A really good friend"));
-		players.add(new User(12, "Also like an okay friend"));
-		players.add(new User(3, "Friend 3"));
-		players.add(new User(4, "Friend 4"));
-		info.put("friends", players);
+		info.put("friends", getFriendsFromDB(getUserIdFromCookies(rq)));
 		return getModelAndView(info, FRIENDS_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView renderFriendInfo(Request rq, Response rs) {
-		BasicDBList friends = DBHandler.getFriendsForUser(getUserIdFromCookies(rq));
-		Player friend = null;
-		for(Object obj : friends){
-			Player p = (Player)obj;
-			if(p.get_id() == Integer.parseInt(rq.params(":id"))){
-				friend = p;
-			}
-		}
-		if(friend == null){
+		List<Player> friends = getFriendsFromDB(getUserIdFromCookies(rq))
+								.stream()
+								.filter(e -> e.get_id() == Integer.parseInt(rq.params(":id")))
+								.collect(Collectors.toList());
+		if(friends.isEmpty()){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "You are not friends with the requested user or the requested user does not exist. If you have just sent them a friend request they may have not accepted yet.");
+			return renderFriends(rq, rs);
 		}
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		info.put("friend", friend);
+		info.put("friend", friends.get(0));
 		return getModelAndView(info, FRIEND_INFO_TEMPLATE, rq, rs);
 	}
 	
@@ -188,13 +162,9 @@ public class TemplateHandler {
 	}
 	
 	private static ModelAndView renderLeaderboard(Request rq, Response rs) {
-		// TODO real things
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		List<Player> players = new LinkedList<Player>();
-		players.add(new User(3, "ImNumberOne@test.com"));
-		players.add(new User(4, "two@email.com"));
-		players.add(new User(5, "thirdistheonewiththetreasurechest@gmail.com"));
-		info.put("players", players);
+		Leaderboard board = DBHandler.getLeadboard();
+		info.put("board", board);
 		return getModelAndView(info, LEADERBOARD_TEMPLATE, rq, rs);
 	}
 	
@@ -249,31 +219,65 @@ public class TemplateHandler {
 	}
 	
 	private static ModelAndView postCreateGame(Request rq, Response rs) {
+		Integer numAiPlayers = Integer.parseInt(rq.queryParams("ai"));		
 		List<Player> players = new LinkedList<Player>();
+		
+		// Add the user that created the game as the first player
 		players.add(getUserFromCookies(rq));
-		players.add(new ArtificialPlayer(-1));
+		
+		// Add the selected friends to the player list
+		Arrays.stream(rq.queryMap("friends").values())
+				.map(e -> DBHandler.getUser(Integer.parseInt(e)))
+				.forEach(e -> players.add(e));
+		
+		// Add the specified number of AI players to the list
+		for(int i = 0; i < numAiPlayers; i++){
+			players.add(new ArtificialPlayer(i * -1));
+		}
+		
+		// Create the game
 		KingsCorner game = new KingsCorner(DBHandler.getNextKCGameID(), players);
 		DBHandler.createKCGame(game);
 		return renderGameList(rq, rs);
 	}
 	
 	private static ModelAndView postMove(Request rq, Response rs) {
-		Integer number = Integer.parseInt(rq.queryParams("number"));
-		String suit = rq.queryParams("suit");
 		String pile = rq.queryParams("pile");
 		Integer gameId = Integer.parseInt(rq.queryParams("gameId"));
 		KingsCorner game = DBHandler.getKCGame(gameId);
-		Pile destination = game.getGameState().piles.get(Integer.parseInt(pile));
-		Pile moving = new Pile("moving");
-		moving.add(new Card(number, Suit.valueOf(suit)));
 		Player player = getUserFromCookies(rq);
-		Pile origin = game.getGameState().userHands.get(player.get_id());
+		Pile moving = new Pile("moving");
+		Pile destination;
+		Pile origin;
+		if(rq.queryParams("pile2") == null){
+			// We are moving a player's card onto a game pile
+			Integer number = Integer.parseInt(rq.queryParams("number"));
+			String suit = rq.queryParams("suit");
+			moving.add(new Card(number, Arrays.stream(Suit.values())
+											.filter(e -> e.getDisplayName().equals(suit))
+											.collect(Collectors.toList())
+											.get(0)));
+			destination = game.getGameState().piles.get(getPileKeyFromString(pile));
+			origin = game.getGameState().userHands.get(Integer.toString(player.get_id()));
+		} else {
+			// We are moving a game pile to another game pile
+			Pile pile1 = game.getGameState().piles.get(getPileKeyFromString(pile));
+			String pile2 = rq.queryParams("pile2");
+			destination = game.getGameState().piles.get(getPileKeyFromString(pile2));
+			origin = pile1;
+			moving.addAll(pile1);
+		}
 		Move move = new KCMove(player, origin, moving, destination);
 		if(game.applyMove(move)){
-			rs.header(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied succefully.");
+			if(!game.getIsActive()){
+				rs.header(GlobalConstants.DISPLAY_SUCCESS, "The game is over and you won!");
+			} else {
+				rs.header(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied succefully.");
+			}
 		} else {
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Move was invalid and and not applied.");
 		}
+		DBHandler.updateKCGame(game);
 		return renderGame(rq, rs);
 	}
 	
@@ -290,11 +294,18 @@ public class TemplateHandler {
 		String searchValue = rq.queryParams("searchValue");
 		Player user2 = DBHandler.getUserByEmail(searchValue);
 		if(user2 == null){
+			user2 = DBHandler.getUserByUserName(searchValue);
+		}
+		if(user2 == null){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "No user was found with that search.");
 		} else {
-			//TODO Are we just going to let people add friends or send emails to accept? Probably need an intermediary pending status as well.
-			DBHandler.addFriend(getUserFromCookies(rq).get_id(), user2.get_id());
-			rs.header(GlobalConstants.DISPLAY_SUCCESS, "A friend request was sent to that user.");
+			if(!DBHandler.addFriend(getUserIdFromCookies(rq), user2.get_id())){
+				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
+			} else if(!DBHandler.addFriend(user2.get_id(), getUserIdFromCookies(rq))){
+				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
+			} else {
+				rs.header(GlobalConstants.DISPLAY_SUCCESS, "The requested friend has been added.");
+			}
 		}
 		return renderFriends(rq, rs);
 	}
@@ -348,6 +359,19 @@ public class TemplateHandler {
 	 */
 	private static User getUserFromCookies(Request rq){
 		return DBHandler.getUser(getUserIdFromCookies(rq));
+	}
+	
+	// The database returns a list of ids get the list of Players
+	private static List<Player> getFriendsFromDB(int userId){
+		return DBHandler.getFriendsForUser(userId)
+					.stream()
+					.map(e -> DBHandler.getUser((Integer)e))
+					.collect(Collectors.toList());
+	}
+	
+	// Get the key for the pile HashMap from the string name of the pile
+	private static String getPileKeyFromString(String name){
+		return Integer.toString(Arrays.stream(PileIds.values()).filter(e -> e.name().equals(name)).collect(Collectors.toList()).get(0).ordinal());
 	}
 	
 	/**

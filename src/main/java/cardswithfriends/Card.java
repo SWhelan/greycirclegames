@@ -27,6 +27,8 @@ public class Card extends ReflectionDBObject {
 		this.number = (Integer)obj.get("Number");
 		this.suitOrdinal = (Integer)obj.get("SuitOrdinal");
 		this.suit = decodeSuit();
+		setDisplayNumber();
+		this.setEnumSuit(suit);
 	}
 
 	public static Card make(int number, Suit suit) throws IllegalArgumentException {
@@ -51,6 +53,8 @@ public class Card extends ReflectionDBObject {
 			case 12: displayNumber = "Q";
 				break;
 			case 11: displayNumber = "J";
+				break;
+			case 1: displayNumber = "A";
 				break;
 			default: displayNumber = Integer.toString(number);
 		}
@@ -113,7 +117,7 @@ public class Card extends ReflectionDBObject {
 	public enum Suit {
 		SPADE("Spade", "&#9824;"),
 		DIAMOND("Diamond", "&#9826;"),
-		HEART("Heart", "&#9825;"),
+		HEART("Heart", "&#9830;"),
 		CLUB("Club", "&#9827;");
 		
 		private String displayName;
