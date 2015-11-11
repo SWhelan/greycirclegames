@@ -15,7 +15,7 @@ public class GameView {
 	Integer gameId;
 	boolean isTurn;
 	List<CardView> userHand;
-	List<List<CardView>> otherPlayers = new LinkedList<List<CardView>>();
+	List<HandView> otherPlayers = new LinkedList<HandView>();
 	List<CardView> drawPile;
 	
 	List<CardView> northPile;
@@ -34,7 +34,7 @@ public class GameView {
 			if(e.equals(viewingPlayer)){
 				userHand = makeCardView(game.getGameState().userHands.get(Integer.toString(viewingPlayer.get_id())).getCards());
 			} else {
-				otherPlayers.add(makeCardView(game.getGameState().userHands.get(Integer.toString(e.get_id())).getCards()));
+				otherPlayers.add(new HandView(makeCardView(game.getGameState().userHands.get(Integer.toString(e.get_id())).getCards()), e.getUserName()));
 			}
 		});	
 		Map<String, Pile> piles = game.getGameState().piles;
@@ -50,25 +50,27 @@ public class GameView {
 		southWestPile = makeCardView(piles.get(Integer.toString(PileIds.SOUTH_WEST_PILE.ordinal())).getCards());
 		northWestPile = makeCardView(piles.get(Integer.toString(PileIds.NORTH_WEST_PILE.ordinal())).getCards());
 		
-		removeMiddle(northPile);
-		removeMiddle(eastPile);
-		removeMiddle(southPile);
-		removeMiddle(westPile);
-		removeMiddle(northEastPile);
-		removeMiddle(southEastPile);
-		removeMiddle(southWestPile);
-		removeMiddle(northWestPile);
+		northPile = removeMiddle(northPile);
+		eastPile = removeMiddle(eastPile);
+		southPile = removeMiddle(southPile);
+		westPile = removeMiddle(westPile);
+		northEastPile = removeMiddle(northEastPile);
+		southEastPile = removeMiddle(southEastPile);
+		southWestPile = removeMiddle(southWestPile);
+		northWestPile = removeMiddle(northWestPile);
 		isTurn = game.getCurrentPlayerObject().get_id() == viewingPlayer.get_id();
 	}
 	
 	private List<CardView> removeMiddle(List<CardView> pile){
-		for(int i = pile.size()-2; i > 0; i--){
-			pile.remove(i);
+		List<CardView> newPile = new LinkedList<CardView>();
+		if(pile.size() > 0){
+			newPile.add(pile.get(0));
 		}
 		if(pile.size() > 1){
-			pile.get(0).setFirst(true);
+			newPile.add(pile.get(pile.size()-1));
+			newPile.get(0).setFirst(true);
 		}
-		return pile;
+		return newPile;
 	}
 	
 	private List<CardView> makeCardView(List<Card> cards){
