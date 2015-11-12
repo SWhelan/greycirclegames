@@ -3,6 +3,7 @@
  */
 package cardswithfriends;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -90,7 +91,6 @@ public class DBHandler {
 
 		LinkedList<KingsCorner> gamesList = new LinkedList<>();
 		while(cursor.hasNext()) {
-			System.out.println("Found a game for user: " + userId);
 			BasicDBObject obj = (BasicDBObject)cursor.next();
 			gamesList.add(new KingsCorner(obj));
 		}
@@ -100,12 +100,24 @@ public class DBHandler {
 		}
 		return gamesList;
 	}
-	
-	public static Leaderboard getLeadboard() {
-		// TODO Auto-generated method stub
-		return null;
+
+	//returns the leaderboard, creates a new empty one if it does not exist in the db
+	public static Leaderboard getLeaderboard() {
+		DB db = DatabaseConnector.getMongoDB();
+		DBCollection coll = db.getCollection("leaderboard");
+		BasicDBObject obj = (BasicDBObject) coll.findOne();
+
+		if (obj == null) {
+			//leaderboard DNE, so create, insert, and return
+			Leaderboard lb = new Leaderboard();
+			coll.save(lb);
+			return lb;
+		}
+		else {
+			return new Leaderboard(obj);
+		}
 	}
-	
+
 	//UPDATE
 	////////////////////////////////////////////////////////////
 	public static void updateUser(User user) {
@@ -118,6 +130,15 @@ public class DBHandler {
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("kcgames");
 		coll.save(game);
+	}
+
+
+	//updates the leaderboard
+	public static void updateLeaderboard(Leaderboard leaderboard) {
+		DB db = DatabaseConnector.getMongoDB();
+		DBCollection coll = db.getCollection("leaderboard");
+		coll.drop(); // delete old leaderboard
+		coll.save(leaderboard);
 	}
 
 	//in the update section because it creates/updates and gets
@@ -216,64 +237,72 @@ public class DBHandler {
 
 		//Test user
 		//////////////////////////////////////////////////////////////////////////////////////
-		//    	BasicDBList frands = new BasicDBList();
-		//    	frands.add(6);
-		//    	frands.add(7);
-		//    	frands.add(42);
-		//    	
-		//    	User user = new User(43,"goduser", "word", "salt", "email@gmail.com", frands);
-		//    	DBHandler.createUser(user);
-		//    	User u = getUser(43);
-		//    	u.setUserName("user2");
-		//    	updateUser(u);
+//		BasicDBList frands = new BasicDBList();
+//		frands.add(6);
+//		frands.add(7);
+//		frands.add(42);
+//
+//		User user = new User(4,"goduser", "word", "salt", "email@gmail.com", frands);
+//		User user2 = new User(5,"goduser2", "word2", "salt2", "2email@gmail.com", frands);
+//		User user3 = new User(6,"goduser3", "word3", "salt3", "3email@gmail.com", frands);
+//		DBHandler.createUser(user);
+//		DBHandler.createUser(user2);
+//		DBHandler.createUser(user3);
+
+		//		User u = getUser(43);
+		//		u.setUserName("user2");
+		//		u.updateWin(GlobalConstants.KINGS_CORNER);
+		//		updateUser(u);
 		//    	deleteUser(43);
 		//////////////////////////////////////////////////////////////////////////////////////
 
 		//Test kcgame
 		//////////////////////////////////////////////////////////////////////////////////////
-		//    	ArrayList<Player> playerList = new ArrayList<Player>();
-		//    	BasicDBList frands = new BasicDBList();
-		//    	frands.add(6);
-		//    	frands.add(7);
-		//    	frands.add(8);
-		//    	
-		//    	Player p1 = new User(43,"username", "word", "salt", "43email@gmail.com", new BasicDBList());    	
-		//    	
-		//    	playerList.add(p1);
-		//    	playerList.add(new User(44,"username", "word", "salt", "44email@gmail.com", frands));
-		//    	playerList.add(new User(45,"username", "word", "salt", "45email@gmail.com", frands));
-		//    	
-		//    	Pile pile1 = new Pile("pile one");
-		//    	Pile pile2 = new Pile("pile two");
-		//    	Pile pile3 = new Pile("pile three");
+		//		ArrayList<Player> playerList = new ArrayList<Player>();
+		//		BasicDBList frands = new BasicDBList();
+		//		frands.add(6);
+		//		frands.add(7);
+		//		frands.add(8);
 		//
-		//    	KingsCorner game = new KingsCorner(142, playerList);
-		//    	game.addMove(new KCMove(p1, pile1, pile2, pile3));
-		//    	
-		//    	DBHandler.createKCGame(game);
-		//    	try {
+		//		Player p1 = new User(43,"username", "word", "salt", "43email@gmail.com", new BasicDBList());    	
+		//
+		//		playerList.add(p1);
+		//		playerList.add(new User(44,"username", "word", "salt", "44email@gmail.com", frands));
+		//		playerList.add(new User(45,"username", "word", "salt", "45email@gmail.com", frands));
+		//
+		//		Pile pile1 = new Pile("pile one");
+		//		Pile pile2 = new Pile("pile two");
+		//		Pile pile3 = new Pile("pile three");
+		//
+		//		KingsCorner game = new KingsCorner(142, playerList);
+		//		game.addMove(new KCMove(p1, pile1, pile2, pile3));
+		//
+		//		DBHandler.createKCGame(game);
+		//		try {
 		//			Thread.sleep(3000);
 		//		} catch (InterruptedException e) {
 		//			e.printStackTrace();
 		//		}
-		//    	
-		//    	LinkedList<KingsCorner> l = (LinkedList<KingsCorner>) getKCGamesforUser(45);
-		//    	
-		//    	KingsCorner kc = getKCGame(142);
-		//    	kc.setIsActive(false);
-		//    	updateKCGame(kc);
-		//    	deleteKCGame(142);
+		//
+		//		LinkedList<KingsCorner> l = (LinkedList<KingsCorner>) getKCGamesforUser(45);
+		//
+		//		KingsCorner kc = getKCGame(142);
+		//		kc.setIsActive(false);
+		//		updateKCGame(kc);
+		//		deleteKCGame(142);
 		//////////////////////////////////////////////////////////////////////////////////////    	
 
 
 		//Test Leaderboard
 		//////////////////////////////////////////////////////////////////////////////////////
 
-		//    	Leaderboard leaderboard = new Leaderboard();
-		//    	replaceLeaderboard(leaderboard);
-		//    	LeaderBoard getLeadBoard()
-		//    	updateLeaderBoard(LeaderBoard leaderBoard) 
-		//    	deleteLeaderBoard() 	
+		User u = getUser(6);
+		u.updateWin(GlobalConstants.KINGS_CORNER);
+		Leaderboard l = getLeaderboard();
+		l.addUser(u);
+		//l.addUser(getUser(5));
+		updateLeaderboard(l); 
+
 
 		int c = 7;
 		int x = c;
@@ -287,3 +316,4 @@ public class DBHandler {
 
 	}
 }
+//}

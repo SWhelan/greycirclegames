@@ -48,6 +48,7 @@ public class KingsCorner extends Game{
 		
 		this.isActive = (Boolean)obj.get("IsActive");
 		this.winner_id = (Integer)obj.get("winner_id");
+		this.updatedLeaderboard = (Boolean)obj.get("UpdatedLeaderboard");
 	}
 
 	public int getCurrentPlayer(){
