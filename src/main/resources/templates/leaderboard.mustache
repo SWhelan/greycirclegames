@@ -1,8 +1,24 @@
 {{> header}}
 <h1>Leaderboard</h1>
-<ol>
-{{#players}}
-	<li>{{email}}</li>
-{{/players}}
-</ol>
+
+<table class="table">
+	<tr>
+		<th>User Name</th>
+		<th># Wins</th>
+		<th># Losses</th>
+	</tr>	
+{{#entries}}
+	<tr>
+		<td>
+			{{user.userName}}
+		</td>
+		<td>
+			{{numWins}}
+		</td>
+		<td>
+			{{numLosses}}
+		</td>
+	</tr>
+{{/entries}}
+</table>
 {{> footer}}
