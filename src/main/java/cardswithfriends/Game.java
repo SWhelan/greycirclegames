@@ -117,6 +117,7 @@ public abstract class Game extends ReflectionDBObject{
 					p.updateLoss(getGameTypeIdentifier());
 				}
 			}
+			this.updatedLeaderboard = true;
 		}
 	}
 	

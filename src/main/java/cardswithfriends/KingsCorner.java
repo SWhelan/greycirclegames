@@ -127,6 +127,7 @@ public class KingsCorner extends Game{
 	private void setToWinState(){
 		isActive = false;
 		winner_id = getCurrentPlayerObject().get_id();
+		this.updateLeaderboard();
 	}
 	
 	private void setToNonWinningEndState(){
