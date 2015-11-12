@@ -3,6 +3,7 @@ package cardswithfriends;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -90,6 +91,35 @@ public class KingsCorner extends Game{
 		currentPlayer = (currentPlayer + 1) % turnOrder.size();
 		
 		return true;
+	}
+	
+	private void applyAIMoves(){
+		Player cur = getCurrentPlayerObject();
+		Pile aiHand;
+		Map<Integer,Pile> visiblePiles = getGameState().getVisiblePiles();
+		Move m = null;
+		while(isAI(cur)){
+			aiHand = getGameState().userHands.get(cur.get_id());
+
+			ArtificialPlayer ai = (ArtificialPlayer) cur;
+			AI_TURN:
+			while(this.isActive){
+				m = ai.createMove(aiHand, visiblePiles);
+				if(m != null){
+					this.applyMove(m);
+				}else{
+					break AI_TURN;
+				}
+			}
+			this.endTurn();
+			
+			cur = getCurrentPlayerObject();
+		}
+	}
+	
+	
+	private static boolean isAI(Player p){
+		return p.get_id() < 0;
 	}
 	
 	public Player getCurrentPlayerObject(){

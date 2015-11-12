@@ -100,6 +100,20 @@ public class KCGameState extends GameState {
 		piles.put(Integer.toString(PileIds.SOUTH_WEST_PILE.ordinal()), new Pile("Southwest Pile"));
 	}
 	
+	//Get only piles that all players should be allowed to see
+	public Map<Integer, Pile> getVisiblePiles() {
+		Map<Integer, Pile> tablePiles = new HashMap<Integer, Pile>();
+		tablePiles.put(PileIds.EAST_PILE.ordinal(), piles.get(PileIds.EAST_PILE.ordinal()));
+		tablePiles.put(PileIds.NORTH_PILE.ordinal(), piles.get(PileIds.NORTH_PILE.ordinal()));
+		tablePiles.put(PileIds.WEST_PILE.ordinal(), piles.get(PileIds.WEST_PILE.ordinal()));
+		tablePiles.put(PileIds.SOUTH_PILE.ordinal(), piles.get(PileIds.SOUTH_PILE.ordinal()));
+		tablePiles.put(PileIds.NORTH_EAST_PILE.ordinal(), piles.get(PileIds.NORTH_EAST_PILE.ordinal()));
+		tablePiles.put(PileIds.NORTH_WEST_PILE.ordinal(), piles.get(PileIds.NORTH_WEST_PILE.ordinal()));
+		tablePiles.put(PileIds.SOUTH_EAST_PILE.ordinal(), piles.get(PileIds.SOUTH_EAST_PILE.ordinal()));
+		tablePiles.put(PileIds.SOUTH_WEST_PILE.ordinal(), piles.get(PileIds.SOUTH_WEST_PILE.ordinal()));
+		return tablePiles;
+	}
+	
 	public class Test{
 		public void testInitializeToNewGameState(List<Player> players){
 			initializeToNewGameState(players);
