@@ -163,7 +163,7 @@ public class TemplateHandler {
 	
 	private static ModelAndView renderLeaderboard(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		Leaderboard board = DBHandler.getLeadboard();
+		Leaderboard board = DBHandler.getLeaderboard();
 		info.put("board", board);
 		return getModelAndView(info, LEADERBOARD_TEMPLATE, rq, rs);
 	}

@@ -48,6 +48,14 @@ public abstract class Game extends ReflectionDBObject{
 		this.updatedLeaderboard = updatedLeaderboard;
 	}
 	
+	public boolean getUpdatedLeaderboard() {
+		return updatedLeaderboard;
+	}
+
+	public void setUpdatedLeaderboard(boolean updatedLeaderboard) {
+		this.updatedLeaderboard = updatedLeaderboard;
+	}
+
 	public boolean getIsActive() {
 		return isActive;
 	}
