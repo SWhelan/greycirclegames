@@ -3,6 +3,7 @@ package cardswithfriends.views;
 import java.util.LinkedList;
 import java.util.List;
 
+import cardswithfriends.DBHandler;
 import cardswithfriends.KingsCorner;
 import cardswithfriends.Player;
 
@@ -19,5 +20,12 @@ public class KingsCornerEntryView {
 			players.add(p.getUserName());
 		}
 		this.isActive = kc.getIsActive();
+		
+		if(!kc.getIsActive()){
+			Player user = DBHandler.getUser(kc.getWinner_id());
+			if(user != null){
+				this.winner = user.getUserName();
+			}
+		}
 	}
 }

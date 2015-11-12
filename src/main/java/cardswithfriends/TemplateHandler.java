@@ -179,10 +179,10 @@ public class TemplateHandler {
 	}
 	
 	private static ModelAndView postRegister(Request rq, Response rs) {
-		String email = rq.queryParams("email");
+		String email = rq.queryParams("email").toLowerCase();
 		String password = rq.queryParams("password");
 		String passwordAgain = rq.queryParams("password-again");
-		User user = DBHandler.getUserByEmail(email); 
+		User user = DBHandler.getUserByEmail(email);
 		if(user != null){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Email already in use.");
 			return renderRegister(rq, rs);
@@ -204,7 +204,7 @@ public class TemplateHandler {
 	}
 	
 	private static ModelAndView postLogin(Request rq, Response rs) {
-		String email = rq.queryParams("email");
+		String email = rq.queryParams("email").toLowerCase();
 		String password = rq.queryParams("password");
 		User user = DBHandler.getUserByEmail(email);
 		if(checkLogin(user, password)){
@@ -317,10 +317,12 @@ public class TemplateHandler {
 		if(user2 == null){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "No user was found with that id to remove.");
 		} else {
-			if(DBHandler.removeFriend(getUserFromCookies(rq).get_id(), user2.get_id())){
-				rs.header(GlobalConstants.DISPLAY_SUCCESS, "Friend was successfully removed.");
-			} else {
+			if(!DBHandler.removeFriend(getUserIdFromCookies(rq), user2.get_id())){
 				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
+			} else if (!DBHandler.removeFriend(user2.get_id(), getUserIdFromCookies(rq))){
+				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
+			} else {
+				rs.header(GlobalConstants.DISPLAY_SUCCESS, "Friend was successfully removed.");
 			}
 		}
 		return renderFriends(rq, rs);
