@@ -47,7 +47,7 @@ public class KingsCorner extends Game{
 		}
 		
 		this.isActive = (Boolean)obj.get("IsActive");
-		this.winner_id = (Integer)obj.get("winner_id");
+		this.winner_id = (Integer)obj.get("Winner_id");
 		this.updatedLeaderboard = (Boolean)obj.get("UpdatedLeaderboard");
 	}
 
@@ -69,6 +69,9 @@ public class KingsCorner extends Game{
 		if(!gameIsOver() && move.isValid()){
 			move.apply();
 			addMove(move);
+			if(gameIsOver()){
+				setToWinState();
+			}
 			return true;
 		}
 		return false;
@@ -108,7 +111,6 @@ public class KingsCorner extends Game{
 	public boolean gameIsOver(){
 		for(Pile p : getGameState().userHands.values()){
 			if(p.isEmpty()){
-				setToWinState();
 				return true;
 			}
 		}
@@ -125,6 +127,7 @@ public class KingsCorner extends Game{
 	private void setToWinState(){
 		isActive = false;
 		winner_id = getCurrentPlayerObject().get_id();
+		this.updateLeaderboard();
 	}
 	
 	private void setToNonWinningEndState(){

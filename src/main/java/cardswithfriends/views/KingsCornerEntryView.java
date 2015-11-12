@@ -6,15 +6,18 @@ import java.util.List;
 import cardswithfriends.KingsCorner;
 import cardswithfriends.Player;
 
-public class KingsCornerView {
+public class KingsCornerEntryView {
+	public boolean isActive;
+	public String winner;
 	public int gameId;
 	public String currentPlayerName;
 	public List<String> players = new LinkedList<String>();
-	public KingsCornerView(KingsCorner kc){
+	public KingsCornerEntryView(KingsCorner kc){
 		gameId = kc.get_id();
 		currentPlayerName = kc.getCurrentPlayerObject().getUserName();
 		for(Player p : kc.turnOrder){
 			players.add(p.getUserName());
 		}
+		this.isActive = kc.getIsActive();
 	}
 }

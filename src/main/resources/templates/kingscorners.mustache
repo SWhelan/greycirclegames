@@ -183,6 +183,10 @@
 	var secondPile;
 	$(".userCard").click(function (){
 		if(isTurn){
+			if($(this).attr("id") == "drawPile"){
+				handleTurn();
+				return;
+			}
 			if($(this).hasClass("clicked")){
 				// The currently selected card has been clicked
 				$(this).removeClass("clicked");
@@ -196,7 +200,8 @@
 				}
 			} else {
 				if($(this).attr("id") == "drawPile"){
-					handleTurn()
+					handleTurn();
+					return;
 				} else {
 					// This is a different card from the one currently selected
 					selectedCard.removeClass("clicked");
@@ -211,6 +216,10 @@
 	
 	$(".gamePile").click(function (){
 		if(isTurn){
+			if($(this).children().first().attr("id") == "drawPile"){
+				handleTurn();
+				return;
+			}
 			if($(this).children().first().hasClass("pileClicked")){
 			 	// Unclick the currently selected pile
 				$(this).children().first().removeClass("pileClicked");
@@ -221,7 +230,7 @@
 				selectedPile = $(this);
 				if(selectedCard){
 					move();
-				}			
+				}
 			} else {
 				// This is the second selected pile
 				if($(this).children().first().attr("id") != "drawPile"){
@@ -233,7 +242,7 @@
 		} else {
 			notTurnAlert();
 		}
-	});	
+	});
 	
 	function notTurnAlert(){
 		$("#alert").html("It is not your turn.");

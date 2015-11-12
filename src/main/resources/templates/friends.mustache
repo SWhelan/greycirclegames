@@ -8,18 +8,21 @@
   </div>
   <button type="submit" class="btn btn-primary btn-lg btn-block">Add a New Friend</button>
 </form>
-
+<br />
 {{#friends}}
+<div class="row">
 	<a href="/friends/{{_id}}">
-		<div>
-			<h3>{{email}}</h3>
-			<h4>{{_id}}</h4>
+		<div class="col-md-4">
+			<p class="friendLink">{{email}}</p>
+		</div>
+		<div class="col-md-4">
 			<form class="form-horizontal" action="/removeFriend" method="post">
 				<input type="hidden" name="friendId" id="friendId" value="{{_id}}">
-				<button type="submit" "class="btn">Remove Friend</button>
+				<button type="submit" class="btn btn-default">Remove Friend</button>
 			</form>
-			<hr>
 		</div>
 	</a>
+</div>
+<hr>
 {{/friends}}
 {{> footer}}

@@ -2,15 +2,35 @@
 <a href="/new"><button type="button" class="btn btn-primary btn-lg btn-block">New Game</button></a>
 <br/>
 {{#games}}
-<div class="gameListItem">
-<a href = "/game/{{gameId}}">
-Game Id: {{gameId}}
-<br/>
-Players:<br/>
-{{#players}}{{.}}<br/>{{/players}}
-Current Player: {{currentPlayerName}}
-</a>
-<hr/>
-</div>
+<h3>Active Games:</h3>
+{{#active}}
+	<div class="gameListItem">
+		<a href = "/game/{{gameId}}">
+			Game Id: {{gameId}}
+			<br/>
+			Players:<br/>
+			{{#players}}{{.}}<br/>{{/players}}
+			Current Player: {{currentPlayerName}}
+		</a>
+	<hr/>
+	</div>
+{{/active}}
+{{^active}}
+	<h2>You are not currently playing any games.</h2>
+{{/active}}
+	<h3>Past Games:</h3>
+{{#ended}}
+	<div class="gameListItem">
+	Game Id: {{gameId}}
+	<br/>
+	Players:<br/>
+	{{#players}}{{.}}<br/>{{/players}}
+	Winner: {{winner}}
+	<hr/>
+	</div>
+{{/ended}}
+{{^ended}}
+	<h3>You have no past games.</h3>
+{{/ended}}
 {{/games}}
 {{> footer}}

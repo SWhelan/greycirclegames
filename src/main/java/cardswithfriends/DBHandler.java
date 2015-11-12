@@ -3,7 +3,6 @@
  */
 package cardswithfriends;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -197,6 +196,9 @@ public class DBHandler {
 	 */
 	public static BasicDBList getFriendsForUser(int userId) {
 		User user = getUser(userId);
+		if(user == null){
+			return null;
+		}
 		return user.getFriends();
 	}
 
@@ -233,9 +235,9 @@ public class DBHandler {
 
 	public static void runTJsTestCode() {
 
-		System.out.println("Running jank db test code");
-		
-		
+		//System.out.println("Running jank db test code");
+
+
 
 		//Test user
 		//////////////////////////////////////////////////////////////////////////////////////
@@ -298,16 +300,17 @@ public class DBHandler {
 		//Test Leaderboard
 		//////////////////////////////////////////////////////////////////////////////////////
 
-//		User u = getUser(8);
-//		User u1 = getUser(9);
-//		User u2 = getUser(13);
-//		
-//		u.updateWin(GlobalConstants.KINGS_CORNER);
-//		Leaderboard l = getLeaderboard();
-//		l.addUser(u);
-//		l.addUser(u1);
-//		l.addUser(u2);
-//		updateLeaderboard(l);
+		//		User u = getUser(8);
+		//		User u1 = getUser(9);
+		//		User u2 = getUser(13);
+		//		
+		//		u.updateWin(GlobalConstants.KINGS_CORNER);
+		//		Leaderboard l = getLeaderboard();
+		//		l.addUser(u);
+		//		l.addUser(u1);
+		//		l.addUser(u2);
+		//		updateLeaderboard(l);
+
 
 
 		int c = 7;

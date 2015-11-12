@@ -13,7 +13,8 @@ import java.util.stream.Collectors;
 
 import cardswithfriends.Card.Suit;
 import cardswithfriends.views.GameView;
-import cardswithfriends.views.KingsCornerView;
+import cardswithfriends.views.KingsCornerListView;
+import cardswithfriends.views.LeaderboardView;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -76,16 +77,23 @@ public class TemplateHandler {
         	// main.css is the only public static file currently
         	// would need to handle this better once more static files are added
         	if(!rq.pathInfo().contains("main.css")){
-        		throw new Exception();
+        		throw new NotFoundException();
         	} else {
         		return null;
         	}
         });
         
         // Catch the 404 errors and redirect to home page
-        exception(Exception.class, (e, rq, rs) -> {
+        exception(NotFoundException.class, (e, rq, rs) -> {
             rs.status(404);
             rs.redirect("/");
+        });
+        
+        // Catch other errors return an internal server error and redirect
+        exception(Exception.class, (e, rq, rs) -> {
+        	e.printStackTrace();
+        	rs.status(500);
+        	rs.redirect("/");
         });
         
 	}
@@ -112,10 +120,7 @@ public class TemplateHandler {
 	
 	private static ModelAndView renderGameList(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		info.put("games", DBHandler.getKCGamesforUser(getUserIdFromCookies(rq))
-								.stream()
-								.map(e -> new KingsCornerView(e))
-								.collect(Collectors.toList()));
+		info.put("games", new KingsCornerListView(getUserIdFromCookies(rq)));
 		return getModelAndView(info, GAME_LIST_TEMPLATE, rq, rs);
 	}
 	
@@ -163,8 +168,7 @@ public class TemplateHandler {
 	
 	private static ModelAndView renderLeaderboard(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		Leaderboard board = DBHandler.getLeaderboard();
-		info.put("board", board);
+		info.put("entries", (new LeaderboardView()).entries);
 		return getModelAndView(info, LEADERBOARD_TEMPLATE, rq, rs);
 	}
 	
@@ -209,13 +213,6 @@ public class TemplateHandler {
 		}
 		rs.header(GlobalConstants.DISPLAY_ERROR, "Your username or password is incorrect.");
 		return renderLogin(rq, rs);
-	}
-	
-	private static boolean checkLogin(User user, String password) {
-		if(user == null || !user.passwordMatches(password)){
-			return false;
-		}		
-		return true;
 	}
 	
 	private static ModelAndView postCreateGame(Request rq, Response rs) {
@@ -298,6 +295,10 @@ public class TemplateHandler {
 		}
 		if(user2 == null){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "No user was found with that search.");
+		} else if (user2.get_id() == getUserIdFromCookies(rq)){
+			rs.header(GlobalConstants.DISPLAY_ERROR, "You can not add your self as a friend try playing a game with a computer player or try the about page if you need to talk to someone.");
+		} else if(alreadyFriends(getUserIdFromCookies(rq), user2.get_id())){
+			rs.header(GlobalConstants.DISPLAY_ERROR, "You are already friends with " + user2.getUserName());
 		} else {
 			if(!DBHandler.addFriend(getUserIdFromCookies(rq), user2.get_id())){
 				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
@@ -344,6 +345,14 @@ public class TemplateHandler {
 		return rq.cookie(GlobalConstants.USER_COOKIE_KEY) != null;
 	}
 	
+	// Is the login/password valid for the found user?
+	private static boolean checkLogin(User user, String password) {
+		if(user == null || !user.passwordMatches(password)){
+			return false;
+		}		
+		return true;
+	}
+	
 	/*
 	 *  Get the user id from the cookies
 	 *  as each url that would use this ensures that the user is logged in
@@ -361,6 +370,12 @@ public class TemplateHandler {
 		return DBHandler.getUser(getUserIdFromCookies(rq));
 	}
 	
+	// Is the user with userId already friends with friendId?
+	private static boolean alreadyFriends(int userId, int friendId){
+		List<Player> friends = getFriendsFromDB(userId);
+		return friends.stream().anyMatch(e -> e.get_id() == friendId);
+	}
+	
 	// The database returns a list of ids get the list of Players
 	private static List<Player> getFriendsFromDB(int userId){
 		return DBHandler.getFriendsForUser(userId)
@@ -371,7 +386,12 @@ public class TemplateHandler {
 	
 	// Get the key for the pile HashMap from the string name of the pile
 	private static String getPileKeyFromString(String name){
-		return Integer.toString(Arrays.stream(PileIds.values()).filter(e -> e.name().equals(name)).collect(Collectors.toList()).get(0).ordinal());
+		return Integer.toString(
+				Arrays.stream(PileIds.values())
+				.filter(e -> e.name().equals(name))
+				.collect(Collectors.toList())
+				.get(0)
+				.ordinal());
 	}
 	
 	/**
