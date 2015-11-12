@@ -38,11 +38,6 @@ public class User extends ReflectionDBObject implements Player {
 		intializeWinsAndLosses();
 	}
 	
-	private void intializeWinsAndLosses() {
-		winsAndLosses = new BasicDBObject();
-		winsAndLosses.append(GlobalConstants.KINGS_CORNER, new Integer[]{0,0});
-	}
-	
 	public User(int _id, String userName, String password, String salt,
 			String email, BasicDBList friends, BasicDBObject wlmap){
 		this._id = _id;
@@ -66,6 +61,15 @@ public class User extends ReflectionDBObject implements Player {
 				(String)obj.get("Email"),
 				(BasicDBList)obj.get("Friends"),
 				(BasicDBObject)obj.get("WinsAndLosses"));
+	}
+	
+	
+	private void intializeWinsAndLosses() {
+		winsAndLosses = new BasicDBObject();
+		BasicDBList winLossList = new BasicDBList();
+		winLossList.add(0);
+		winLossList.add(0);
+		winsAndLosses.put(GlobalConstants.KINGS_CORNER, winLossList);
 	}
 
 	public Integer get_id() {
@@ -225,13 +229,17 @@ public class User extends ReflectionDBObject implements Player {
 
 	@Override
 	public void updateWin(String game) {
-		((Integer[])winsAndLosses.get(game))[0]++;
+		BasicDBList winLossList = ((BasicDBList)winsAndLosses.get(game));
+		int numWins = (Integer)winLossList.get(0) + 1;
+		winLossList.put(0, numWins);
 		DBHandler.updateUser(this);
 	}
 
 	@Override
 	public void updateLoss(String game) {
-		((Integer[])winsAndLosses.get(game))[1]++;
+		BasicDBList winLossList = ((BasicDBList)winsAndLosses.get(game));
+		int numLosses = (Integer)winLossList.get(1) + 1;
+		winLossList.put(1, numLosses);
 		DBHandler.updateUser(this);
 	}
 
