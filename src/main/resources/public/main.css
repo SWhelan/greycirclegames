@@ -65,3 +65,7 @@
 .friendLink {
 	font-size: 14pt;
 }
+
+.currentPlayer {
+	font-weight: bold;
+}

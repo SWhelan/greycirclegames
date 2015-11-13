@@ -116,7 +116,7 @@
 	</table>
 </div>
 <div class="row">
-	Your hand ({{#userHand.size}}{{userHand.size}}{{/userHand.size}} Remaining Cards):
+	Your hand ({{#userHand.size}}{{userHand.size}}{{/userHand.size}} Remaining Cards){{#isTurn}}<b> It's your turn!</b>{{/isTurn}}:
 	<div class="viewingHand">
 		{{#userHand}}
 			<div class="userCard card {{#isRed}}red{{/isRed}} {{^isTurn}}greyedOut{{/isTurn}}" number="{{number}}" suit="{{suit.displayName}}">
@@ -132,7 +132,7 @@
 	<ul>
 	{{#otherPlayers}}
 		{{this}}
-			<li>{{userName}} ({{cards.size}} Remaining Cards)</li>
+			<li {{#isCurrentPlayer}}class="currentPlayer"{{/isCurrentPlayer}}>{{userName}} ({{cards.size}} Remaining Cards){{#isCurrentPlayer}} (Current Player){{/isCurrentPlayer}}</li>
 		{{this}}
 	{{/otherPlayers}}
 	</ul>

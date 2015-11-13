@@ -32,11 +32,12 @@ public class GameView {
 	
 	public GameView(KingsCorner game, Player viewingPlayer){
 		gameId = game.get_id();
+		int currentPlayerId = game.getCurrentPlayer();
 		game.getPlayers().stream().forEach((e) -> { 
 			if(e.equals(viewingPlayer)){
 				userHand = makeCardView(game.getGameState().userHands.get(Integer.toString(viewingPlayer.get_id())).getCards());
 			} else {
-				otherPlayers.add(new HandView(makeCardView(game.getGameState().userHands.get(Integer.toString(e.get_id())).getCards()), e.getUserName()));
+				otherPlayers.add(new HandView(makeCardView(game.getGameState().userHands.get(Integer.toString(e.get_id())).getCards()), e.getUserName(), e.get_id() == currentPlayerId));
 			}
 		});	
 		Map<String, Pile> piles = game.getGameState().piles;
