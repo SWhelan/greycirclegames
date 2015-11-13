@@ -86,7 +86,11 @@ public class KingsCorner extends Game{
 		Pile curUserHand = gs.userHands.get(Integer.toString(getCurrentPlayerObject().get_id()));
 		Pile drawPile = gs.piles.get(Integer.toString(PileIds.DRAW_PILE.ordinal()));
 		if(!drawPile.isEmpty()){
-			curUserHand.add(drawPile.removeTop());
+			Pile topCard = new Pile("Top card");
+			topCard.add(drawPile.getTop());
+			Move endTurn = new KCMove(getCurrentPlayerObject(), drawPile, topCard, curUserHand);
+			endTurn.apply();
+			moves.add(endTurn);
 		}
 		currentPlayer = (currentPlayer + 1) % turnOrder.size();
 		
