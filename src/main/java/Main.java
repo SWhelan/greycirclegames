@@ -1,5 +1,5 @@
 import static spark.SparkBase.port;
-import cardswithfriends.DBHandler;
+
 import cardswithfriends.TemplateHandler;
 import spark.Spark;
 

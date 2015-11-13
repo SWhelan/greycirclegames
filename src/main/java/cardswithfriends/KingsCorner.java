@@ -93,7 +93,7 @@ public class KingsCorner extends Game{
 		return true;
 	}
 	
-	private void applyAIMoves(){
+	public void applyAIMoves(){
 		Player cur = getCurrentPlayerObject();
 		Pile aiHand;
 		Map<Integer,Pile> visiblePiles = getGameState().getVisiblePiles();
@@ -102,13 +102,13 @@ public class KingsCorner extends Game{
 			aiHand = getGameState().userHands.get(cur.get_id());
 
 			ArtificialPlayer ai = (ArtificialPlayer) cur;
-			AI_TURN:
-			while(this.isActive){
+			boolean hasMove = true;
+			while(this.isActive && hasMove){
 				m = ai.createMove(aiHand, visiblePiles);
 				if(m != null){
 					this.applyMove(m);
 				}else{
-					break AI_TURN;
+					hasMove = false;
 				}
 			}
 			this.endTurn();
@@ -117,8 +117,7 @@ public class KingsCorner extends Game{
 		}
 	}
 	
-	
-	private static boolean isAI(Player p){
+	public static boolean isAI(Player p){
 		return p.get_id() < 0;
 	}
 	

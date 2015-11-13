@@ -274,6 +274,13 @@ public class TemplateHandler {
 		} else {
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Move was invalid and and not applied.");
 		}
+		
+		if(game.getIsActive() && KingsCorner.isAI(game.getCurrentPlayerObject())){
+			game.applyAIMoves();
+			if(!game.getIsActive()){
+				rs.header(GlobalConstants.DISPLAY_ERROR, "The game is over and the computer player won.");
+			}
+		}
 		DBHandler.updateKCGame(game);
 		return renderGame(rq, rs);
 	}
@@ -361,7 +368,11 @@ public class TemplateHandler {
 	 *  ie has a cookie this parse int won't fail
 	 */
 	private static int getUserIdFromCookies(Request rq){
-		return Integer.parseInt(rq.cookie(GlobalConstants.USER_COOKIE_KEY));
+		try {
+			return Integer.parseInt(rq.cookie(GlobalConstants.USER_COOKIE_KEY));
+		} catch (NumberFormatException e){
+			return -1;
+		}
 	}
 	
 	/*
@@ -419,6 +430,7 @@ public class TemplateHandler {
 	private static ModelAndView getModelAndView(HashMap<String, Object> info, String templateName, Request rq, Response rs){
 		if(isLoggedIn(rq)){
 			info.put("loggedIn", true);
+			info.put("userName", getUserFromCookies(rq).getUserName());
 		}
 		if(rs.raw().containsHeader(GlobalConstants.DISPLAY_ERROR)){
 			info.put(GlobalConstants.DISPLAY_ERROR, rs.raw().getHeader(GlobalConstants.DISPLAY_ERROR));

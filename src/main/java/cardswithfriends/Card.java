@@ -113,6 +113,11 @@ public class Card extends ReflectionDBObject {
 	public void setEnumSuit(Suit suit) {
 		this.suit = suit;
 	}
+	
+	@Override
+	public String toString(){
+		return this.displayNumber + " of " + this.suit.getDisplayName();
+	}
 
 	public enum Suit {
 		SPADE("Spade", "&#9828;"),

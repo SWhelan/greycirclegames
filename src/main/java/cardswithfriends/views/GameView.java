@@ -28,6 +28,8 @@ public class GameView {
 	List<CardView> southWestPile;
 	List<CardView> northWestPile;
 	
+	List<String> moveHistory;
+	
 	public GameView(KingsCorner game, Player viewingPlayer){
 		gameId = game.get_id();
 		game.getPlayers().stream().forEach((e) -> { 
@@ -59,6 +61,8 @@ public class GameView {
 		southWestPile = removeMiddle(southWestPile);
 		northWestPile = removeMiddle(northWestPile);
 		isTurn = game.getCurrentPlayerObject().get_id() == viewingPlayer.get_id();
+		
+		this.moveHistory = game.getMoves().stream().map(e -> e.toString()).collect(Collectors.toList());
 	}
 	
 	private List<CardView> removeMiddle(List<CardView> pile){

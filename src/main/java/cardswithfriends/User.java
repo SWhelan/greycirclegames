@@ -233,6 +233,7 @@ public class User extends ReflectionDBObject implements Player {
 		int numWins = (Integer)winLossList.get(0) + 1;
 		winLossList.put(0, numWins);
 		DBHandler.updateUser(this);
+		
 		Leaderboard lb = DBHandler.getLeaderboard();
 		lb.addUser(this);
 		DBHandler.updateLeaderboard(lb);

@@ -139,6 +139,19 @@
 </div>
 
 
+<div class="row">
+	<!-- The previous moves. -->
+	<h4>Move History:</h4>
+	<ul>
+		{{#moveHistory}}
+			<li>{{.}}</li>
+		{{/moveHistory}}
+	</ul>
+	{{^moveHistory}}
+	<p>There have not been any moves yet.</p>
+	{{/moveHistory}}
+</div>
+
 
 <script type = text/javascript>
 
