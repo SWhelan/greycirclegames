@@ -19,9 +19,9 @@ public class LeaderboardEntryView implements Comparable<LeaderboardEntryView>{
 		if(other.numWins == this.numWins){
 			return 0;
 		} else if (other.numWins > this.numWins){
-			return -1;
-		} else {
 			return 1;
+		} else {
+			return -1;
 		}
 	}
 

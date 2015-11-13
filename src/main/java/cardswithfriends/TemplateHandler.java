@@ -179,10 +179,10 @@ public class TemplateHandler {
 	}
 	
 	private static ModelAndView postRegister(Request rq, Response rs) {
-		String email = rq.queryParams("email");
+		String email = rq.queryParams("email").toLowerCase();
 		String password = rq.queryParams("password");
 		String passwordAgain = rq.queryParams("password-again");
-		User user = DBHandler.getUserByEmail(email); 
+		User user = DBHandler.getUserByEmail(email);
 		if(user != null){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Email already in use.");
 			return renderRegister(rq, rs);
@@ -204,7 +204,7 @@ public class TemplateHandler {
 	}
 	
 	private static ModelAndView postLogin(Request rq, Response rs) {
-		String email = rq.queryParams("email");
+		String email = rq.queryParams("email").toLowerCase();
 		String password = rq.queryParams("password");
 		User user = DBHandler.getUserByEmail(email);
 		if(checkLogin(user, password)){
@@ -274,6 +274,13 @@ public class TemplateHandler {
 		} else {
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Move was invalid and and not applied.");
 		}
+		
+		if(game.getIsActive() && KingsCorner.isAI(game.getCurrentPlayerObject())){
+			game.applyAIMoves();
+			if(!game.getIsActive()){
+				rs.header(GlobalConstants.DISPLAY_ERROR, "The game is over and the computer player won.");
+			}
+		}
 		DBHandler.updateKCGame(game);
 		return renderGame(rq, rs);
 	}
@@ -317,10 +324,12 @@ public class TemplateHandler {
 		if(user2 == null){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "No user was found with that id to remove.");
 		} else {
-			if(DBHandler.removeFriend(getUserFromCookies(rq).get_id(), user2.get_id())){
-				rs.header(GlobalConstants.DISPLAY_SUCCESS, "Friend was successfully removed.");
-			} else {
+			if(!DBHandler.removeFriend(getUserIdFromCookies(rq), user2.get_id())){
 				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
+			} else if (!DBHandler.removeFriend(user2.get_id(), getUserIdFromCookies(rq))){
+				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
+			} else {
+				rs.header(GlobalConstants.DISPLAY_SUCCESS, "Friend was successfully removed.");
 			}
 		}
 		return renderFriends(rq, rs);
@@ -359,7 +368,11 @@ public class TemplateHandler {
 	 *  ie has a cookie this parse int won't fail
 	 */
 	private static int getUserIdFromCookies(Request rq){
-		return Integer.parseInt(rq.cookie(GlobalConstants.USER_COOKIE_KEY));
+		try {
+			return Integer.parseInt(rq.cookie(GlobalConstants.USER_COOKIE_KEY));
+		} catch (NumberFormatException e){
+			return -1;
+		}
 	}
 	
 	/*
@@ -417,6 +430,7 @@ public class TemplateHandler {
 	private static ModelAndView getModelAndView(HashMap<String, Object> info, String templateName, Request rq, Response rs){
 		if(isLoggedIn(rq)){
 			info.put("loggedIn", true);
+			info.put("userName", getUserFromCookies(rq).getUserName());
 		}
 		if(rs.raw().containsHeader(GlobalConstants.DISPLAY_ERROR)){
 			info.put(GlobalConstants.DISPLAY_ERROR, rs.raw().getHeader(GlobalConstants.DISPLAY_ERROR));

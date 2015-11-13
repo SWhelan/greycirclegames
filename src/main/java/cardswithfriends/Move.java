@@ -73,7 +73,20 @@ public abstract class Move extends ReflectionDBObject {
 	@Override
 	public String toString(){
 		//Player # placed card on pile X or Moved PIle X onto Pile Y
-		return this.player.getUserName() + " moved " + this.moving.getName() + " from " + this.origin.getName() + " onto " + this.destination.getName();
+		StringBuilder builder = new StringBuilder();
+		int count = 0;
+		for(Card e : this.moving.getCards()) {
+			builder.append(e.toString());
+			if(this.moving.size() <= 1 || count == this.moving.size() - 1){
+				builder.append(" ");
+			} else if(count == this.moving.size() - 2){
+				builder.append(", and ");
+			} else if(count != this.moving.size() - 1){
+				builder.append(", ");
+			}
+			count++;
+		};
+		return this.player.getUserName() + " moved " + builder.toString() + "from " + this.origin.getName() + " onto " + this.destination.getName();
 	}
 	
 	public class Test{
