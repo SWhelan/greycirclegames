@@ -17,6 +17,9 @@ public class KCMove extends Move {
 
 	@Override
 	public boolean isValid() {
+		if(origin.getName().equals("Draw Pile")){
+			return moving.size() == 1 && origin.getTop().equals(moving.getTop());
+		}
 		//If everything in moving is in origin, and if the bottom card of moving works with the top of destination, we good
 		if(origin.containsAll(moving)){
 			Card movingBottom = moving.getBottom();
