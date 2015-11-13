@@ -235,21 +235,23 @@ public class DBHandler {
 
 	public static void runTJsTestCode() {
 
-		System.out.println("Running jank db test code");
+		//System.out.println("Running jank db test code");
+
+
 
 		//Test user
 		//////////////////////////////////////////////////////////////////////////////////////
-//		BasicDBList frands = new BasicDBList();
-//		frands.add(6);
-//		frands.add(7);
-//		frands.add(42);
-//
-//		User user = new User(4,"goduser", "word", "salt", "email@gmail.com", frands);
-//		User user2 = new User(5,"goduser2", "word2", "salt2", "2email@gmail.com", frands);
-//		User user3 = new User(6,"goduser3", "word3", "salt3", "3email@gmail.com", frands);
-//		DBHandler.createUser(user);
-//		DBHandler.createUser(user2);
-//		DBHandler.createUser(user3);
+		//		BasicDBList frands = new BasicDBList();
+		//		frands.add(6);
+		//		frands.add(7);
+		//		frands.add(42);
+		//
+		//		User user = new User(4,"goduser", "word", "salt", "email@gmail.com", frands);
+		//		User user2 = new User(5,"goduser2", "word2", "salt2", "2email@gmail.com", frands);
+		//		User user3 = new User(6,"goduser3", "word3", "salt3", "3email@gmail.com", frands);
+		//		DBHandler.createUser(user);
+		//		DBHandler.createUser(user2);
+		//		DBHandler.createUser(user3);
 
 		//		User u = getUser(43);
 		//		u.setUserName("user2");
@@ -298,16 +300,21 @@ public class DBHandler {
 		//Test Leaderboard
 		//////////////////////////////////////////////////////////////////////////////////////
 
-		/*User u = getUser(6);
-		u.updateWin(GlobalConstants.KINGS_CORNER);
-		Leaderboard l = getLeaderboard();
-		l.addUser(u);
-		//l.addUser(getUser(5));
-		updateLeaderboard(l); 
+		//		User u = getUser(8);
+		//		User u1 = getUser(9);
+		//		User u2 = getUser(13);
+		//		
+		//		u.updateWin(GlobalConstants.KINGS_CORNER);
+		//		Leaderboard l = getLeaderboard();
+		//		l.addUser(u);
+		//		l.addUser(u1);
+		//		l.addUser(u2);
+		//		updateLeaderboard(l);
+
 
 
 		int c = 7;
-		int x = c;*/
+		int x = c;
 		//////////////////////////////////////////////////////////////////////////////////////
 
 

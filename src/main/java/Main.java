@@ -10,7 +10,7 @@ public class Main {
     	Spark.staticFileLocation("/public");
         port(getHerokuAssignedPort());
         TemplateHandler.registerTemplates();
-        DBHandler.runTJsTestCode();
+        //DBHandler.runTJsTestCode();
     }
 
     static int getHerokuAssignedPort() {
