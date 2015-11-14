@@ -1,5 +1,6 @@
 package cardswithfriends.views;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +15,7 @@ import cardswithfriends.Player;
 public class GameView {
 	Integer gameId;
 	boolean isTurn;
+	boolean isActive;
 	List<CardView> userHand;
 	List<HandView> otherPlayers = new LinkedList<HandView>();
 	List<CardView> drawPile;
@@ -32,7 +34,7 @@ public class GameView {
 	
 	public GameView(KingsCorner game, Player viewingPlayer){
 		gameId = game.get_id();
-		int currentPlayerId = game.getCurrentPlayer();
+		int currentPlayerId = game.getCurrentPlayerObject().get_id();
 		game.getPlayers().stream().forEach((e) -> { 
 			if(e.equals(viewingPlayer)){
 				userHand = makeCardView(game.getGameState().userHands.get(Integer.toString(viewingPlayer.get_id())).getCards());
@@ -64,6 +66,9 @@ public class GameView {
 		isTurn = game.getCurrentPlayerObject().get_id() == viewingPlayer.get_id();
 		
 		this.moveHistory = game.getMoves().stream().map(e -> e.toString()).collect(Collectors.toList());
+		Collections.reverse(this.moveHistory);
+		
+		isActive = game.getIsActive();
 	}
 	
 	private List<CardView> removeMiddle(List<CardView> pile){

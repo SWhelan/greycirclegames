@@ -11,7 +11,7 @@ import com.mongodb.DBObject;
 
 public class KingsCorner extends Game{
 	public List<Player> turnOrder;
-	//The id of the current player not the number of turn order
+	// The number of turn order not the current Id of the player.
 	private int currentPlayer;
 
 	public KingsCorner(int gameId, List<Player> players){

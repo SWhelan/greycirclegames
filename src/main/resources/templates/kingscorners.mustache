@@ -141,7 +141,7 @@
 
 <div class="row">
 	<!-- The previous moves. -->
-	<h4>Move History:</h4>
+	<h4>Move History (Most recent first):</h4>
 	<ul>
 		{{#moveHistory}}
 			<li>{{.}}</li>
@@ -162,110 +162,170 @@
 	{{/isTurn}}
 	{{^isTurn}}
 	isTurn = false;
-	{{/isTurn}}
-
 	window.onload = function (){
 		setTimeout(function (){
 			window.location.replace("/game/" + {{gameId}});
 		}, 20000);
 	}
+	{{/isTurn}}
+
+	var isActive;
+	
+	{{#isActive}}
+	isActive = true;
+	{{/isActive}}
+	{{^isActive}}
+	isActive = false;
+	handleGameOver();
+	{{/isActive}}
+	
+	var selectedCard;
+	var selectedPile;
+	var secondPile;
 	
 	$("#drawPile").click(function (){
 		handleTurn();
 	});
 
-	function handleTurn(){
-		if(isTurn){
-			turnForm=document.createElement('FORM');
-			turnForm.name='turn';
-			turnForm.method='POST';
-			turnForm.action='/turn';
-			
-			hiddenElement=document.createElement('INPUT');
-			hiddenElement.type='HIDDEN';
-			hiddenElement.name='gameId';
-			hiddenElement.value={{gameId}};
-			turnForm.appendChild(hiddenElement);
-			turnForm.submit();
-		} else {
-			notTurnAlert();
-		}
-	}
-	var selectedCard;
-	var selectedPile;
-	var secondPile;
 	$(".userCard").click(function (){
-		if(isTurn){
+		if(!isActive){
+			return;
+		}
+		if(!isTurn){
+			notTurnAlert();
+			return
+		}
+		if($(this).attr("id") == "drawPile"){
+			handleTurn();
+			return;
+		}
+		if($(this).hasClass("clicked")){
+			// The currently selected card has been clicked
+			$(this).removeClass("clicked");
+			selectedCard = null;
+		} else if(!selectedCard){
+			// A new card has been clicked
+			$(this).addClass("clicked");
+			selectedCard = $(this);
+			if(selectedPile){
+				move();
+			}
+		} else {
 			if($(this).attr("id") == "drawPile"){
 				handleTurn();
 				return;
-			}
-			if($(this).hasClass("clicked")){
-				// The currently selected card has been clicked
-				$(this).removeClass("clicked");
-				selectedCard = null;
-			} else if(!selectedCard){
-				// A new card has been clicked
+			} else {
+				// This is a different card from the one currently selected
+				selectedCard.removeClass("clicked");
 				$(this).addClass("clicked");
 				selectedCard = $(this);
-				if(selectedPile){
-					move();
-				}
-			} else {
-				if($(this).attr("id") == "drawPile"){
-					handleTurn();
-					return;
-				} else {
-					// This is a different card from the one currently selected
-					selectedCard.removeClass("clicked");
-					$(this).addClass("clicked");
-					selectedCard = $(this);
-				}
 			}
-		} else {
-			notTurnAlert();
 		}
+		return;
 	});
 	
 	$(".gamePile").click(function (){
-		if(isTurn){
-			if($(this).children().first().attr("id") == "drawPile"){
-				handleTurn();
-				return;
-			}
-			if($(this).children().first().hasClass("pileClicked")){
-			 	// Unclick the currently selected pile
-				$(this).children().first().removeClass("pileClicked");
-				selectedPile = null;
-			} else if(!selectedPile){
-				// This is the first selected pile
-				$(this).children().first().addClass("pileClicked");
-				selectedPile = $(this);
-				if(selectedCard){
-					move();
-				}
-			} else {
-				// This is the second selected pile
-				if($(this).children().first().attr("id") != "drawPile"){
-					$(this).children().first().addClass("pileClicked");
-					secondPile = $(this);
-					move();
-				}
+		if(!isActive){
+			return;
+		}
+		if(!isTurn){
+			notTurnAlert();
+			return
+		}
+		if($(this).children().first().attr("id") == "drawPile"){
+			handleTurn();
+			return;
+		}
+		if($(this).children().first().hasClass("pileClicked")){
+		 	// Unclick the currently selected pile
+			$(this).children().first().removeClass("pileClicked");
+			selectedPile = null;
+		} else if(!selectedPile){
+			// This is the first selected pile
+			$(this).children().first().addClass("pileClicked");
+			selectedPile = $(this);
+			if(selectedCard){
+				move();
 			}
 		} else {
-			notTurnAlert();
+			// This is the second selected pile
+			if($(this).children().first().attr("id") != "drawPile"){
+				$(this).children().first().addClass("pileClicked");
+				secondPile = $(this);
+				move();
+			}
 		}
+		return;
 	});
 	
 	function notTurnAlert(){
-		$("#alert").html("It is not your turn.");
-		$("#alert").addClass("alert-danger");
+		displayError("It is not your turn.", true);
+		return;
+	}
+	
+	function handleGameOver(){
+		if(!isActive){
+			var message = "The game is over.";
+			if(isTurn){
+				message = message + " You won!";
+				displaySuccess(message, false);
+			} else {
+				message = message + " You lost.";
+				displayError(message, false);
+			}
+		}
+		return;
+	}
+	
+	function displaySuccess(message, remove){
+		displayMessage(message, "alert-success", remove);
+		return;
+	}
+	
+	function displayError(message, remove){
+		displayMessage(message, "alert-danger", remove);
+		return;
+	}
+	
+	function displayMessage(message, alertClass, remove){
+		$("#alert").addClass(alertClass);
+		$("#alert").html(message);
 		$("#alert").removeClass("hidden");
-		setTimeout(function(){ 
-			$("#alert").html("");
-			$("#alert").removeClass("alert-danger");
-			$("#alert").addClass("hidden");
-		}, 5000);
+		if(remove){
+			setTimeout(function(){
+				removeMessage(alertClass)
+			}, 5000);
+		}
+		return;
+	}
+	
+	function removeMessage(alertClass){
+		$("#alert").html("");
+		$("#alert").removeClass(alertClass);
+		$("#alert").addClass("hidden");
+		return;
+	}
+	
+	function handleTurn(){
+		if(!isActive){
+			return;
+		}
+		if(!isTurn){
+			notTurnAlert();
+			return;
+		}
+		turnForm=document.createElement('FORM');
+		turnForm.name='turn';
+		turnForm.method='POST';
+		turnForm.action='/turn';
+		
+		hiddenElement=document.createElement('INPUT');
+		hiddenElement.type='HIDDEN';
+		hiddenElement.name='gameId';
+		hiddenElement.value={{gameId}};
+		turnForm.appendChild(hiddenElement);
+		turnForm.submit();
+		return;
 	}
 	
 	function move(){
@@ -302,8 +362,13 @@
 		hiddenElement.name='gameId';
 		hiddenElement.value={{gameId}};
 		moveForm.appendChild(hiddenElement);
-		moveForm.submit();	
+		moveForm.submit();
+		return;
 	}
 </script>
+{{/game}}
+
+{{^game}}
+<h4><a href="/games">Click here to return to your games list.</a></h4>
 {{/game}}
 {{> footer}}

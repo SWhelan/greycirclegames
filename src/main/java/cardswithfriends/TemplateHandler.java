@@ -44,6 +44,8 @@ public class TemplateHandler {
 	public static void registerTemplates(){
 		// Ensure they are logged in or the url is public/doesn't require login
         before((rq, rs) -> {
+        	rs.removeCookie(GlobalConstants.DISPLAY_SUCCESS);
+        	rs.removeCookie(GlobalConstants.DISPLAY_ERROR);
         	String path = rq.pathInfo();
             if (requiresAuthentication(path) && !isLoggedIn(rq)) {
             	rs.redirect("/");
@@ -74,9 +76,7 @@ public class TemplateHandler {
         
         // Throw an error on 404s
         get("/*", (rq, rs) -> {
-        	// main.css is the only public static file currently
-        	// would need to handle this better once more static files are added
-        	if(!rq.pathInfo().contains("main.css")){
+        	if(!rq.pathInfo().startsWith("/public")){
         		throw new NotFoundException();
         	} else {
         		return null;
@@ -85,19 +85,19 @@ public class TemplateHandler {
         
         // Catch the 404 errors and redirect to home page
         exception(NotFoundException.class, (e, rq, rs) -> {
-            rs.status(404);
-            rs.redirect("/");
+        	e.printStackTrace();
+            handleNotFound(rs);
         });
         
         // Catch other errors return an internal server error and redirect
         exception(Exception.class, (e, rq, rs) -> {
         	e.printStackTrace();
-        	rs.status(500);
-        	rs.redirect("/");
+        	//rs.status(500);
+        	//rs.redirect("/");
         });
         
 	}
-	
+
 	private static ModelAndView renderHome(Request rq, Response rs) {
 		if(rq.cookie(GlobalConstants.USER_COOKIE_KEY) != null){
 			return renderGameList(rq, rs);
@@ -130,7 +130,15 @@ public class TemplateHandler {
 		try {
 			gameId = Integer.parseInt(rq.queryParams("gameId"));
 		} catch (NumberFormatException e){
+			
+		}
+		
+		try {
 			gameId = Integer.parseInt(rq.params(":id"));
+		} catch (NumberFormatException e){
+			info.put("game", null);
+			rs.header(GlobalConstants.DISPLAY_ERROR, "Game not found.");
+			return getModelAndView(info, KINGS_CORNERS_TEMPLATE, rq, rs);
 		}
 		info.put("game", new GameView(DBHandler.getKCGame(gameId), getUserFromCookies(rq)));
 		return getModelAndView(info, KINGS_CORNERS_TEMPLATE, rq, rs);
@@ -175,7 +183,7 @@ public class TemplateHandler {
 	private static ModelAndView logout(Request rq, Response rs) {
 		rs.removeCookie(GlobalConstants.USER_COOKIE_KEY);
 		rs.redirect("/");
-		return null;
+		return getModelAndView(null, HOME_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView postRegister(Request rq, Response rs) {
@@ -199,8 +207,9 @@ public class TemplateHandler {
 		newUser.setPassword(User.hashPassword(salt, password));
 		newUser.setUserName(email);
 		DBHandler.createUser(newUser);
-		rs.header(GlobalConstants.DISPLAY_SUCCESS, "New user succesfully created.");
-		return renderLogin(rq, rs);
+		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "New user succesfully created.");
+		rs.redirect("/login");
+		return getModelAndView(null, REGISTER_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView postLogin(Request rq, Response rs) {
@@ -209,6 +218,7 @@ public class TemplateHandler {
 		User user = DBHandler.getUserByEmail(email);
 		if(checkLogin(user, password)){
 			rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(user.get_id()));
+			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Logged in successfully.");
 			rs.redirect("/games");
 		}
 		rs.header(GlobalConstants.DISPLAY_ERROR, "Your username or password is incorrect.");
@@ -235,12 +245,15 @@ public class TemplateHandler {
 		// Create the game
 		KingsCorner game = new KingsCorner(DBHandler.getNextKCGameID(), players);
 		DBHandler.createKCGame(game);
-		return renderGameList(rq, rs);
+		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created.");
+		rs.redirect("/games");
+		return getModelAndView(null, GAME_LIST_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView postMove(Request rq, Response rs) {
 		String pile = rq.queryParams("pile");
-		Integer gameId = Integer.parseInt(rq.queryParams("gameId"));
+		String gameIdString = rq.queryParams("gameId");
+		Integer gameId = Integer.parseInt(gameIdString);
 		KingsCorner game = DBHandler.getKCGame(gameId);
 		Player player = getUserFromCookies(rq);
 		Pile moving = new Pile("moving");
@@ -266,32 +279,30 @@ public class TemplateHandler {
 		}
 		Move move = new KCMove(player, origin, moving, destination);
 		if(game.applyMove(move)){
-			if(!game.getIsActive()){
-				rs.header(GlobalConstants.DISPLAY_SUCCESS, "The game is over and you won!");
-			} else {
-				rs.header(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied succefully.");
+			if(game.getIsActive()){
+				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied succefully.");
 			}
 		} else {
-			rs.header(GlobalConstants.DISPLAY_ERROR, "Move was invalid and and not applied.");
+			rs.cookie(GlobalConstants.DISPLAY_ERROR, "Move was invalid and not applied.");
 		}
 		
 		if(game.getIsActive() && KingsCorner.isAI(game.getCurrentPlayerObject())){
 			game.applyAIMoves();
-			if(!game.getIsActive()){
-				rs.header(GlobalConstants.DISPLAY_ERROR, "The game is over and the computer player won.");
-			}
 		}
 		DBHandler.updateKCGame(game);
-		return renderGame(rq, rs);
+		rs.redirect("/game/" + gameIdString);
+		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView postTurn(Request rq, Response rs) {
-		int gameId = Integer.parseInt(rq.queryParams("gameId"));
+		String gameIdString = rq.queryParams("gameId");
+		int gameId = Integer.parseInt(gameIdString);
 		KingsCorner game = DBHandler.getKCGame(gameId);
 		game.endTurn();
-		rs.header(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
+		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
 		DBHandler.updateKCGame(game);
-		return renderGame(rq, rs);
+		rs.redirect("/game/" + gameIdString);
+		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
 
 	private static ModelAndView postAddFriend(Request rq, Response rs){
@@ -301,38 +312,40 @@ public class TemplateHandler {
 			user2 = DBHandler.getUserByUserName(searchValue);
 		}
 		if(user2 == null){
-			rs.header(GlobalConstants.DISPLAY_ERROR, "No user was found with that search.");
+			rs.cookie(GlobalConstants.DISPLAY_ERROR, "No user was found with that search.");
 		} else if (user2.get_id() == getUserIdFromCookies(rq)){
-			rs.header(GlobalConstants.DISPLAY_ERROR, "You can not add your self as a friend try playing a game with a computer player or try the about page if you need to talk to someone.");
+			rs.cookie(GlobalConstants.DISPLAY_ERROR, "You can not add your self as a friend.");
 		} else if(alreadyFriends(getUserIdFromCookies(rq), user2.get_id())){
-			rs.header(GlobalConstants.DISPLAY_ERROR, "You are already friends with " + user2.getUserName());
+			rs.cookie(GlobalConstants.DISPLAY_ERROR, "You are already friends with " + user2.getUserName());
 		} else {
 			if(!DBHandler.addFriend(getUserIdFromCookies(rq), user2.get_id())){
-				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
+				rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
 			} else if(!DBHandler.addFriend(user2.get_id(), getUserIdFromCookies(rq))){
-				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
+				rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
 			} else {
-				rs.header(GlobalConstants.DISPLAY_SUCCESS, "The requested friend has been added.");
+				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The requested friend has been added.");
 			}
 		}
-		return renderFriends(rq, rs);
+		rs.redirect("/friends");
+		return getModelAndView(null, FRIENDS_TEMPLATE, rq, rs);
 	}
 	
 	private static ModelAndView postRemoveFriend(Request rq, Response rs){
 		Integer friendToRemoveId = Integer.parseInt(rq.queryParams("friendId"));
 		Player user2 = DBHandler.getUser(friendToRemoveId);
 		if(user2 == null){
-			rs.header(GlobalConstants.DISPLAY_ERROR, "No user was found with that id to remove.");
+			rs.cookie(GlobalConstants.DISPLAY_ERROR, "No user was found with that id to remove.");
 		} else {
 			if(!DBHandler.removeFriend(getUserIdFromCookies(rq), user2.get_id())){
-				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
+				rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
 			} else if (!DBHandler.removeFriend(user2.get_id(), getUserIdFromCookies(rq))){
-				rs.header(GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
+				rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
 			} else {
-				rs.header(GlobalConstants.DISPLAY_SUCCESS, "Friend was successfully removed.");
+				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Friend was successfully removed.");
 			}
 		}
-		return renderFriends(rq, rs);
+		rs.redirect("/friends");
+		return getModelAndView(null, FRIENDS_TEMPLATE, rq, rs);
 	}
 	
 	/* Utilities */
@@ -407,6 +420,13 @@ public class TemplateHandler {
 				.ordinal());
 	}
 	
+	// Set 404 not found and display error
+	private static void handleNotFound(Response rs) {
+		rs.status(404);
+		rs.cookie(GlobalConstants.DISPLAY_ERROR, "Page not found.");
+		rs.redirect("/");
+	}
+	
 	/**
 	 * 
 	 * A way to display success and failure messages to the user without
@@ -428,6 +448,9 @@ public class TemplateHandler {
 	 * the template.
 	 */
 	private static ModelAndView getModelAndView(HashMap<String, Object> info, String templateName, Request rq, Response rs){
+		if(info == null){
+			return new ModelAndView(new HashMap<String, Object>(), templateName);
+		}
 		if(isLoggedIn(rq)){
 			info.put("loggedIn", true);
 			info.put("userName", getUserFromCookies(rq).getUserName());
@@ -438,6 +461,16 @@ public class TemplateHandler {
 		if(rs.raw().containsHeader(GlobalConstants.DISPLAY_SUCCESS)){
 			info.put(GlobalConstants.DISPLAY_SUCCESS, rs.raw().getHeader(GlobalConstants.DISPLAY_SUCCESS));
 		}
+		
+		if(rq.cookie(GlobalConstants.DISPLAY_ERROR) != null){
+			info.put(GlobalConstants.DISPLAY_ERROR, rq.cookie(GlobalConstants.DISPLAY_ERROR));
+			rs.removeCookie(GlobalConstants.DISPLAY_ERROR);
+		}
+		if(rq.cookie(GlobalConstants.DISPLAY_SUCCESS) != null){
+			info.put(GlobalConstants.DISPLAY_SUCCESS, rq.cookie(GlobalConstants.DISPLAY_SUCCESS));
+			rs.removeCookie(GlobalConstants.DISPLAY_SUCCESS);
+		}
+		
 		return new ModelAndView(info, templateName);
 	}
 

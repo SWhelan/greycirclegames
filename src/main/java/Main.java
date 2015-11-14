@@ -7,10 +7,9 @@ import spark.Spark;
 public class Main {
 
     public static void main(String[] args) {
-    	Spark.staticFileLocation("/public");
+    	Spark.staticFileLocation("/static");
         port(getHerokuAssignedPort());
         TemplateHandler.registerTemplates();
-        //DBHandler.runTJsTestCode();
     }
 
     static int getHerokuAssignedPort() {
