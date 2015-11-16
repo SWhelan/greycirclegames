@@ -306,7 +306,7 @@ public class TemplateHandler {
 	}
 
 	private static ModelAndView postAddFriend(Request rq, Response rs){
-		String searchValue = rq.queryParams("searchValue");
+		String searchValue = rq.queryParams("searchValue").toLowerCase();
 		Player user2 = DBHandler.getUserByEmail(searchValue);
 		if(user2 == null){
 			user2 = DBHandler.getUserByUserName(searchValue);
