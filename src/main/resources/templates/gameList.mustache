@@ -3,7 +3,25 @@
 <br/>
 {{#games}}
 <h3>Active Games:</h3>
-{{#active}}
+
+<h4>Games waiting on you:</h4>
+{{#currentTurn}}
+	<div class="gameListItem">
+		<a href = "/game/{{gameId}}">
+			Game Id: {{gameId}}
+			<br/>
+			Players:<br/>
+			{{#players}}{{.}}<br/>{{/players}}
+		</a>
+	<hr/>
+	</div>
+{{/currentTurn}}
+{{^currentTurn}}
+	<h5>No Games are waiting for you.</h5>
+{{/currentTurn}}
+
+<h4>Games waiting on others:</h4>
+{{#othersTurn}}
 	<div class="gameListItem">
 		<a href = "/game/{{gameId}}">
 			Game Id: {{gameId}}
@@ -14,11 +32,12 @@
 		</a>
 	<hr/>
 	</div>
-{{/active}}
-{{^active}}
-	<h4>You are not currently playing any games.</h4>
-{{/active}}
-	<h3>Past Games:</h3>
+{{/othersTurn}}
+{{^othersTurn}}
+	<h5>No Games are waiting on others.</h5>
+{{/othersTurn}}
+
+<h3>Past Games:</h3>
 {{#ended}}
 	<div class="gameListItem">
 	Game Id: {{gameId}}
@@ -30,7 +49,7 @@
 	</div>
 {{/ended}}
 {{^ended}}
-	<h4>You have no past games.</h4>
+	<h5>You have no past games.</h5>
 {{/ended}}
 {{/games}}
 {{> footer}}

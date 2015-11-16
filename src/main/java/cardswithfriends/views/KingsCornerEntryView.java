@@ -12,10 +12,12 @@ public class KingsCornerEntryView {
 	public String winner;
 	public int gameId;
 	public String currentPlayerName;
+	public int currentPlayerId;
 	public List<String> players = new LinkedList<String>();
 	public KingsCornerEntryView(KingsCorner kc){
 		gameId = kc.get_id();
 		currentPlayerName = kc.getCurrentPlayerObject().getUserName();
+		currentPlayerId = kc.getCurrentPlayerObject().get_id();
 		for(Player p : kc.turnOrder){
 			players.add(p.getUserName());
 		}

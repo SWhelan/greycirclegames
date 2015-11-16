@@ -85,15 +85,15 @@ public class TemplateHandler {
         
         // Catch the 404 errors and redirect to home page
         exception(NotFoundException.class, (e, rq, rs) -> {
-        	e.printStackTrace();
-            handleNotFound(rs);
+    		rs.status(404);
+    		rs.redirect("/");
         });
         
         // Catch other errors return an internal server error and redirect
         exception(Exception.class, (e, rq, rs) -> {
         	e.printStackTrace();
-        	//rs.status(500);
-        	//rs.redirect("/");
+        	rs.status(500);
+        	rs.redirect("/");
         });
         
 	}
@@ -418,13 +418,6 @@ public class TemplateHandler {
 				.collect(Collectors.toList())
 				.get(0)
 				.ordinal());
-	}
-	
-	// Set 404 not found and display error
-	private static void handleNotFound(Response rs) {
-		rs.status(404);
-		rs.cookie(GlobalConstants.DISPLAY_ERROR, "Page not found.");
-		rs.redirect("/");
 	}
 	
 	/**
