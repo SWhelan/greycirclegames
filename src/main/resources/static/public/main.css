@@ -48,6 +48,7 @@
 .userCard{
 	margin: 10px;
 	float: left;
+	margin-right: -30px;
 }
 
 .red {
