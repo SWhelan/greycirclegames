@@ -223,7 +223,7 @@ public class TemplateHandler {
 		newUser.setPassword(User.hashPassword(salt, password));
 		newUser.setUserName(email);
 		DBHandler.createUser(newUser);
-		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "New user succesfully created.");
+		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "New user successfully created.");
 		rs.redirect(LOGIN_ROUTE);
 		return getModelAndView(null, REGISTER_TEMPLATE, rq, rs);
 	}
@@ -296,7 +296,7 @@ public class TemplateHandler {
 		Move move = new KCMove(player, origin, moving, destination);
 		if(game.applyMove(move)){
 			if(game.getIsActive()){
-				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied succefully.");
+				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied successfully.");
 			}
 		} else {
 			rs.cookie(GlobalConstants.DISPLAY_ERROR, "Move was invalid and not applied.");
