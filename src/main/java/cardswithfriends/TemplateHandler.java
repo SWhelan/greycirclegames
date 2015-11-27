@@ -30,6 +30,22 @@ import spark.template.mustache.MustacheTemplateEngine;
  *
  */
 public class TemplateHandler {
+	public static final String HOME_ROUTE = "/";
+	public static final String LOGIN_ROUTE = "/login";
+	public static final String REGISTER_ROUTE = "/register";
+	public static final String CREATE_GAME_ROUTE = "/new";
+	public static final String FRIENDS_ROUTE = "/friends";
+	public static final String FRIENDS_ADD_ROUTE = "/addFriend";
+	public static final String FRIENDS_REMOVE_ROUTE = "/removeFriend";
+	public static final String GAMES_ROUTE = "/games";
+	public static final String LEADERBOARD_ROUTE = "/leaderboard";
+	public static final String TUTORIAL_ROUTE = "/tutorial";
+	public static final String LOGOUT_ROUTE = "/logout";
+	public static final String POST_MOVE_ROUTE = "/move";
+	public static final String POST_TURN_ROUTE = "/turn";
+	
+	public static final String PUBLIC_ROUTE = "/public";
+	
 	private static final String HOME_TEMPLATE = "home.mustache";
 	private static final String LOGIN_TEMPLATE = "login.mustache";
 	private static final String REGISTER_TEMPLATE = "register.mustache";
@@ -53,30 +69,30 @@ public class TemplateHandler {
         });
         
         // Handle the GET requests by rendering the mustache template
-        get("/", 			(rq, rs) -> renderHome(rq, rs), 		new MustacheTemplateEngine());
-        get("/register", 	(rq, rs) -> renderRegister(rq, rs), 	new MustacheTemplateEngine());
-        get("/login", 		(rq, rs) -> renderLogin(rq, rs), 		new MustacheTemplateEngine());
-        get("/games", 		(rq, rs) -> renderGameList(rq, rs), 	new MustacheTemplateEngine());
-        get("/game/:id",	(rq, rs) -> renderGame(rq, rs), 		new MustacheTemplateEngine());
-        get("/new", 		(rq, rs) -> renderCreateGame(rq, rs), 	new MustacheTemplateEngine());
-        get("/friends", 	(rq, rs) -> renderFriends(rq, rs), 		new MustacheTemplateEngine());
-        get("/friends/:id", (rq, rs) -> renderFriendInfo(rq, rs), 	new MustacheTemplateEngine());
-        get("/tutorial", 	(rq, rs) -> renderTutorial(rq, rs), 	new MustacheTemplateEngine());
-        get("/leaderboard", (rq, rs) -> renderLeaderboard(rq, rs), 	new MustacheTemplateEngine());
-        get("/logout", 		(rq, rs) -> logout(rq, rs));
+        get(HOME_ROUTE, 				(rq, rs) -> renderHome(rq, rs), 		new MustacheTemplateEngine());
+        get(REGISTER_ROUTE, 		(rq, rs) -> renderRegister(rq, rs), 	new MustacheTemplateEngine());
+        get(LOGIN_ROUTE, 			(rq, rs) -> renderLogin(rq, rs), 		new MustacheTemplateEngine());
+        get(GAMES_ROUTE, 			(rq, rs) -> renderGameList(rq, rs), 	new MustacheTemplateEngine());
+        get(GAMES_ROUTE + "/:id",	(rq, rs) -> renderGame(rq, rs), 		new MustacheTemplateEngine());
+        get(CREATE_GAME_ROUTE, 		(rq, rs) -> renderCreateGame(rq, rs), 	new MustacheTemplateEngine());
+        get(FRIENDS_ROUTE, 			(rq, rs) -> renderFriends(rq, rs), 		new MustacheTemplateEngine());
+        get(FRIENDS_ROUTE + "/:id", (rq, rs) -> renderFriendInfo(rq, rs), 	new MustacheTemplateEngine());
+        get(TUTORIAL_ROUTE, 		(rq, rs) -> renderTutorial(rq, rs), 	new MustacheTemplateEngine());
+        get(LEADERBOARD_ROUTE, 		(rq, rs) -> renderLeaderboard(rq, rs), 	new MustacheTemplateEngine());
+        get(LOGOUT_ROUTE, 			(rq, rs) -> logout(rq, rs));
         
         // Handle the POST requests
-        post("/register", (rq, rs) -> postRegister(rq, rs), new MustacheTemplateEngine());
-        post("/login", (rq, rs) -> postLogin(rq, rs), 	new MustacheTemplateEngine());
-        post("/new", (rq, rs) -> postCreateGame(rq, rs), new MustacheTemplateEngine());        
-        post("/move", (rq, rs) -> postMove(rq, rs), new MustacheTemplateEngine());
-        post("/turn", (rq, rs) -> postTurn(rq, rs), new MustacheTemplateEngine());
-        post("/addFriend", (rq, rs) -> postAddFriend(rq, rs), new MustacheTemplateEngine());
-        post("/removeFriend", (rq, rs) -> postRemoveFriend(rq, rs), new MustacheTemplateEngine());
+        post(REGISTER_ROUTE, 		(rq, rs) -> postRegister(rq, rs), 		new MustacheTemplateEngine());
+        post(LOGIN_ROUTE, 			(rq, rs) -> postLogin(rq, rs), 			new MustacheTemplateEngine());
+        post(CREATE_GAME_ROUTE, 	(rq, rs) -> postCreateGame(rq, rs), 	new MustacheTemplateEngine());        
+        post(POST_MOVE_ROUTE, 		(rq, rs) -> postMove(rq, rs), 			new MustacheTemplateEngine());
+        post(POST_TURN_ROUTE, 		(rq, rs) -> postTurn(rq, rs), 			new MustacheTemplateEngine());
+        post(FRIENDS_ADD_ROUTE, 	(rq, rs) -> postAddFriend(rq, rs), 		new MustacheTemplateEngine());
+        post(FRIENDS_REMOVE_ROUTE, 	(rq, rs) -> postRemoveFriend(rq, rs),	new MustacheTemplateEngine());
         
         // Throw an error on 404s
         get("/*", (rq, rs) -> {
-        	if(!rq.pathInfo().startsWith("/public")){
+        	if(!rq.pathInfo().startsWith(PUBLIC_ROUTE)){
         		throw new NotFoundException();
         	} else {
         		return null;
@@ -86,14 +102,14 @@ public class TemplateHandler {
         // Catch the 404 errors and redirect to home page
         exception(NotFoundException.class, (e, rq, rs) -> {
     		rs.status(404);
-    		rs.redirect("/");
+    		rs.redirect(HOME_ROUTE);
         });
         
         // Catch other errors return an internal server error and redirect
         exception(Exception.class, (e, rq, rs) -> {
         	e.printStackTrace();
         	rs.status(500);
-        	rs.redirect("/");
+        	rs.redirect(HOME_ROUTE);
         });
         
 	}
@@ -182,7 +198,7 @@ public class TemplateHandler {
 	
 	private static ModelAndView logout(Request rq, Response rs) {
 		rs.removeCookie(GlobalConstants.USER_COOKIE_KEY);
-		rs.redirect("/");
+		rs.redirect(HOME_ROUTE);
 		return getModelAndView(null, HOME_TEMPLATE, rq, rs);
 	}
 	
@@ -208,7 +224,7 @@ public class TemplateHandler {
 		newUser.setUserName(email);
 		DBHandler.createUser(newUser);
 		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "New user succesfully created.");
-		rs.redirect("/login");
+		rs.redirect(LOGIN_ROUTE);
 		return getModelAndView(null, REGISTER_TEMPLATE, rq, rs);
 	}
 	
@@ -219,7 +235,7 @@ public class TemplateHandler {
 		if(checkLogin(user, password)){
 			rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(user.get_id()));
 			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Logged in successfully.");
-			rs.redirect("/games");
+			rs.redirect(GAMES_ROUTE);
 		}
 		rs.header(GlobalConstants.DISPLAY_ERROR, "Your username or password is incorrect.");
 		return renderLogin(rq, rs);
@@ -246,7 +262,7 @@ public class TemplateHandler {
 		KingsCorner game = new KingsCorner(DBHandler.getNextKCGameID(), players);
 		DBHandler.createKCGame(game);
 		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created.");
-		rs.redirect("/games");
+		rs.redirect(GAMES_ROUTE);
 		return getModelAndView(null, GAME_LIST_TEMPLATE, rq, rs);
 	}
 	
@@ -290,7 +306,7 @@ public class TemplateHandler {
 			game.applyAIMoves();
 		}
 		DBHandler.updateKCGame(game);
-		rs.redirect("/game/" + gameIdString);
+		rs.redirect(GAMES_ROUTE + "/" + gameIdString);
 		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
 	
@@ -301,7 +317,7 @@ public class TemplateHandler {
 		game.endTurn();
 		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
 		DBHandler.updateKCGame(game);
-		rs.redirect("/game/" + gameIdString);
+		rs.redirect(GAMES_ROUTE + "/" + gameIdString);
 		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
 
@@ -326,7 +342,7 @@ public class TemplateHandler {
 				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The requested friend has been added.");
 			}
 		}
-		rs.redirect("/friends");
+		rs.redirect(FRIENDS_ROUTE);
 		return getModelAndView(null, FRIENDS_TEMPLATE, rq, rs);
 	}
 	
@@ -344,7 +360,7 @@ public class TemplateHandler {
 				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Friend was successfully removed.");
 			}
 		}
-		rs.redirect("/friends");
+		rs.redirect(FRIENDS_ROUTE);
 		return getModelAndView(null, FRIENDS_TEMPLATE, rq, rs);
 	}
 	
@@ -353,10 +369,10 @@ public class TemplateHandler {
 	// Does the attempted url require the user to be logged in?
 	private static boolean requiresAuthentication(String path) {
 		if(	path == null || 
-			path.equals("/") || 
-			path.equals("/login") || 
-			path.equals("/register") || 
-			path.equals("/tutorial")){
+			path.equals(HOME_ROUTE) || 
+			path.equals(LOGIN_ROUTE) || 
+			path.equals(REGISTER_ROUTE) || 
+			path.equals(TUTORIAL_ROUTE)){
 			return false;
 		}
 		return true;
@@ -463,6 +479,21 @@ public class TemplateHandler {
 			info.put(GlobalConstants.DISPLAY_SUCCESS, rq.cookie(GlobalConstants.DISPLAY_SUCCESS));
 			rs.removeCookie(GlobalConstants.DISPLAY_SUCCESS);
 		}
+		
+		info.put("HOME_ROUTE", HOME_ROUTE);
+		info.put("LOGIN_ROUTE", LOGIN_ROUTE);
+		info.put("REGISTER_ROUTE", REGISTER_ROUTE);
+		info.put("CREATE_GAME_ROUTE", CREATE_GAME_ROUTE);
+		info.put("FRIENDS_ROUTE", FRIENDS_ROUTE);
+		info.put("FRIENDS_ADD_ROUTE", FRIENDS_ADD_ROUTE);
+		info.put("FRIENDS_REMOVE_ROUTE", FRIENDS_REMOVE_ROUTE);
+		info.put("GAMES_ROUTE", GAMES_ROUTE);
+		info.put("LEADERBOARD_ROUTE", LEADERBOARD_ROUTE);
+		info.put("TUTORIAL_ROUTE", TUTORIAL_ROUTE);
+		info.put("LOGOUT_ROUTE", LOGOUT_ROUTE);
+		info.put("POST_MOVE_ROUTE", POST_MOVE_ROUTE);
+		info.put("POST_TURN_ROUTE", POST_TURN_ROUTE);
+		
 		
 		return new ModelAndView(info, templateName);
 	}

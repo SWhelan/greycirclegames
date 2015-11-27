@@ -1,5 +1,5 @@
 {{> header}}
-<a href="/new"><button type="button" class="btn btn-primary btn-lg btn-block">New Game</button></a>
+<a href="{{CREATE_GAME_ROUTE}}"><button type="button" class="btn btn-primary btn-lg btn-block">New Game</button></a>
 <br/>
 {{#games}}
 <h3>Active Games:</h3>
@@ -7,7 +7,7 @@
 <h4>Games waiting on you:</h4>
 {{#currentTurn}}
 	<div class="gameListItem">
-		<a href = "/game/{{gameId}}">
+		<a href = "{{GAMES_ROUTE}}/{{gameId}}">
 			Game Id: {{gameId}}
 			<br/>
 			Players:<br/>
@@ -23,7 +23,7 @@
 <h4>Games waiting on others:</h4>
 {{#othersTurn}}
 	<div class="gameListItem">
-		<a href = "/game/{{gameId}}">
+		<a href = "{{GAMES_ROUTE}}/{{gameId}}">
 			Game Id: {{gameId}}
 			<br/>
 			Players:<br/>

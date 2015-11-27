@@ -153,7 +153,7 @@
 </div>
 
 
-<script type = text/javascript>
+<script type="text/javascript">
 
 	var isTurn;
 	
@@ -164,7 +164,7 @@
 	isTurn = false;
 	window.onload = function (){
 		setTimeout(function (){
-			window.location.replace("/game/" + {{gameId}});
+			window.location.replace('{{GAMES_ROUTE}}/' + {{gameId}});
 		}, 20000);
 	}
 	{{/isTurn}}
@@ -317,7 +317,7 @@
 		turnForm=document.createElement('FORM');
 		turnForm.name='turn';
 		turnForm.method='POST';
-		turnForm.action='/turn';
+		turnForm.action= '{{POST_TURN_ROUTE}}';
 		
 		hiddenElement=document.createElement('INPUT');
 		hiddenElement.type='HIDDEN';
@@ -332,7 +332,7 @@
 		moveForm=document.createElement('FORM');
 		moveForm.name='makeMove';
 		moveForm.method='POST';
-		moveForm.action='/move';
+		moveForm.action='{{POST_MOVE_ROUTE}}';
 		
 		hiddenElement=document.createElement('INPUT');
 		hiddenElement.type='HIDDEN';
@@ -369,6 +369,6 @@
 {{/game}}
 
 {{^game}}
-<h4><a href="/games">Click here to return to your games list.</a></h4>
+<h4><a href="{{GAMES_ROUTE}}">Click here to return to your games list.</a></h4>
 {{/game}}
 {{> footer}}
