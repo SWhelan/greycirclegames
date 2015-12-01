@@ -1,17 +1,20 @@
 package cardswithfriends;
 
 import java.util.Map;
+
+import com.mongodb.ReflectionDBObject;
 //TODO rethink data structures. Realized better approaches as implementing
 /**
  * Class representing the artificial player
  * @author Kirtan
  *
  */
-public class ArtificialPlayer implements Player {
+public class ArtificialPlayer extends ReflectionDBObject implements Player {
 	/**
 	 * Artificial Player's ID
 	 */
 	private int playerID;
+	private String userName;
 
 	/**
 	 * Constructor of artificial player. 
@@ -20,6 +23,7 @@ public class ArtificialPlayer implements Player {
 	public ArtificialPlayer(int playerID) {
 		super();
 		this.playerID = playerID;
+		this.userName = "Computer Player " + Integer.toString(Math.abs(playerID));
 	}
 	
 	/**
@@ -48,8 +52,7 @@ public class ArtificialPlayer implements Player {
 		//otherwise
 		else
 			//do nothing (end the turn and draw a card)
-			//TODO: is drawing a card implicitly done?
-			return new KCMove(DBHandler.getUser(playerID), null, null, null);
+			return null;
 	}
 
 	/**
@@ -191,28 +194,44 @@ public class ArtificialPlayer implements Player {
 		}
 		return returnPile;
 	}
-	
- 
+
+
 	@Override
-	public boolean equals(Object o) {
-		// TODO Auto-generated method stub
-		return false;
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + playerID;
+		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+		return result;
 	}
-	
+
 	@Override
-	public int hashCode(){
-		return this.getPlayerID().hashCode();
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ArtificialPlayer other = (ArtificialPlayer) obj;
+		if (playerID != other.playerID)
+			return false;
+		if (userName == null) {
+			if (other.userName != null)
+				return false;
+		} else if (!userName.equals(other.userName))
+			return false;
+		return true;
 	}
 
 	@Override
 	public Integer get_id() {
-		// TODO Auto-generated method stub
-		return -1;
+		return playerID;
 	}
 
 	@Override
 	public String getUserName() {
-		return "Computer Player";
+		return userName;
 	}
 
 	@Override
@@ -224,4 +243,5 @@ public class ArtificialPlayer implements Player {
 	public void updateLoss(String game) {
 		//Do nothing - we do not store stats for ai players currently
 	}
+	
 }

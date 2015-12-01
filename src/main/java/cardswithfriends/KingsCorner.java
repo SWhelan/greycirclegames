@@ -29,7 +29,12 @@ public class KingsCorner extends Game{
 		BasicDBList turnOrder = (BasicDBList)obj.get("TurnOrder");
 		this.turnOrder = new LinkedList<Player>();
 		for (Object player : turnOrder) {
-			this.turnOrder.add(new User((BasicDBObject)player));
+			int playerId = (Integer)((BasicDBObject) player).get("_id");
+			if(playerId < 0){
+				this.turnOrder.add(new ArtificialPlayer(playerId));
+			} else {
+				this.turnOrder.add(new User((BasicDBObject)player));
+			}
 		}
 		
 		this._id = (Integer)obj.get("_id");
@@ -44,7 +49,12 @@ public class KingsCorner extends Game{
 		BasicDBList players = (BasicDBList)obj.get("Players");
 		this.players = new LinkedList<Player>();
 		for (Object player : players) {
-			this.players.add(new User((BasicDBObject)player));
+			int playerId = (Integer)((BasicDBObject) player).get("_id");
+			if(playerId < 0){
+				this.players.add(new ArtificialPlayer(playerId));
+			} else {
+				this.players.add(new User((BasicDBObject)player));
+			}
 		}
 		
 		this.isActive = (Boolean)obj.get("IsActive");
@@ -97,12 +107,14 @@ public class KingsCorner extends Game{
 		return true;
 	}
 	
-	public void applyAIMoves(){
+	public boolean applyAIMoves(){
+		boolean result = false;
 		Player cur = getCurrentPlayerObject();
 		Pile aiHand;
 		Map<Integer,Pile> visiblePiles = getGameState().getVisiblePiles();
 		Move m = null;
 		while(isAI(cur)){
+			result = true;
 			aiHand = getGameState().userHands.get(cur.get_id());
 
 			ArtificialPlayer ai = (ArtificialPlayer) cur;
@@ -113,16 +125,18 @@ public class KingsCorner extends Game{
 					this.applyMove(m);
 				}else{
 					hasMove = false;
-				}
+				}				
 			}
 			this.endTurn();
 			
 			cur = getCurrentPlayerObject();
 		}
+		return result;
 	}
 	
 	public static boolean isAI(Player p){
-		return p.get_id() < 0;
+		int id = p.get_id();
+		return id < 0;
 	}
 	
 	public Player getCurrentPlayerObject(){

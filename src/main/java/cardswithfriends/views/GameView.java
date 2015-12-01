@@ -63,7 +63,9 @@ public class GameView {
 		southEastPile = removeMiddle(southEastPile);
 		southWestPile = removeMiddle(southWestPile);
 		northWestPile = removeMiddle(northWestPile);
-		isTurn = game.getCurrentPlayerObject().get_id() == viewingPlayer.get_id();
+		int currentPlayerIdCheck = game.getCurrentPlayerObject().get_id();
+		int viewingPlayerIdCheck = viewingPlayer.get_id();
+		isTurn = currentPlayerIdCheck == viewingPlayerIdCheck; 
 		
 		this.moveHistory = game.getMoves().stream().map(e -> e.toString()).collect(Collectors.toList());
 		Collections.reverse(this.moveHistory);

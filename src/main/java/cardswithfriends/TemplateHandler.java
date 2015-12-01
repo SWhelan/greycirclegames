@@ -249,12 +249,14 @@ public class TemplateHandler {
 		players.add(getUserFromCookies(rq));
 		
 		// Add the selected friends to the player list
-		Arrays.stream(rq.queryMap("friends").values())
-				.map(e -> DBHandler.getUser(Integer.parseInt(e)))
-				.forEach(e -> players.add(e));
+		if(rq.queryMap("friends").hasValue()){
+			Arrays.stream(rq.queryMap("friends").values())
+					.map(e -> DBHandler.getUser(Integer.parseInt(e)))
+					.forEach(e -> players.add(e));
+		}
 		
 		// Add the specified number of AI players to the list
-		for(int i = 0; i < numAiPlayers; i++){
+		for(int i = 1; i < numAiPlayers + 1; i++){
 			players.add(new ArtificialPlayer(i * -1));
 		}
 		
@@ -315,7 +317,12 @@ public class TemplateHandler {
 		int gameId = Integer.parseInt(gameIdString);
 		KingsCorner game = DBHandler.getKCGame(gameId);
 		game.endTurn();
-		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
+		if(game.applyAIMoves()){
+			// It was an AI Player's turn
+			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn ended. AI Player(s) played.");
+		} else {
+			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
+		}
 		DBHandler.updateKCGame(game);
 		rs.redirect(GAMES_ROUTE + "/" + gameIdString);
 		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
