@@ -19,6 +19,11 @@ public class Pile extends ReflectionDBObject {
 		cards = new LinkedList<Card>();
 	}
 	
+	public Pile(String n, List<Card> c){
+		name = n;
+		cards = (LinkedList<Card>)c;
+	}
+	
 	public Pile(BasicDBObject obj) {
 		BasicDBList cards = (BasicDBList)obj.get("Cards");
 		this.cards = new LinkedList<Card>();
@@ -120,6 +125,10 @@ public class Pile extends ReflectionDBObject {
 	
 	public boolean namesAreEqual(Pile p){
 		return p.getName().equals(this.getName());
+	}
+	
+	public Pile copy(){
+		return new Pile(this.getName(), this.getCards());
 	}
 	
 }

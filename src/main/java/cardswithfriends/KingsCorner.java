@@ -113,9 +113,9 @@ public class KingsCorner extends Game{
 		Pile aiHand;
 		Map<Integer,Pile> visiblePiles = getGameState().getVisiblePiles();
 		Move m = null;
-		while(isAI(cur)){
+		while(this.isActive && isAI(cur)){
 			result = true;
-			aiHand = getGameState().userHands.get(Integer.toString(cur.get_id()));
+			aiHand = getGameState().userHands.get(Integer.toString(cur.get_id())).copy();
 
 			ArtificialPlayer ai = (ArtificialPlayer) cur;
 			boolean hasMove = true;
