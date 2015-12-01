@@ -88,7 +88,9 @@ public class ArtificialPlayer extends ReflectionDBObject implements Player {
 	 * @param compatibles A pile representing the different cards than can be placed this turn (independent of AI's hand)
 	 * @return A pile representing the different cards in the AI's hand that can be placed this turn.
 	 */
-	private Pile findCompatibleHand(Pile hand, Pile compatibles) {
+	private Pile findCompatibleHand(Pile handoriginal, Pile compatibles) {
+		Pile hand = new Pile("copy");
+		hand.addAll(handoriginal);
 		Pile returnPile = new Pile("playableCards");
 		Card topCard;
 		while (!hand.isEmpty()) {
