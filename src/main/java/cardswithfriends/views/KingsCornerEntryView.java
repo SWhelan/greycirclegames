@@ -27,6 +27,8 @@ public class KingsCornerEntryView {
 			Player user = DBHandler.getUser(kc.getWinner_id());
 			if(user != null){
 				this.winner = user.getUserName();
+			} else {
+				this.winner = "A Computer Player";
 			}
 		}
 	}
