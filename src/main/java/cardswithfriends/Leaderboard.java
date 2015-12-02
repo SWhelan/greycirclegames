@@ -25,7 +25,9 @@ public class Leaderboard extends ReflectionDBObject{
 		
 		BasicDBObject gameStats = (BasicDBObject)obj.get("GameStats");
 		for (Entry<String, Object> e : gameStats.entrySet()) {
-			this.gameStats.put(e.getKey(), (BasicDBObject)e.getValue());
+			if(e.getKey().contains("Computer Player ")){
+				this.gameStats.put(e.getKey(), (BasicDBObject)e.getValue());
+			}
 		}
 	}
 	
