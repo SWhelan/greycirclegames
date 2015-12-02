@@ -245,12 +245,6 @@ public class TemplateHandler {
 		Integer numAiPlayers = Integer.parseInt(rq.queryParams("ai"));		
 		List<Player> players = new LinkedList<Player>();
 		
-		if(players.size() + numAiPlayers > GlobalConstants.MAX_PLAYERS){
-			rs.cookie(GlobalConstants.DISPLAY_ERROR, "The game may not have more than " + Integer.toString(GlobalConstants.MAX_PLAYERS) + "players.");
-			rs.redirect(CREATE_GAME_ROUTE);
-			return getModelAndView(null, GAME_LIST_TEMPLATE, rq, rs);
-		}
-		
 		// Add the user that created the game as the first player
 		players.add(getUserFromCookies(rq));
 		
@@ -259,6 +253,12 @@ public class TemplateHandler {
 			Arrays.stream(rq.queryMap("friends").values())
 					.map(e -> DBHandler.getUser(Integer.parseInt(e)))
 					.forEach(e -> players.add(e));
+		}
+		
+		if(players.size() + numAiPlayers > GlobalConstants.MAX_PLAYERS){
+			rs.cookie(GlobalConstants.DISPLAY_ERROR, "The game may not have more than " + Integer.toString(GlobalConstants.MAX_PLAYERS) + " players.");
+			rs.redirect(CREATE_GAME_ROUTE);
+			return getModelAndView(null, CREATE_GAME_TEMPLATE, rq, rs);
 		}
 		
 		// Add the specified number of AI players to the list

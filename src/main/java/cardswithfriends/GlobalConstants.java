@@ -2,7 +2,7 @@ package cardswithfriends;
 
 public class GlobalConstants {
 	public static final int KING = 13;
-	public static final int MAX_PLAYERS = 7;
+	public static final int MAX_PLAYERS = 6;
 	public static final int INITIAL_NUM_CARDS = 7;
 	
 	//Templates
