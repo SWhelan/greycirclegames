@@ -1,6 +1,7 @@
 package cardswithfriends;
 
 import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 
 public class KCMove extends Move {
 
@@ -12,7 +13,13 @@ public class KCMove extends Move {
 		this.origin = new Pile((BasicDBObject)obj.get("Origin"));
 		this.moving = new Pile((BasicDBObject)obj.get("Moving"));
 		this.destination = new Pile((BasicDBObject)obj.get("Destination"));
-		this.player = new User((BasicDBObject)obj.get("Player"));
+		BasicDBObject player = (BasicDBObject)obj.get("Player");
+		Integer playerId = (Integer)player.get("_id");
+		if(playerId < 0){
+			this.player = new ArtificialPlayer(playerId);
+		} else {
+			this.player = new User(player);
+		}
 	}
 
 	@Override

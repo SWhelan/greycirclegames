@@ -103,14 +103,14 @@ public class KCGameState extends GameState {
 	//Get only piles that all players should be allowed to see
 	public Map<Integer, Pile> getVisiblePiles() {
 		Map<Integer, Pile> tablePiles = new HashMap<Integer, Pile>();
-		tablePiles.put(PileIds.EAST_PILE.ordinal(), piles.get(Integer.toString(PileIds.EAST_PILE.ordinal())).copy());
-		tablePiles.put(PileIds.NORTH_PILE.ordinal(), piles.get(Integer.toString(PileIds.NORTH_PILE.ordinal())).copy());
-		tablePiles.put(PileIds.WEST_PILE.ordinal(), piles.get(Integer.toString(PileIds.WEST_PILE.ordinal())).copy());
-		tablePiles.put(PileIds.SOUTH_PILE.ordinal(), piles.get(Integer.toString(PileIds.SOUTH_PILE.ordinal())).copy());
-		tablePiles.put(PileIds.NORTH_EAST_PILE.ordinal(), piles.get(Integer.toString(PileIds.NORTH_EAST_PILE.ordinal())).copy());
-		tablePiles.put(PileIds.NORTH_WEST_PILE.ordinal(), piles.get(Integer.toString(PileIds.NORTH_WEST_PILE.ordinal())).copy());
-		tablePiles.put(PileIds.SOUTH_EAST_PILE.ordinal(), piles.get(Integer.toString(PileIds.SOUTH_EAST_PILE.ordinal())).copy());
-		tablePiles.put(PileIds.SOUTH_WEST_PILE.ordinal(), piles.get(Integer.toString(PileIds.SOUTH_WEST_PILE.ordinal())).copy());
+		tablePiles.put(PileIds.EAST_PILE.ordinal(), piles.get(Integer.toString(PileIds.EAST_PILE.ordinal())));
+		tablePiles.put(PileIds.NORTH_PILE.ordinal(), piles.get(Integer.toString(PileIds.NORTH_PILE.ordinal())));
+		tablePiles.put(PileIds.WEST_PILE.ordinal(), piles.get(Integer.toString(PileIds.WEST_PILE.ordinal())));
+		tablePiles.put(PileIds.SOUTH_PILE.ordinal(), piles.get(Integer.toString(PileIds.SOUTH_PILE.ordinal())));
+		tablePiles.put(PileIds.NORTH_EAST_PILE.ordinal(), piles.get(Integer.toString(PileIds.NORTH_EAST_PILE.ordinal())));
+		tablePiles.put(PileIds.NORTH_WEST_PILE.ordinal(), piles.get(Integer.toString(PileIds.NORTH_WEST_PILE.ordinal())));
+		tablePiles.put(PileIds.SOUTH_EAST_PILE.ordinal(), piles.get(Integer.toString(PileIds.SOUTH_EAST_PILE.ordinal())));
+		tablePiles.put(PileIds.SOUTH_WEST_PILE.ordinal(), piles.get(Integer.toString(PileIds.SOUTH_WEST_PILE.ordinal())));
 		return tablePiles;
 	}
 	

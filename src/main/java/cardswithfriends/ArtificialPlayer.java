@@ -71,7 +71,7 @@ public class ArtificialPlayer extends ReflectionDBObject implements Player {
 		movingPile.add(moveCard);
 		//Find a table pile in the gamestate to place the card
 		for (Pile tPile: tablePiles.values()) {
-			KCMove possibleMove = new KCMove(DBHandler.getUser(playerID), AIHand, movingPile, tPile);
+			KCMove possibleMove = new KCMove(this, AIHand, movingPile, tPile);
 			if (possibleMove.isValid()) {
 				returnMove = possibleMove;
 				break;
