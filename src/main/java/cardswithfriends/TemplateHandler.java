@@ -507,7 +507,6 @@ public class TemplateHandler {
 		info.put("POST_MOVE_ROUTE", POST_MOVE_ROUTE);
 		info.put("POST_TURN_ROUTE", POST_TURN_ROUTE);
 		
-		
 		return new ModelAndView(info, templateName);
 	}
 

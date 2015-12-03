@@ -1,7 +1,6 @@
 package cardswithfriends;
 
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
 
 public class KCMove extends Move {
 

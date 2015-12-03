@@ -1,9 +1,7 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import com.mongodb.BasicDBList;
 
-import spark.utils.Assert;
 import cardswithfriends.DBHandler;
 import cardswithfriends.KCMove;
 import cardswithfriends.KingsCorner;
@@ -11,6 +9,7 @@ import cardswithfriends.Leaderboard;
 import cardswithfriends.Pile;
 import cardswithfriends.Player;
 import cardswithfriends.User;
+import spark.utils.Assert;
 
 
 public class DBTest {
@@ -76,8 +75,6 @@ public class DBTest {
 		game.addMove(new KCMove(p1, pile1, pile2, pile3));
 
 		DBHandler.createKCGame(game);
-
-		LinkedList<KingsCorner> l = (LinkedList<KingsCorner>) DBHandler.getKCGamesforUser(45);
 
 		KingsCorner kc = DBHandler.getKCGame(gameID);
 		Assert.isTrue(kc.getIsActive(), "Demo game should be active!");

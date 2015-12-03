@@ -1,6 +1,9 @@
 {{> header}}
 	<form action="{{CREATE_GAME_ROUTE}}" method="POST">		
 		<div class="form-group">
+		{{^friends}}
+		<p> If you want to play with people you know you'll have to add them as friends first: <a href="{{FRIENDS_ROUTE}}">Add Friends</a></p>
+		{{/friends}}
 		<label for="friends">Friends:</label>
 		<select multiple class="form-control" name="friends" id="friends">
 		<option value="-1"></option>

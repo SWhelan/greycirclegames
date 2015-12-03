@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.ReflectionDBObject;
 
@@ -15,7 +14,7 @@ public class Leaderboard extends ReflectionDBObject{
 	//The embedded basicDBList has length 2, first entry contains # of wins, second contains # of losses
 	public Map<String, BasicDBObject> gameStats;
 	
-	//deafult contructor, initialize empty map
+	//Default constructor, initialize empty map
 	public Leaderboard() {
 		gameStats = new HashMap<String, BasicDBObject>();
 	}

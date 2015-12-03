@@ -23,7 +23,7 @@ public class LeaderboardView {
 		entries = leaderboard.gameStats.entrySet().stream().map(e -> {
 			int wins;
 			int losses;
-			Player user;
+			Player user;			
 			user = DBHandler.getUser(Integer.parseInt(e.getKey()));
 			BasicDBObject gameEntries = e.getValue();
 			BasicDBList kingsCornerNumbers = (BasicDBList) gameEntries.get(GlobalConstants.KINGS_CORNER);
