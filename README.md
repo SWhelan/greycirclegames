@@ -40,6 +40,8 @@ Additionally with every commit and push to github TravisCI automatically builds 
 
 [![Build Status](https://travis-ci.org/SWhelan/cardswithfriends.svg?branch=master)](https://travis-ci.org/SWhelan/cardswithfriends)
 
+Functional tests are also all passing but as there is no automated documentation system and there are so few of them we have found it simpler to just run all the functional tests before each major demo/release which equates to clicking all the links on the site and playing several full games. These tests were run before submission on December 4th 2015. The tests themselves are enumerated in the Functional Tests document.
+
 #### Code Coverage
 
 Every time the tests are run JaCoCo, a maven code coverage tool, runs a code coverage report. By settings in the pom.xml this coverage report which happens to be a dynamically generated html website is placed into target/site/jacoco-ut/ and can be accessed via index.html.
