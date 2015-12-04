@@ -30,7 +30,9 @@ public class LeaderboardView {
 			wins = (Integer)kingsCornerNumbers.get(0);
 			losses = (Integer)kingsCornerNumbers.get(1);
 			return new LeaderboardEntryView(wins, losses, user);
-		}).collect(Collectors.toList());
+		})
+		.filter(e -> e.user != null)
+		.collect(Collectors.toList());
 		
 		entries.sort(entryComparator);
 	}

@@ -232,6 +232,7 @@ public class User extends ReflectionDBObject implements Player {
 		BasicDBList winLossList = ((BasicDBList)winsAndLosses.get(game));
 		int numWins = (Integer)winLossList.get(0) + 1;
 		winLossList.put(0, numWins);
+		winsAndLosses.put(game, winLossList);
 		DBHandler.updateUser(this);
 		
 		Leaderboard lb = DBHandler.getLeaderboard();
@@ -244,6 +245,7 @@ public class User extends ReflectionDBObject implements Player {
 		BasicDBList winLossList = ((BasicDBList)winsAndLosses.get(game));
 		int numLosses = (Integer)winLossList.get(1) + 1;
 		winLossList.put(1, numLosses);
+		winsAndLosses.put(game, winLossList);
 		DBHandler.updateUser(this);
 		
 		Leaderboard lb = DBHandler.getLeaderboard();

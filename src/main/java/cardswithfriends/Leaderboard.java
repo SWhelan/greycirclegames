@@ -57,7 +57,7 @@ public class Leaderboard extends ReflectionDBObject{
 	}
 	
 	public void addUser(User user){
-			gameStats.put(Integer.toString(user.get_id()), user.getWinsAndLosses());
+		gameStats.put(Integer.toString(user.get_id()), user.getWinsAndLosses());
 	}
 
 	public Map<String, BasicDBObject> getGameStats() {

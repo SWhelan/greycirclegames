@@ -54,8 +54,6 @@ Bugs and issues are tracked via github issues and can be found at: [https://gith
 
 At the time the project was initially submitted (December 4th, 2015) there were no known bugs with the features implemented.
 
-Of note when playing with the app there is one thing that may look like a bug but is not. On the leaderboard there may be blank entries with no name and 0 wins and 0 losses. This is because the database is shared between connections and as part of heroku's security some of the data is blocked. For example if the app is run locally and a new user is created they would be added to the database but other connections to the same database could not see this new data however heroku/heroku's mongoDB plugin show this data in aggregate queries like user counts so when we go to display the leaderboard more rows are shown than data we can retrieve however this is fine as if this were to go into production a single/separate/new database would be used and this situation would not occur. Running the DB unit tests will also cause these blank rows.
-
 ### User Manual
 
 A basic instructional page for rules about how to play the game can be found on the about page: [http://cardswithfriends.herokuapp.com/tutorial](http://cardswithfriends.herokuapp.com/tutorial) but a more in-depth look at how to navigate and use the app/website can be found in the UserManual.docx or if preferred UserManual.pdf in the root directory.
