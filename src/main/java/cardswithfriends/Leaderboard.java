@@ -9,16 +9,24 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.ReflectionDBObject;
 
 public class Leaderboard extends ReflectionDBObject{
-	//User id --> GameType ID --> #wins, # losses in that game
-	//The embedded basicDBobject is GameType ID's (only one in our case) mapped to a BasicDBList
-	//The embedded basicDBList has length 2, first entry contains # of wins, second contains # of losses
+	/**
+	 * User id --> GameType ID --> #wins, # losses in that game
+	 * The embedded basicDBobject is GameType ID's (only one in our case) mapped to a BasicDBList
+	 * The embedded basicDBList has length 2, first entry contains # of wins, second contains # of losses
+	 */
 	public Map<String, BasicDBObject> gameStats;
 	
-	//Default constructor, initialize empty map
+	/**
+	 * Default constructor, initialize empty map
+	 */
 	public Leaderboard() {
 		gameStats = new HashMap<String, BasicDBObject>();
 	}
 
+	/**
+	 * Builds the global leaderboard.
+	 * @param obj
+	 */
 	public Leaderboard(BasicDBObject obj) {
 		this.gameStats = new HashMap<String, BasicDBObject>();
 		
@@ -30,6 +38,12 @@ public class Leaderboard extends ReflectionDBObject{
 		}
 	}
 	
+	/**
+	 * Builds the leaderboard for a user - a leaderboard which only contains
+	 * the given user's friends, and themself.
+	 * Currently, there is no front-end display of this.
+	 * @param user
+	 */
 	public Leaderboard(User user){
 		gameStats = new HashMap<String, BasicDBObject>();
 		List<User> friends = user.getFriendsList();

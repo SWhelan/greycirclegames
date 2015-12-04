@@ -8,6 +8,16 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.ReflectionDBObject;
 
+/**
+ * A class that abstracts a pile of cards.
+ * A pile maintains an order, but the order does not always matter.
+ * For instance, the order of a user's hand pile, or the draw pile, does not mean anything.
+ * However, the order of a game pile is important.
+ * 
+ * This is more or less a contained class for a Linked List of cards.
+ * @author George
+ *
+ */
 public class Pile extends ReflectionDBObject {
 	private LinkedList<Card> cards;
 	public String name;
@@ -94,6 +104,11 @@ public class Pile extends ReflectionDBObject {
 		return cards.isEmpty();
 	}
 	
+	/**
+	 * Makes a complete deck named n.
+	 * @param n	The name of the deck.
+	 * @return	The new deck.
+	 */
 	public static Pile makeDeck(String n){
 		Pile p = new Pile(n);
 		for(int i = 1; i < 14; i++){
@@ -105,6 +120,11 @@ public class Pile extends ReflectionDBObject {
 		return p;
 	}
 	
+	/**
+	 * Shuffles a given pile.
+	 * All possible combinations have a roughly uniform probability of being output.
+	 * @param p
+	 */
 	public static void shuffle(Pile p){
 		Collections.shuffle(p.cards);
 	}
@@ -123,10 +143,6 @@ public class Pile extends ReflectionDBObject {
 	
 	public boolean namesAreEqual(Pile p){
 		return p.getName().equals(this.getName());
-	}
-	
-	public Pile copy(){
-		return new Pile(this.getName(), this.getCards());
 	}
 	
 }

@@ -8,6 +8,9 @@ import java.util.Map.Entry;
 import com.mongodb.BasicDBObject;
 
 public class KCGameState extends GameState {
+	/**
+	 * The non-user piles
+	 */
 	public Map<String, Pile> piles;
 	
 	public Map<String, Pile> getPiles() {
@@ -17,16 +20,15 @@ public class KCGameState extends GameState {
 		this.piles = piles;
 	}
 
-	public KCGameState(KCGameStateGenerator kc){
-		//Initialize to a pre-existing game
-	}
-
 	//Initialize to new gamestate
 	public KCGameState() {
-		//Initialize to a new game
 		super();
 	}
 
+	/**
+	 * Initialize to a Game State that was saved in the database.
+	 * @param obj A DBObject containing all the necessary info for this game state.
+	 */
 	public KCGameState(BasicDBObject obj) {
 		
 		BasicDBObject piles = (BasicDBObject)obj.get("Piles");
@@ -43,9 +45,6 @@ public class KCGameState extends GameState {
 		
 		this.turnNumber = (Integer)obj.get("TurnNumber");
 	}
-
-	public static class KCGameStateGenerator{
-	}
 	
 	public static KingsCorner getKCGame(int gameID) {
 		return DBHandler.getKCGame(gameID);
@@ -53,7 +52,9 @@ public class KCGameState extends GameState {
 
 	@Override
 	protected void initializeToNewGameState(List<Player> players) {
+		//Initialize game piles
 		initializePiles();
+		//Initialize user hands
 		userHands = new HashMap<String, Pile>();
 		for(Player p : players){
 			userHands.put(Integer.toString(p.get_id()), new Pile(p.getUserName()+"'s Pile"));
@@ -85,6 +86,7 @@ public class KCGameState extends GameState {
 		}
 	}
 
+	//Put empty piles for each game pile, except the draw pile which contains a full, shuffled deck.
 	private void initializePiles() {
 		piles = new HashMap<String, Pile>();
 		Pile drawPile = Pile.makeDeck("Draw Pile");
@@ -100,7 +102,11 @@ public class KCGameState extends GameState {
 		piles.put(Integer.toString(PileIds.SOUTH_WEST_PILE.ordinal()), new Pile("Southwest Pile"));
 	}
 	
-	//Get only piles that all players should be allowed to see
+	/**
+	 * Get only piles that all players should be allowed to see.
+	 * Used for an AI to generate a move.
+	 * @return
+	 */
 	public Map<Integer, Pile> getVisiblePiles() {
 		Map<Integer, Pile> tablePiles = new HashMap<Integer, Pile>();
 		tablePiles.put(PileIds.EAST_PILE.ordinal(), piles.get(Integer.toString(PileIds.EAST_PILE.ordinal())));

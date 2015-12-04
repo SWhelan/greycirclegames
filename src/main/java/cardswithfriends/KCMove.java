@@ -2,6 +2,11 @@ package cardswithfriends;
 
 import com.mongodb.BasicDBObject;
 
+/**
+ * A move for King's Corner.
+ * @author George
+ *
+ */
 public class KCMove extends Move {
 
 	public KCMove(Player player, Pile origin, Pile moving, Pile destination){
@@ -23,7 +28,9 @@ public class KCMove extends Move {
 
 	@Override
 	public boolean isValid() {
+		//If this is a draw move
 		if(origin.getName().equals("Draw Pile")){
+			//The moving pile should be 1 card, and it should equal the top card of the draw pile
 			return moving.size() == 1 && origin.getTop().equals(moving.getTop());
 		}
 		//If everything in moving is in origin, and if the bottom card of moving works with the top of destination, we good
@@ -49,7 +56,10 @@ public class KCMove extends Move {
 	}
 
 	private static boolean cardsAreCompatible(Card movingBottom, Card destTop, Boolean destIsCorner) {
+		//If the destination is empty
 		if(destTop == null){
+			//We can move any card there if it is not a corner.
+			//If it is a corner, the moving pile must have a King on the bottom
 			return (!destIsCorner || (destIsCorner && movingBottom.getNumber() == GlobalConstants.KING));
 		}
 		boolean numbersCompatible = movingBottom.getNumber() == destTop.getNumber() - 1;
