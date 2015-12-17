@@ -1,4 +1,4 @@
-package cardswithfriends;
+package greycirclegames;
 
 import java.util.Collections;
 import java.util.LinkedList;

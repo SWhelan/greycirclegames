@@ -1,6 +1,6 @@
 import static spark.SparkBase.port;
 
-import cardswithfriends.TemplateHandler;
+import greycirclegames.TemplateHandler;
 import spark.Spark;
 
 

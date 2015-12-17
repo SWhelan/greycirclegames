@@ -1,4 +1,4 @@
-package cardswithfriends;
+package greycirclegames;
 
 public class GlobalConstants {
 	public static final int KING = 13;

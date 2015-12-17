@@ -1,4 +1,4 @@
-package cardswithfriends;
+package greycirclegames;
 
 import static spark.Spark.before;
 import static spark.Spark.exception;
@@ -11,10 +11,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import cardswithfriends.Card.Suit;
-import cardswithfriends.views.GameView;
-import cardswithfriends.views.KingsCornerListView;
-import cardswithfriends.views.LeaderboardView;
+import greycirclegames.Card.Suit;
+import greycirclegames.views.GameView;
+import greycirclegames.views.KingsCornerListView;
+import greycirclegames.views.LeaderboardView;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;

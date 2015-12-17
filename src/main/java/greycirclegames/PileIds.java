@@ -1,4 +1,4 @@
-package cardswithfriends;
+package greycirclegames;
 
 public enum PileIds {
 	DRAW_PILE,

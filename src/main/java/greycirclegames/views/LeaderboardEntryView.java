@@ -1,6 +1,6 @@
-package cardswithfriends.views;
+package greycirclegames.views;
 
-import cardswithfriends.Player;
+import greycirclegames.Player;
 
 public class LeaderboardEntryView implements Comparable<LeaderboardEntryView>{
 	public int numWins;

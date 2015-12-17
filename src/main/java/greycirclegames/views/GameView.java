@@ -1,4 +1,4 @@
-package cardswithfriends.views;
+package greycirclegames.views;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import cardswithfriends.Card;
-import cardswithfriends.KingsCorner;
-import cardswithfriends.Pile;
-import cardswithfriends.PileIds;
-import cardswithfriends.Player;
+import greycirclegames.Card;
+import greycirclegames.KingsCorner;
+import greycirclegames.Pile;
+import greycirclegames.PileIds;
+import greycirclegames.Player;
 
 public class GameView {
 	Integer gameId;

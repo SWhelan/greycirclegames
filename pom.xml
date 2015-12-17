@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>com.cardswithfriends.app</groupId>
-	<artifactId>cardswithfriends</artifactId>
+	<groupId>com.greycirclegames.app</groupId>
+	<artifactId>greycirclegames</artifactId>
 	<version>1.0</version>
 
 	<dependencies>
@@ -63,9 +63,9 @@
 				<version>0.4.4</version>
 				<configuration>
 					<jdkVersion>1.8</jdkVersion>
-					<appName>cardswithfriends</appName>
+					<appName>greycirclegames</appName>
 					<processTypes>
-						<web>java -jar ./target/cardswithfriends-1.0-jar-with-dependencies.jar</web>
+						<web>java -jar ./target/greycirclegames-1.0-jar-with-dependencies.jar</web>
 					</processTypes>
 				</configuration>
 			</plugin>

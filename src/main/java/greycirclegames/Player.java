@@ -1,4 +1,4 @@
-package cardswithfriends;
+package greycirclegames;
 
 /**
  * A player who can play in a game.

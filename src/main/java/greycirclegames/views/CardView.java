@@ -1,7 +1,7 @@
-package cardswithfriends.views;
+package greycirclegames.views;
 
-import cardswithfriends.Card;
-import cardswithfriends.Card.Suit;
+import greycirclegames.Card;
+import greycirclegames.Card.Suit;
 
 public class CardView {
 	public boolean isFirst;

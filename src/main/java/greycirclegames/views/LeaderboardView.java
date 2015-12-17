@@ -1,4 +1,4 @@
-package cardswithfriends.views;
+package greycirclegames.views;
 
 import java.util.Comparator;
 import java.util.List;
@@ -7,10 +7,10 @@ import java.util.stream.Collectors;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 
-import cardswithfriends.DBHandler;
-import cardswithfriends.GlobalConstants;
-import cardswithfriends.Leaderboard;
-import cardswithfriends.Player;
+import greycirclegames.DBHandler;
+import greycirclegames.GlobalConstants;
+import greycirclegames.Leaderboard;
+import greycirclegames.Player;
 
 public class LeaderboardView {
 	public List<LeaderboardEntryView> entries;

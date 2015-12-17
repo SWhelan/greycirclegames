@@ -1,4 +1,4 @@
-package cardswithfriends;
+package greycirclegames;
 
 import java.util.HashMap;
 import java.util.List;

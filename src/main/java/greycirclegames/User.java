@@ -1,4 +1,4 @@
-package cardswithfriends;
+package greycirclegames;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

@@ -1,4 +1,4 @@
-package cardswithfriends;
+package greycirclegames;
 
 import com.mongodb.ReflectionDBObject;
 

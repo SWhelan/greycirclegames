@@ -1,11 +1,11 @@
-package cardswithfriends.views;
+package greycirclegames.views;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import cardswithfriends.DBHandler;
-import cardswithfriends.KingsCorner;
-import cardswithfriends.Player;
+import greycirclegames.DBHandler;
+import greycirclegames.KingsCorner;
+import greycirclegames.Player;
 
 public class KingsCornerEntryView {
 	public boolean isActive;

@@ -1,4 +1,4 @@
-package cardswithfriends.views;
+package greycirclegames.views;
 
 import java.util.List;
 

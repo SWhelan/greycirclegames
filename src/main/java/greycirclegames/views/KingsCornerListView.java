@@ -1,9 +1,9 @@
-package cardswithfriends.views;
+package greycirclegames.views;
 
 import java.util.LinkedList;
 import java.util.List;
 
-import cardswithfriends.DBHandler;
+import greycirclegames.DBHandler;
 
 public class KingsCornerListView {
 	public List<KingsCornerEntryView> currentTurn = new LinkedList<KingsCornerEntryView>();

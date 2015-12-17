@@ -2,13 +2,13 @@ import java.util.ArrayList;
 
 import com.mongodb.BasicDBList;
 
-import cardswithfriends.DBHandler;
-import cardswithfriends.KCMove;
-import cardswithfriends.KingsCorner;
-import cardswithfriends.Leaderboard;
-import cardswithfriends.Pile;
-import cardswithfriends.Player;
-import cardswithfriends.User;
+import greycirclegames.DBHandler;
+import greycirclegames.KCMove;
+import greycirclegames.KingsCorner;
+import greycirclegames.Leaderboard;
+import greycirclegames.Pile;
+import greycirclegames.Player;
+import greycirclegames.User;
 import spark.utils.Assert;
 
 

@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import cardswithfriends.Card;
-import cardswithfriends.GlobalConstants;
-import cardswithfriends.KCGameState;
-import cardswithfriends.KCMove;
-import cardswithfriends.KingsCorner;
-import cardswithfriends.Move;
-import cardswithfriends.Pile;
-import cardswithfriends.PileIds;
-import cardswithfriends.Player;
-import cardswithfriends.User;
+import greycirclegames.Card;
+import greycirclegames.GlobalConstants;
+import greycirclegames.KCGameState;
+import greycirclegames.KCMove;
+import greycirclegames.KingsCorner;
+import greycirclegames.Move;
+import greycirclegames.Pile;
+import greycirclegames.PileIds;
+import greycirclegames.Player;
+import greycirclegames.User;
 import spark.utils.Assert;
 
 public class Test {
