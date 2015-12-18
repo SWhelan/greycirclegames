@@ -1,6 +1,6 @@
 import static spark.SparkBase.port;
 
-import greycirclegames.TemplateHandler;
+import greycirclegames.frontend.TemplateHandler;
 import spark.Spark;
 
 

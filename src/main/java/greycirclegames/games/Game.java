@@ -1,9 +1,12 @@
-package greycirclegames;
+package greycirclegames.games;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import com.mongodb.ReflectionDBObject;
+
+import greycirclegames.Player;
+import greycirclegames.games.kingscorner.Move;
 
 /**
  * The Game holds all the information about the game.

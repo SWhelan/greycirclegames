@@ -1,6 +1,8 @@
-package greycirclegames;
+package greycirclegames.games.kingscorner;
 
 import com.mongodb.ReflectionDBObject;
+
+import greycirclegames.Player;
 
 /**
  * A Move encapsulates a move of a card game.

@@ -1,4 +1,4 @@
-package greycirclegames;
+package greycirclegames.games.kingscorner;
 
 import java.util.HashMap;
 import java.util.List;
@@ -6,6 +6,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.mongodb.BasicDBObject;
+
+import greycirclegames.DBHandler;
+import greycirclegames.GlobalConstants;
+import greycirclegames.Player;
+import greycirclegames.games.GameState;
 
 public class KCGameState extends GameState {
 	/**
@@ -51,7 +56,7 @@ public class KCGameState extends GameState {
 	}
 
 	@Override
-	protected void initializeToNewGameState(List<Player> players) {
+	public void initializeToNewGameState(List<Player> players) {
 		//Initialize game piles
 		initializePiles();
 		//Initialize user hands
@@ -60,7 +65,7 @@ public class KCGameState extends GameState {
 			userHands.put(Integer.toString(p.get_id()), new Pile(p.getUserName()+"'s Pile"));
 		}
 		
-		Pile drawPile = piles.get(Integer.toString(PileIds.DRAW_PILE.ordinal()));
+		Pile drawPile = piles.get(PileIds.DRAW_PILE.getKey());
 		
 		//Deal cards to users
 		for(int i = 0; i < GlobalConstants.INITIAL_NUM_CARDS; i++){
@@ -70,10 +75,10 @@ public class KCGameState extends GameState {
 		}
 		
 		//Add cards to initial piles
-		addCardTo(piles.get(Integer.toString(PileIds.NORTH_PILE.ordinal())), piles.get(Integer.toString(PileIds.NORTH_WEST_PILE.ordinal())), drawPile);
-		addCardTo(piles.get(Integer.toString(PileIds.EAST_PILE.ordinal())), piles.get(Integer.toString(PileIds.NORTH_EAST_PILE.ordinal())), drawPile);
-		addCardTo(piles.get(Integer.toString(PileIds.SOUTH_PILE.ordinal())), piles.get(Integer.toString(PileIds.SOUTH_WEST_PILE.ordinal())), drawPile);
-		addCardTo(piles.get(Integer.toString(PileIds.WEST_PILE.ordinal())), piles.get(Integer.toString(PileIds.SOUTH_EAST_PILE.ordinal())), drawPile);
+		addCardTo(piles.get(PileIds.NORTH_PILE.getKey()), piles.get(PileIds.NORTH_WEST_PILE.getKey()), drawPile);
+		addCardTo(piles.get(PileIds.EAST_PILE.getKey()), piles.get(PileIds.NORTH_EAST_PILE.getKey()), drawPile);
+		addCardTo(piles.get(PileIds.SOUTH_PILE.getKey()), piles.get(PileIds.SOUTH_WEST_PILE.getKey()), drawPile);
+		addCardTo(piles.get(PileIds.WEST_PILE.getKey()), piles.get(PileIds.SOUTH_EAST_PILE.getKey()), drawPile);
 	}
 
 	private void addCardTo(Pile notKing, Pile isKing, Pile drawPile) {
@@ -91,15 +96,15 @@ public class KCGameState extends GameState {
 		piles = new HashMap<String, Pile>();
 		Pile drawPile = Pile.makeDeck("Draw Pile");
 		Pile.shuffle(drawPile);
-		piles.put(Integer.toString(PileIds.DRAW_PILE.ordinal()), drawPile);
-		piles.put(Integer.toString(PileIds.EAST_PILE.ordinal()), new Pile("East Pile"));
-		piles.put(Integer.toString(PileIds.NORTH_PILE.ordinal()), new Pile("North Pile"));
-		piles.put(Integer.toString(PileIds.SOUTH_PILE.ordinal()), new Pile("South Pile"));
-		piles.put(Integer.toString(PileIds.WEST_PILE.ordinal()), new Pile("West Pile"));
-		piles.put(Integer.toString(PileIds.NORTH_EAST_PILE.ordinal()), new Pile("Northeast Pile"));
-		piles.put(Integer.toString(PileIds.NORTH_WEST_PILE.ordinal()), new Pile("Northwest Pile"));
-		piles.put(Integer.toString(PileIds.SOUTH_EAST_PILE.ordinal()), new Pile("Southeast Pile"));
-		piles.put(Integer.toString(PileIds.SOUTH_WEST_PILE.ordinal()), new Pile("Southwest Pile"));
+		piles.put(PileIds.DRAW_PILE.getKey(), drawPile);
+		piles.put(PileIds.EAST_PILE.getKey(), new Pile("East Pile"));
+		piles.put(PileIds.NORTH_PILE.getKey(), new Pile("North Pile"));
+		piles.put(PileIds.SOUTH_PILE.getKey(), new Pile("South Pile"));
+		piles.put(PileIds.WEST_PILE.getKey(), new Pile("West Pile"));
+		piles.put(PileIds.NORTH_EAST_PILE.getKey(), new Pile("Northeast Pile"));
+		piles.put(PileIds.NORTH_WEST_PILE.getKey(), new Pile("Northwest Pile"));
+		piles.put(PileIds.SOUTH_EAST_PILE.getKey(), new Pile("Southeast Pile"));
+		piles.put(PileIds.SOUTH_WEST_PILE.getKey(), new Pile("Southwest Pile"));
 	}
 	
 	/**
@@ -109,14 +114,14 @@ public class KCGameState extends GameState {
 	 */
 	public Map<Integer, Pile> getVisiblePiles() {
 		Map<Integer, Pile> tablePiles = new HashMap<Integer, Pile>();
-		tablePiles.put(PileIds.EAST_PILE.ordinal(), piles.get(Integer.toString(PileIds.EAST_PILE.ordinal())));
-		tablePiles.put(PileIds.NORTH_PILE.ordinal(), piles.get(Integer.toString(PileIds.NORTH_PILE.ordinal())));
-		tablePiles.put(PileIds.WEST_PILE.ordinal(), piles.get(Integer.toString(PileIds.WEST_PILE.ordinal())));
-		tablePiles.put(PileIds.SOUTH_PILE.ordinal(), piles.get(Integer.toString(PileIds.SOUTH_PILE.ordinal())));
-		tablePiles.put(PileIds.NORTH_EAST_PILE.ordinal(), piles.get(Integer.toString(PileIds.NORTH_EAST_PILE.ordinal())));
-		tablePiles.put(PileIds.NORTH_WEST_PILE.ordinal(), piles.get(Integer.toString(PileIds.NORTH_WEST_PILE.ordinal())));
-		tablePiles.put(PileIds.SOUTH_EAST_PILE.ordinal(), piles.get(Integer.toString(PileIds.SOUTH_EAST_PILE.ordinal())));
-		tablePiles.put(PileIds.SOUTH_WEST_PILE.ordinal(), piles.get(Integer.toString(PileIds.SOUTH_WEST_PILE.ordinal())));
+		tablePiles.put(PileIds.EAST_PILE.ordinal(), piles.get(PileIds.EAST_PILE.getKey()));
+		tablePiles.put(PileIds.NORTH_PILE.ordinal(), piles.get(PileIds.NORTH_PILE.getKey()));
+		tablePiles.put(PileIds.WEST_PILE.ordinal(), piles.get(PileIds.WEST_PILE.getKey()));
+		tablePiles.put(PileIds.SOUTH_PILE.ordinal(), piles.get(PileIds.SOUTH_PILE.getKey()));
+		tablePiles.put(PileIds.NORTH_EAST_PILE.ordinal(), piles.get(PileIds.NORTH_EAST_PILE.getKey()));
+		tablePiles.put(PileIds.NORTH_WEST_PILE.ordinal(), piles.get(PileIds.NORTH_WEST_PILE.getKey()));
+		tablePiles.put(PileIds.SOUTH_EAST_PILE.ordinal(), piles.get(PileIds.SOUTH_EAST_PILE.getKey()));
+		tablePiles.put(PileIds.SOUTH_WEST_PILE.ordinal(), piles.get(PileIds.SOUTH_WEST_PILE.getKey()));
 		return tablePiles;
 	}
 	

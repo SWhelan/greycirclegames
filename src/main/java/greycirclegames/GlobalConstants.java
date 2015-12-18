@@ -12,4 +12,5 @@ public class GlobalConstants {
 	
 	//Games
 	public static final String KINGS_CORNER = "King's Corner";
+	public static final String CIRCLES = "Circles";
 }

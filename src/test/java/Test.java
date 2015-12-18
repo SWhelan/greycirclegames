@@ -4,16 +4,16 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import greycirclegames.Card;
 import greycirclegames.GlobalConstants;
-import greycirclegames.KCGameState;
-import greycirclegames.KCMove;
-import greycirclegames.KingsCorner;
-import greycirclegames.Move;
-import greycirclegames.Pile;
-import greycirclegames.PileIds;
 import greycirclegames.Player;
 import greycirclegames.User;
+import greycirclegames.games.kingscorner.Card;
+import greycirclegames.games.kingscorner.KCGameState;
+import greycirclegames.games.kingscorner.KCMove;
+import greycirclegames.games.kingscorner.KingsCorner;
+import greycirclegames.games.kingscorner.Move;
+import greycirclegames.games.kingscorner.Pile;
+import greycirclegames.games.kingscorner.PileIds;
 import spark.utils.Assert;
 
 public class Test {
@@ -139,7 +139,7 @@ public class Test {
     	
     	int numCardsPlayed = 0;
     	for(Entry<String, Pile> e : kc.piles.entrySet()){
-    		if(!e.getKey().equals(Integer.toString(PileIds.DRAW_PILE.ordinal()))){
+    		if(!e.getKey().equals(PileIds.DRAW_PILE.getKey())){
     			if(e.getValue().size() == 1){
     				numCardsPlayed++;
     			}else if(e.getValue().size() != 0){
@@ -260,7 +260,7 @@ public class Test {
     	KingsCorner kc = new KingsCorner(0, players);
     	KCGameState gs = (KCGameState) kc.getGameState();
     	
-    	Pile drawPile = gs.piles.get(Integer.toString(PileIds.DRAW_PILE.ordinal()));
+    	Pile drawPile = gs.piles.get(PileIds.DRAW_PILE.getKey());
     	Card topCard = drawPile.getTop();
     	
     	Player currentPlayer = kc.getCurrentPlayerObject();
@@ -282,7 +282,7 @@ public class Test {
     	
     	Pile spoof = new Pile("Spoof North Pile");
     	spoof.addOn(Card.make(8, Card.Suit.CLUB));
-    	gs.piles.put(Integer.toString(PileIds.NORTH_PILE.ordinal()), spoof);
+    	gs.piles.put(PileIds.NORTH_PILE.getKey(), spoof);
     	Pile user0Hand = gs.userHands.get(Integer.toString(players.get(0).get_id()));
     	Card toMove = Card.make(7, Card.Suit.DIAMOND);
     	if(!user0Hand.contains(toMove)){
@@ -323,7 +323,7 @@ public class Test {
     	
     	Pile spoof = new Pile("Spoof North Pile");
     	spoof.addOn(Card.make(10, Card.Suit.CLUB));
-    	gs.piles.put(Integer.toString(PileIds.NORTH_PILE.ordinal()), spoof);
+    	gs.piles.put(PileIds.NORTH_PILE.getKey(), spoof);
     	Pile user0Hand = gs.userHands.get(Integer.toString(players.get(0).get_id()));
     	Card toMove = Card.make(7, Card.Suit.DIAMOND);
     	if(!user0Hand.contains(toMove)){

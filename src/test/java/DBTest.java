@@ -3,12 +3,12 @@ import java.util.ArrayList;
 import com.mongodb.BasicDBList;
 
 import greycirclegames.DBHandler;
-import greycirclegames.KCMove;
-import greycirclegames.KingsCorner;
 import greycirclegames.Leaderboard;
-import greycirclegames.Pile;
 import greycirclegames.Player;
 import greycirclegames.User;
+import greycirclegames.games.kingscorner.KCMove;
+import greycirclegames.games.kingscorner.KingsCorner;
+import greycirclegames.games.kingscorner.Pile;
 import spark.utils.Assert;
 
 

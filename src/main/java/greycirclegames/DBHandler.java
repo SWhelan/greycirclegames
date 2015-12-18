@@ -11,15 +11,16 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
+import greycirclegames.games.kingscorner.KingsCorner;
+
 /**
  * @ author Thomas Pech
  */
 
 public class DBHandler {
-	//CRUD operations for java classes
+	// CRUD operations for java classes
 
-	//CREATE
-	////////////////////////////////////////////////////////////
+	// CREATE
 	public static void createUser(User user) {
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("users");
@@ -32,8 +33,7 @@ public class DBHandler {
 		coll.save(game);
 	}
 
-	//READ
-	////////////////////////////////////////////////////////////
+	// READ
 	public static User getUser(int userID) {
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("users");
@@ -94,14 +94,9 @@ public class DBHandler {
 			BasicDBObject obj = (BasicDBObject)cursor.next();
 			gamesList.add(new KingsCorner(obj));
 		}
-
-		if (gamesList.isEmpty()) {
-			System.out.println("No games found for user: " + userId);
-		}
 		return gamesList;
 	}
 
-	//returns the leaderboard, creates a new empty one if it does not exist in the db
 	public static Leaderboard getLeaderboard() {
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("leaderboard");
@@ -118,8 +113,7 @@ public class DBHandler {
 		}
 	}
 
-	//UPDATE
-	////////////////////////////////////////////////////////////
+	// UPDATE
 	public static void updateUser(User user) {
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("users");
@@ -132,8 +126,6 @@ public class DBHandler {
 		coll.save(game);
 	}
 
-
-	//updates the leaderboard
 	public static void updateLeaderboard(Leaderboard leaderboard) {
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("leaderboard");
@@ -141,7 +133,6 @@ public class DBHandler {
 		coll.save(leaderboard);
 	}
 
-	//in the update section because it creates/updates and gets
 	private static int getNextID(String idName) {
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("ids");
@@ -173,8 +164,7 @@ public class DBHandler {
 		return getNextID("nextKCGameID");
 	}
 
-	//DELETE
-	////////////////////////////////////////////////////////////
+	// DELETE
 	public static void deleteUser(int userID) {
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("users");
@@ -189,8 +179,7 @@ public class DBHandler {
 		coll.remove(query);
 	}
 
-	//OTHER
-	////////////////////////////////////////////////////////////
+	// OTHER
 	/**
 	 * @param userId the id of the user to get friends from
 	 * @return a list of userID's indicating who the user is friends with

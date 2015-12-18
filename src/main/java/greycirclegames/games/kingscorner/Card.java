@@ -1,4 +1,4 @@
-package greycirclegames;
+package greycirclegames.games.kingscorner;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.ReflectionDBObject;

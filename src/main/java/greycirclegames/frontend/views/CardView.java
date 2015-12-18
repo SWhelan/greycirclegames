@@ -1,7 +1,7 @@
-package greycirclegames.views;
+package greycirclegames.frontend.views;
 
-import greycirclegames.Card;
-import greycirclegames.Card.Suit;
+import greycirclegames.games.kingscorner.Card;
+import greycirclegames.games.kingscorner.Card.Suit;
 
 public class CardView {
 	public boolean isFirst;

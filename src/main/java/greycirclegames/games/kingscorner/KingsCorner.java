@@ -1,4 +1,4 @@
-package greycirclegames;
+package greycirclegames.games.kingscorner;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -8,6 +8,12 @@ import java.util.Map;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
+
+import greycirclegames.GlobalConstants;
+import greycirclegames.Player;
+import greycirclegames.User;
+import greycirclegames.games.Game;
+import greycirclegames.games.GameState;
 
 public class KingsCorner extends Game{
 	/**
@@ -112,7 +118,7 @@ public class KingsCorner extends Game{
 		}
 		KCGameState gs = getGameState();
 		Pile curUserHand = gs.userHands.get(Integer.toString(getCurrentPlayerObject().get_id()));
-		Pile drawPile = gs.piles.get(Integer.toString(PileIds.DRAW_PILE.ordinal()));
+		Pile drawPile = gs.piles.get(PileIds.DRAW_PILE.getKey());
 		if(!drawPile.isEmpty()){
 			Pile topCard = new Pile("Top card");
 			topCard.add(drawPile.getTop());

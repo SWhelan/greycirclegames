@@ -1,4 +1,4 @@
-package greycirclegames;
+package greycirclegames.frontend;
 
 import static spark.Spark.before;
 import static spark.Spark.exception;
@@ -11,10 +11,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import greycirclegames.Card.Suit;
-import greycirclegames.views.GameView;
-import greycirclegames.views.KingsCornerListView;
-import greycirclegames.views.LeaderboardView;
+import greycirclegames.DBHandler;
+import greycirclegames.GlobalConstants;
+import greycirclegames.NotFoundException;
+import greycirclegames.Player;
+import greycirclegames.User;
+import greycirclegames.frontend.views.GameView;
+import greycirclegames.frontend.views.KingsCornerListView;
+import greycirclegames.frontend.views.LeaderboardView;
+import greycirclegames.games.kingscorner.ArtificialPlayer;
+import greycirclegames.games.kingscorner.Card;
+import greycirclegames.games.kingscorner.Card.Suit;
+import greycirclegames.games.kingscorner.KCMove;
+import greycirclegames.games.kingscorner.KingsCorner;
+import greycirclegames.games.kingscorner.Move;
+import greycirclegames.games.kingscorner.Pile;
+import greycirclegames.games.kingscorner.PileIds;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;

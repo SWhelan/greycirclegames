@@ -11,6 +11,8 @@ import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.ReflectionDBObject;
+
+import greycirclegames.games.Game;
 	
 public class User extends ReflectionDBObject implements Player {
 	private static final int NUM_BITS = 128;

@@ -1,9 +1,12 @@
-package greycirclegames;
+package greycirclegames.games;
 
 import java.util.List;
 import java.util.Map;
 
 import com.mongodb.ReflectionDBObject;
+
+import greycirclegames.Player;
+import greycirclegames.games.kingscorner.Pile;
 
 /**
  * GameState store the "state of the board" of a game.
@@ -65,5 +68,5 @@ public abstract class GameState extends ReflectionDBObject {
 	 * involving the given list of players.
 	 * @param players	A list of players involved in this game.
 	 */
-	protected abstract void initializeToNewGameState(List<Player> players);
+	public abstract void initializeToNewGameState(List<Player> players);
 }

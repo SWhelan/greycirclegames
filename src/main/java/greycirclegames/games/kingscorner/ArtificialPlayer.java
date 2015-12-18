@@ -1,8 +1,10 @@
-package greycirclegames;
+package greycirclegames.games.kingscorner;
 
 import java.util.Map;
 
 import com.mongodb.ReflectionDBObject;
+
+import greycirclegames.Player;
 //TODO rethink data structures. Realized better approaches as implementing
 /**
  * Class representing the artificial player

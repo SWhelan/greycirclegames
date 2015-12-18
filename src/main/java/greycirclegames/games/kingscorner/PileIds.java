@@ -1,4 +1,4 @@
-package greycirclegames;
+package greycirclegames.games.kingscorner;
 
 public enum PileIds {
 	DRAW_PILE,
@@ -9,5 +9,9 @@ public enum PileIds {
 	NORTH_WEST_PILE,
 	NORTH_EAST_PILE,
 	SOUTH_EAST_PILE,
-	SOUTH_WEST_PILE
+	SOUTH_WEST_PILE;
+	
+	public String getKey(){
+		return Integer.toString(this.ordinal());
+	}
 }

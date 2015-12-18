@@ -1,11 +1,11 @@
-package greycirclegames.views;
+package greycirclegames.frontend.views;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import greycirclegames.DBHandler;
-import greycirclegames.KingsCorner;
 import greycirclegames.Player;
+import greycirclegames.games.kingscorner.KingsCorner;
 
 public class KingsCornerEntryView {
 	public boolean isActive;

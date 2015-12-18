@@ -1,6 +1,10 @@
-package greycirclegames;
+package greycirclegames.games.kingscorner;
 
 import com.mongodb.BasicDBObject;
+
+import greycirclegames.GlobalConstants;
+import greycirclegames.Player;
+import greycirclegames.User;
 
 /**
  * A move for King's Corner.

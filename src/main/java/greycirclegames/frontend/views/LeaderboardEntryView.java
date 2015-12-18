@@ -1,4 +1,4 @@
-package greycirclegames.views;
+package greycirclegames.frontend.views;
 
 import greycirclegames.Player;
 
