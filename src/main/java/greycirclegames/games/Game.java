@@ -1,5 +1,6 @@
 package greycirclegames.games;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,6 +37,14 @@ public abstract class Game extends ReflectionDBObject{
 	protected boolean updatedLeaderboard;
 	//The id of the winner of the game (null if no winner)
 	protected Integer winner_id;
+	
+	/**
+	 * The turn order of the game in the current state.
+	 * Order does matter here.
+	 */
+	public List<Player> turnOrder;
+	// The index of turn order, not the current Id of the player.
+	public int currentPlayer;
 
 	//default constructor, only used when reinitializing from the database
 	public Game(){}
@@ -43,6 +52,9 @@ public abstract class Game extends ReflectionDBObject{
 	//Make a completely new game
 	public Game(int _id, List<Player> players){
 		this._id = _id;
+		turnOrder = new ArrayList<Player>();
+		turnOrder.addAll(players);
+		currentPlayer = 0;
 		this.gameState = newGameState(players);
 		this.moves = new LinkedList<Move>();
 		this.players = players;
@@ -110,7 +122,20 @@ public abstract class Game extends ReflectionDBObject{
 	 * @param move	A move to be applied to this game.
 	 * @return	Returns true if the move was successfully passed.  Would return false if, for example, the move was invalid.
 	 */
-	public abstract boolean applyMove(Move move);
+	public boolean applyMove(Move move){
+		//If the game is not over and the move is valid.
+		if(!gameIsOver() && move.isValid()){
+			//Apply the move and save it to the list of moves
+			move.apply();
+			addMove(move);
+			//Check if the move has made a player win
+			if(gameIsOver()){
+				changeToWinState();
+			}
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Get the id of the game.
@@ -235,4 +260,44 @@ public abstract class Game extends ReflectionDBObject{
 	 */
 	public abstract boolean gameIsOver();
 	
+	
+	public int getCurrentPlayer(){
+		return currentPlayer;
+	}
+	public void setCurrentPlayer(int currentPlayer){
+		this.currentPlayer = currentPlayer;
+	}
+	public List<Player> getTurnOrder(){
+		return turnOrder;
+	}
+	public void setTurnOrder(List<Player> turnOrder){
+		this.turnOrder = turnOrder;
+	}
+	
+	/**
+	 * Sets the game to a win state - meaning someone has won.
+	 */
+	protected void changeToWinState(){
+		isActive = false;
+		winner_id = getCurrentPlayerObject().get_id();
+		this.updateLeaderboard();
+	}
+	
+	/**
+	 * Gets the Player object of the current player.
+	 * @return	The current Player
+	 */
+	public Player getCurrentPlayerObject(){
+		return turnOrder.get(currentPlayer);
+	}
+	
+	/**
+	 * Sets the game to a non-winning end state.
+	 * For example, if a player quits the game, the whole game might end.
+	 * Currently, this is not implemented on the front-end.
+	 */
+	protected void changeToNonWinningEndState(){
+		isActive = false;
+		winner_id = null;
+	}
 }

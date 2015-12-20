@@ -1,6 +1,5 @@
 package greycirclegames.games.kingscorner;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -16,19 +15,9 @@ import greycirclegames.games.Game;
 import greycirclegames.games.GameState;
 
 public class KingsCorner extends Game{
-	/**
-	 * The turn order of the game in the current state.
-	 * Order does matter here.
-	 */
-	public List<Player> turnOrder;
-	// The index of turn order, not the current Id of the player.
-	private int currentPlayer;
 
 	public KingsCorner(int gameId, List<Player> players){
 		super(gameId, players);
-		turnOrder = new ArrayList<Player>();
-		turnOrder.addAll(players);
-		currentPlayer = 0;
 	}
 
 	//for creating a new kcgame from the mongo object
@@ -74,35 +63,6 @@ public class KingsCorner extends Game{
 		this.isActive = (Boolean)obj.get("IsActive");
 		this.winner_id = (Integer)obj.get("Winner_id");
 		this.updatedLeaderboard = (Boolean)obj.get("UpdatedLeaderboard");
-	}
-
-	public int getCurrentPlayer(){
-		return currentPlayer;
-	}
-	public void setCurrentPlayer(int currentPlayer){
-		this.currentPlayer = currentPlayer;
-	}
-	public List<Player> getTurnOrder(){
-		return turnOrder;
-	}
-	public void setTurnOrder(List<Player> turnOrder){
-		this.turnOrder = turnOrder;
-	}
-	
-	@Override
-	public boolean applyMove(Move move) {
-		//If the game is not over and the move is valid.
-		if(!gameIsOver() && move.isValid()){
-			//Apply the move and save it to the list of moves
-			move.apply();
-			addMove(move);
-			//Check if the move has made a player win
-			if(gameIsOver()){
-				setToWinState();
-			}
-			return true;
-		}
-		return false;
 	}
 	
 	/**
@@ -178,14 +138,6 @@ public class KingsCorner extends Game{
 	}
 	
 	/**
-	 * Gets the Player object of the current player.
-	 * @return	The current Player
-	 */
-	public Player getCurrentPlayerObject(){
-		return turnOrder.get(currentPlayer);
-	}
-	
-	/**
 	 * Returns the GameState as a KCGameState object.
 	 */
 	public KCGameState getGameState(){
@@ -219,25 +171,6 @@ public class KingsCorner extends Game{
 			return getCurrentPlayerObject();
 		}
 		return null;
-	}
-	
-	/**
-	 * Sets the game to a win state - meaning someone has won.
-	 */
-	private void setToWinState(){
-		isActive = false;
-		winner_id = getCurrentPlayerObject().get_id();
-		this.updateLeaderboard();
-	}
-	
-	/**
-	 * Sets the game to a non-winning end state.
-	 * For example, if a player quits the game, the whole game might end.
-	 * Currently, this is not implemented on the front-end.
-	 */
-	private void setToNonWinningEndState(){
-		isActive = false;
-		winner_id = null;
 	}
 
 	//The string identifier for King's Corner
