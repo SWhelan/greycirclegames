@@ -11,6 +11,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
+import greycirclegames.games.circles.Circles;
 import greycirclegames.games.kingscorner.KingsCorner;
 
 /**
@@ -30,6 +31,12 @@ public class DBHandler {
 	public static void createKCGame(KingsCorner game) {
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("kcgames");
+		coll.save(game);
+	}
+	
+	public static void createCirclesGame(Circles game) {
+		DB db = DatabaseConnector.getMongoDB();
+		DBCollection coll = db.getCollection("circlesgames");
 		coll.save(game);
 	}
 
@@ -160,8 +167,8 @@ public class DBHandler {
 		return getNextID("nextUserID");
 	}
 
-	public static int getNextKCGameID() {
-		return getNextID("nextKCGameID");
+	public static int getNextGameID() {
+		return getNextID("nextGameID");
 	}
 
 	// DELETE
@@ -222,4 +229,5 @@ public class DBHandler {
 		}
 		return true;
 	}
+
 }

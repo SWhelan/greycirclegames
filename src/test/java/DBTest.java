@@ -70,7 +70,7 @@ public class DBTest {
 		Pile pile3 = new Pile("pile three");
 
 
-		int gameID = DBHandler.getNextKCGameID();
+		int gameID = DBHandler.getNextGameID();
 		KingsCorner game = new KingsCorner(gameID, playerList);
 		game.addMove(new KCMove(p1, pile1, pile2, pile3));
 

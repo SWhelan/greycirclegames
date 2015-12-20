@@ -16,7 +16,8 @@ public class DatabaseConnector {
 	private static String MONGO_DATABASE_URI = BETA_DATABASE_URI;
 	// To connect to mongo shell:
 	// mongo host:port/dbname -u dbuser -p dbpassword
-	// mongo ds033125.mongolab.com:33125/heroku_t3f98vjn -u heroku_t3f98vjn -p inbmdktab4630err6k64igtg2a@ds033125
+	// mongo ds033125.mongolab.com:33125/heroku_t3f98vjn -u heroku_t3f98vjn -p inbmdktab4630err6k64igtg2a
+	
 
 	private static MongoClient client;
 	private static DB db; 

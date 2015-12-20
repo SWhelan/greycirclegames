@@ -1,28 +1,61 @@
 {{> header}}
-	<form action="{{CREATE_GAME_ROUTE}}" method="POST">		
-		<div class="form-group">
+
+ <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#circles">Circles</a></li>
+    <li><a data-toggle="tab" href="#kingscorner">King's Corner</a></li>
+ </ul>
+<br/>
+  <div class="tab-content">
+    <div id="circles" class="tab-pane fade in active">
 		{{^friends}}
-		<p> If you want to play with people you know you'll have to add them as friends first: <a href="{{FRIENDS_ROUTE}}">Add Friends</a></p>
+			<p> If you want to play with people you know you'll have to add them as friends first: <a href="{{FRIENDS_ROUTE}}">Add Friends</a></p>
 		{{/friends}}
-		<label for="friends">Friends:</label>
-		<select multiple class="form-control" name="friends" id="friends">
-		<option value="-1"></option>
-		{{#friends}}
-		<option value="{{_id}}">{{userName}}</option>
-		{{/friends}}
-		</select>
-		</div>
-		<div class="form-group">
-		  <label for="ai">Number of Computer Players:</label>
-		  <select class="form-control" name="ai" id="ai">
-		    <option>0</option>
-		    <option>1</option>
-		    <option>2</option>
-		    <option>3</option>
-		    <option>4</option>
-		    <option>5</option>
-		  </select>
-		</div>
-		<button type="submit" class="btn btn-primary btn-lg btn-block">Create Game</button>
-	</form>
+    	{{#hasFriends}}
+    	<form action="{{CIRCLES_ROUTE}}{{CREATE_GAME_ROUTE}}" method="POST">
+			<div class="form-group">
+			<label for="friends">Friends:</label>
+			<select class="form-control" name="friends" id="friends">
+			{{#friends}}
+				<option value="{{_id}}">{{userName}}</option>
+			{{/friends}}
+			</select>
+			</div>
+			<button type="submit" class="btn btn-primary btn-lg btn-block">Create Game</button>
+		</form>
+		<br/>
+		{{/hasFriends}}
+		<form action="{{CIRCLES_ROUTE}}{{CREATE_GAME_ROUTE}}" method="POST">
+			<input type="hidden" id="ai" value="true">
+			<button type="submit" class="btn btn-primary btn-lg btn-block">Play Against Computer</button>
+		</form>
+    </div>
+    <div id="kingscorner" class="tab-pane fade">
+	    <form action="{{CREATE_GAME_ROUTE}}" method="POST">		
+			<div class="form-group">
+			{{^friends}}
+			<p> If you want to play with people you know you'll have to add them as friends first: <a href="{{FRIENDS_ROUTE}}">Add Friends</a></p>
+			{{/friends}}
+			<label for="friends">Friends:</label>
+			<select multiple class="form-control" name="friends" id="friends">
+			<option value="-1"></option>
+			{{#friends}}
+			<option value="{{_id}}">{{userName}}</option>
+			{{/friends}}
+			</select>
+			</div>
+			<div class="form-group">
+			  <label for="ai">Number of Computer Players:</label>
+			  <select class="form-control" name="ai" id="ai">
+			    <option>0</option>
+			    <option>1</option>
+			    <option>2</option>
+			    <option>3</option>
+			    <option>4</option>
+			    <option>5</option>
+			  </select>
+			</div>
+			<button type="submit" class="btn btn-primary btn-lg btn-block">Create Game</button>
+		</form>
+	</div>
+  </div>
 {{> footer}}

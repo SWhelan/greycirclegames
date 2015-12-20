@@ -9,13 +9,12 @@ public class CirclesGameState extends GameState {
 	private static final int ROWS = 8;
 	private static final int COLUMNS = 8;
 	private Circle[][] board = new Circle[ROWS][COLUMNS];
-	private int currentTurnPlayerId;
 	private List<Player> players;
 	
 	@Override
 	public void initializeToNewGameState(List<Player> players) {
 		this.setPlayers(players);
-		setCurrentTurn(players.get(0).get_id());
+		this.setTurnNumber(players.get(0).get_id());
 		for(int i = 0; i < board.length; i++){
 			for(int j = 0; j < board[i].length; j++){
 				// TODO what if we change board size?
@@ -44,14 +43,6 @@ public class CirclesGameState extends GameState {
 	
 	public static boolean validPosition(int column, int row){
 		return column <= COLUMNS && column >= 0 && row <= ROWS && row >= 0;
-	}
-
-	public int getCurrentTurn() {
-		return currentTurnPlayerId;
-	}
-
-	public void setCurrentTurn(int currentTurn) {
-		this.currentTurnPlayerId = currentTurn;
 	}
 
 	public List<Player> getPlayers() {

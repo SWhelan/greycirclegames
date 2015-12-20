@@ -56,6 +56,10 @@ public class TemplateHandler {
 	public static final String POST_MOVE_ROUTE = "/move";
 	public static final String POST_TURN_ROUTE = "/turn";
 	
+	// Prepend Games
+	public static final String CIRCLES_ROUTE = "/circles";
+	public static final String KINGS_CORNER_ROUTE = "/kingscorner";
+	
 	public static final String PUBLIC_ROUTE = "/public";
 	
 	private static final String HOME_TEMPLATE = "home.mustache";
@@ -64,7 +68,7 @@ public class TemplateHandler {
 	private static final String CREATE_GAME_TEMPLATE = "createGame.mustache";
 	private static final String FRIENDS_TEMPLATE = "friends.mustache";
 	private static final String FRIEND_INFO_TEMPLATE = "friendInfo.mustache";
-	private static final String GAME_LIST_TEMPLATE = "gameList.mustache";
+	public static final String GAME_LIST_TEMPLATE = "gameList.mustache";
 	private static final String KINGS_CORNERS_TEMPLATE = "kingscorners.mustache";
 	private static final String LEADERBOARD_TEMPLATE = "leaderboard.mustache";
 	private static final String TUTORIAL_TEMPLATE = "tutorial.mustache";
@@ -81,7 +85,7 @@ public class TemplateHandler {
         });
         
         // Handle the GET requests by rendering the mustache template
-        get(HOME_ROUTE, 				(rq, rs) -> renderHome(rq, rs), 		new MustacheTemplateEngine());
+        get(HOME_ROUTE, 			(rq, rs) -> renderHome(rq, rs), 		new MustacheTemplateEngine());
         get(REGISTER_ROUTE, 		(rq, rs) -> renderRegister(rq, rs), 	new MustacheTemplateEngine());
         get(LOGIN_ROUTE, 			(rq, rs) -> renderLogin(rq, rs), 		new MustacheTemplateEngine());
         get(GAMES_ROUTE, 			(rq, rs) -> renderGameList(rq, rs), 	new MustacheTemplateEngine());
@@ -101,6 +105,8 @@ public class TemplateHandler {
         post(POST_TURN_ROUTE, 		(rq, rs) -> postTurn(rq, rs), 			new MustacheTemplateEngine());
         post(FRIENDS_ADD_ROUTE, 	(rq, rs) -> postAddFriend(rq, rs), 		new MustacheTemplateEngine());
         post(FRIENDS_REMOVE_ROUTE, 	(rq, rs) -> postRemoveFriend(rq, rs),	new MustacheTemplateEngine());
+        
+        post(CIRCLES_ROUTE + CREATE_GAME_ROUTE, (rq, rs) -> CirclesHandler.postCreateGame(rq, rs), new MustacheTemplateEngine());
         
         // Throw an error on 404s
         get("/*", (rq, rs) -> {
@@ -174,7 +180,9 @@ public class TemplateHandler {
 	
 	private static ModelAndView renderCreateGame(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		info.put("friends", getFriendsFromDB(getUserIdFromCookies(rq)));
+		List<Player> friends = getFriendsFromDB(getUserIdFromCookies(rq));
+		info.put("friends", friends);
+		info.put("hasFriends", !friends.isEmpty());
 		return getModelAndView(info, CREATE_GAME_TEMPLATE, rq, rs);
 	}
 	
@@ -279,7 +287,7 @@ public class TemplateHandler {
 		}
 		
 		// Create the game
-		KingsCorner game = new KingsCorner(DBHandler.getNextKCGameID(), players);
+		KingsCorner game = new KingsCorner(DBHandler.getNextGameID(), players);
 		DBHandler.createKCGame(game);
 		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created.");
 		rs.redirect(GAMES_ROUTE);
@@ -421,7 +429,7 @@ public class TemplateHandler {
 	 *  as each url that would use this ensures that the user is logged in
 	 *  ie has a cookie this parse int won't fail
 	 */
-	private static int getUserIdFromCookies(Request rq){
+	public static int getUserIdFromCookies(Request rq){
 		try {
 			return Integer.parseInt(rq.cookie(GlobalConstants.USER_COOKIE_KEY));
 		} catch (NumberFormatException e){
@@ -433,18 +441,18 @@ public class TemplateHandler {
 	 * Same as get user id but then also get the user with that id
 	 * form the database
 	 */
-	private static User getUserFromCookies(Request rq){
+	public static User getUserFromCookies(Request rq){
 		return DBHandler.getUser(getUserIdFromCookies(rq));
 	}
 	
 	// Is the user with userId already friends with friendId?
-	private static boolean alreadyFriends(int userId, int friendId){
+	public static boolean alreadyFriends(int userId, int friendId){
 		List<Player> friends = getFriendsFromDB(userId);
 		return friends.stream().anyMatch(e -> e.get_id() == friendId);
 	}
 	
 	// The database returns a list of ids get the list of Players
-	private static List<Player> getFriendsFromDB(int userId){
+	public static List<Player> getFriendsFromDB(int userId){
 		return DBHandler.getFriendsForUser(userId)
 					.stream()
 					.map(e -> DBHandler.getUser((Integer)e))
@@ -452,7 +460,7 @@ public class TemplateHandler {
 	}
 	
 	// Get the key for the pile HashMap from the string name of the pile
-	private static String getPileKeyFromString(String name){
+	public static String getPileKeyFromString(String name){
 		return Integer.toString(
 				Arrays.stream(PileIds.values())
 				.filter(e -> e.name().equals(name))
@@ -481,7 +489,7 @@ public class TemplateHandler {
 	 * A ModelAndView is passed to the Mustache Rendering Engine to render the response via
 	 * the template.
 	 */
-	private static ModelAndView getModelAndView(HashMap<String, Object> info, String templateName, Request rq, Response rs){
+	public static ModelAndView getModelAndView(HashMap<String, Object> info, String templateName, Request rq, Response rs){
 		if(info == null){
 			return new ModelAndView(new HashMap<String, Object>(), templateName);
 		}
@@ -518,6 +526,8 @@ public class TemplateHandler {
 		info.put("LOGOUT_ROUTE", LOGOUT_ROUTE);
 		info.put("POST_MOVE_ROUTE", POST_MOVE_ROUTE);
 		info.put("POST_TURN_ROUTE", POST_TURN_ROUTE);
+		info.put("CIRCLES_ROUTE", CIRCLES_ROUTE);
+		info.put("KINGS_CORNER_ROUTE", KINGS_CORNER_ROUTE);
 		
 		return new ModelAndView(info, templateName);
 	}

@@ -9,13 +9,14 @@ import greycirclegames.games.GameState;
 import greycirclegames.games.kingscorner.Move;
 
 public class Circles extends Game {
-	private boolean isActive = true;
-	private int winnerPlayerId;
-	private CirclesGameState state;
 
+	public Circles(int id, List<Player> players){
+		super(id, players);
+	}
+	
 	@Override
 	protected GameState newGameState(List<Player> players) {
-		GameState game = new CirclesGameState();
+		CirclesGameState game = new CirclesGameState();
 		game.initializeToNewGameState(players);
 		return game;
 	}
@@ -32,7 +33,7 @@ public class Circles extends Game {
 
 	private void setToWinState() {
 		isActive = false;
-		winnerPlayerId = state.getCurrentTurn();
+		winner_id = players.get(gameState.getTurnNumber()).get_id();
 	}
 
 	@Override
