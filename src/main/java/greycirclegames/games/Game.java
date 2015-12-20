@@ -4,16 +4,22 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
 import com.mongodb.ReflectionDBObject;
 
 import greycirclegames.Player;
+import greycirclegames.User;
+import greycirclegames.games.kingscorner.ArtificialPlayer;
+import greycirclegames.games.kingscorner.KCMove;
 import greycirclegames.games.kingscorner.Move;
 
 /**
  * The Game holds all the information about the game.
  * Game stores more the "meta" information of the game:
  * The information we still need, but that is not necessary for the game mechanics.
- * Each subclass of Game should have at least won corresponding subclass of GameState,
+ * Each subclass of Game should have at least one corresponding subclass of GameState,
  * of which Game contains an instance of that GameState object to represent the state
  * of the game "on the board" - the information necessary for game mechanics.
  * @author George
@@ -43,7 +49,7 @@ public abstract class Game extends ReflectionDBObject{
 	 * Order does matter here.
 	 */
 	public List<Player> turnOrder;
-	// The index of turn order, not the current Id of the player.
+	// The index of turn order, NOT the id of the current player.
 	public int currentPlayer;
 
 	//default constructor, only used when reinitializing from the database
@@ -299,5 +305,55 @@ public abstract class Game extends ReflectionDBObject{
 	protected void changeToNonWinningEndState(){
 		isActive = false;
 		winner_id = null;
+	}
+	
+	/**
+	 * Returns the winning player of the game, if there is one.
+	 * @return	The winning Player, or null if there is none.
+	 */
+	public Player getWinner(){
+		if(gameIsOver()){
+			return getCurrentPlayerObject();
+		}
+		return null;
+	}
+	
+	/**
+	 * Checks if th player is an AI for the King's Corner game.
+	 * @param p	A player
+	 * @return	True if the player is an AI.
+	 */
+	public static boolean isAI(Player p){
+		int id = p.get_id();
+		return id < 0;
+	}
+
+	public void gameFromDBObject(DBObject obj) {
+		this._id = (Integer)obj.get("_id");
+		this.currentPlayer = (Integer)obj.get("CurrentPlayer");
+		
+		BasicDBList turnOrder = (BasicDBList)obj.get("TurnOrder");
+		this.turnOrder = new LinkedList<Player>();
+		//We have to consider if a player is an Artificial Player or user when
+		//constructing from the database
+		for (Object player : turnOrder) {
+			int playerId = (Integer)((BasicDBObject) player).get("_id");
+			if(playerId < 0){
+				this.turnOrder.add(new ArtificialPlayer(playerId));
+			} else {
+				this.turnOrder.add(new User((BasicDBObject)player));
+			}
+		}
+		
+		BasicDBList moves = (BasicDBList)obj.get("Moves");
+		this.moves = new LinkedList<Move>();
+		for (Object move : moves) {
+			this.moves.add(new KCMove((BasicDBObject)move));
+		}
+		this.players = this.turnOrder;
+		this.isActive = (Boolean)obj.get("IsActive");
+		this.winner_id = (Integer)obj.get("Winner_id");
+		this.updatedLeaderboard = (Boolean)obj.get("UpdatedLeaderboard");
+		
 	}
 }

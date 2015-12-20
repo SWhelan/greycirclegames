@@ -10,9 +10,9 @@ import com.mongodb.BasicDBObject;
 import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
-import greycirclegames.games.GameState;
+import greycirclegames.games.CardBasedGameState;
 
-public class KCGameState extends GameState {
+public class KCGameState extends CardBasedGameState {
 	/**
 	 * The non-user piles
 	 */

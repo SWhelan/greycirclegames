@@ -1,12 +1,10 @@
 package greycirclegames.games;
 
 import java.util.List;
-import java.util.Map;
 
 import com.mongodb.ReflectionDBObject;
 
 import greycirclegames.Player;
-import greycirclegames.games.kingscorner.Pile;
 
 /**
  * GameState store the "state of the board" of a game.
@@ -24,10 +22,6 @@ public abstract class GameState extends ReflectionDBObject {
 	 * The current turn number of the game state.
 	 */
 	public int turnNumber;
-	/**
-	 *	A map of player id to Piles, representing the player's hand
-	 */
-	public Map<String, Pile> userHands;
 	
 	/**
 	 * Gets the number of turns played in the game state.
@@ -43,24 +37,6 @@ public abstract class GameState extends ReflectionDBObject {
 	 */
 	public void setTurnNumber(int turnNumber) {
 		this.turnNumber = turnNumber;
-	}
-	
-	/**
-	 * Gets the user hands.  NOT A DEFENSIVE COPY:
-	 * Move objects need direct access to the piles they are involved with,
-	 * in order to apply the move in a way which affects the GameState.
-	 * @return	A reference to the users hands.
-	 */
-	public Map<String, Pile> getUserHands() {
-		return userHands;
-	}
-	
-	/**
-	 * Sets the user's hands.
-	 * @param userHands	The user's hands.
-	 */
-	public void setUserHands(Map<String, Pile> userHands) {
-		this.userHands = userHands; 
 	}
 
 	/**

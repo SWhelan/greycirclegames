@@ -2,6 +2,9 @@ package greycirclegames.games.circles;
 
 import java.util.List;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+
 import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import greycirclegames.games.Game;
@@ -11,6 +14,11 @@ public class Circles extends Game {
 
 	public Circles(int id, List<Player> players){
 		super(id, players);
+	}
+	
+	public Circles(DBObject obj){
+		super.gameFromDBObject(obj);
+		this.gameState = new CirclesGameState((BasicDBObject)obj.get("GameState"));
 	}
 	
 	@Override
