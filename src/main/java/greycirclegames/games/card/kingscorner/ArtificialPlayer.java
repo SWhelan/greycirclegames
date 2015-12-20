@@ -1,10 +1,13 @@
-package greycirclegames.games.kingscorner;
+package greycirclegames.games.card.kingscorner;
 
 import java.util.Map;
 
 import com.mongodb.ReflectionDBObject;
 
 import greycirclegames.Player;
+import greycirclegames.games.card.Card;
+import greycirclegames.games.card.CardBasedMove;
+import greycirclegames.games.card.Pile;
 //TODO rethink data structures. Realized better approaches as implementing
 /**
  * Class representing the artificial player
@@ -42,7 +45,7 @@ public class ArtificialPlayer extends ReflectionDBObject implements Player {
 	 * @param tablePiles Piles on table (directional (visible) only)
 	 * @return A move that the AI can make (it is a valid move). 
 	 */
-	public Move createMove(Pile AIHand, Map<Integer, Pile> tablePiles) {
+	public CardBasedMove createMove(Pile AIHand, Map<Integer, Pile> tablePiles) {
 		//Let compatibleCards be all the possible cards that can be placed this turn. (findCompatibleCards)
 		Pile compatibleCards = findCompatibleCards(tablePiles);
 		//Let compatibleHand be the cards in the AI's hand that can be placed(findCompatibleHand)
@@ -139,10 +142,10 @@ public class ArtificialPlayer extends ReflectionDBObject implements Player {
 	 * @return Is the direction N, E, W , or S?
 	 */
 	public boolean isCardinalDirection(Integer pileOrdinal) {
-		if (pileOrdinal == PileIds.EAST_PILE.ordinal() ||
-				pileOrdinal == PileIds.NORTH_PILE.ordinal() ||
-						pileOrdinal == PileIds.SOUTH_PILE.ordinal() ||
-								pileOrdinal == PileIds.WEST_PILE.ordinal()) {
+		if (pileOrdinal == KCPileIds.EAST_PILE.ordinal() ||
+				pileOrdinal == KCPileIds.NORTH_PILE.ordinal() ||
+						pileOrdinal == KCPileIds.SOUTH_PILE.ordinal() ||
+								pileOrdinal == KCPileIds.WEST_PILE.ordinal()) {
 			return true;
 		}
 		else {

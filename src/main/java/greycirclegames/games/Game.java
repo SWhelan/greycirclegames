@@ -11,9 +11,9 @@ import com.mongodb.ReflectionDBObject;
 
 import greycirclegames.Player;
 import greycirclegames.User;
-import greycirclegames.games.kingscorner.ArtificialPlayer;
-import greycirclegames.games.kingscorner.KCMove;
-import greycirclegames.games.kingscorner.Move;
+import greycirclegames.games.card.CardBasedMove;
+import greycirclegames.games.card.kingscorner.ArtificialPlayer;
+import greycirclegames.games.card.kingscorner.KCMove;
 
 /**
  * The Game holds all the information about the game.
@@ -32,7 +32,7 @@ public abstract class Game extends ReflectionDBObject{
 	//The game state
 	protected GameState gameState;
 	//The list of moves
-	protected List<Move> moves;
+	protected List<CardBasedMove> moves;
 	//The list of players
 	protected List<Player> players;
 	//Whether or not the game is active ie curently playable.
@@ -62,7 +62,7 @@ public abstract class Game extends ReflectionDBObject{
 		turnOrder.addAll(players);
 		currentPlayer = 0;
 		this.gameState = newGameState(players);
-		this.moves = new LinkedList<Move>();
+		this.moves = new LinkedList<CardBasedMove>();
 		this.players = players;
 		isActive = true;
 		updatedLeaderboard = false;
@@ -74,7 +74,7 @@ public abstract class Game extends ReflectionDBObject{
 	 * @param _id	The id of the game - this should be a unique value and should be input from the database.
 	 * @param players	The list of players of this game.  Order of this list is not important.
 	 */
-	public Game(int _id, GameState gameState, List<Move> moves, List<Player> players, boolean active, boolean updatedLeaderboard){
+	public Game(int _id, GameState gameState, List<CardBasedMove> moves, List<Player> players, boolean active, boolean updatedLeaderboard){
 		this._id = _id;
 		this.gameState = gameState;
 		this.moves = moves;
@@ -128,7 +128,7 @@ public abstract class Game extends ReflectionDBObject{
 	 * @param move	A move to be applied to this game.
 	 * @return	Returns true if the move was successfully passed.  Would return false if, for example, the move was invalid.
 	 */
-	public boolean applyMove(Move move){
+	public boolean applyMove(CardBasedMove move){
 		//If the game is not over and the move is valid.
 		if(!gameIsOver() && move.isValid()){
 			//Apply the move and save it to the list of moves
@@ -162,7 +162,7 @@ public abstract class Game extends ReflectionDBObject{
 	 * Get the moves that have happened in the game.
 	 * @return	A list of moves that have been applied to this game.
 	 */
-	public final List<Move> getMoves() {
+	public final List<CardBasedMove> getMoves() {
 		return moves;
 	}
 	
@@ -194,7 +194,7 @@ public abstract class Game extends ReflectionDBObject{
 	 * Set the past moves of this game.
 	 * @param moves	A list of moves previously applied to this game.
 	 */
-	public void setMoves(List<Move> moves) {
+	public void setMoves(List<CardBasedMove> moves) {
 		this.moves = moves;
 	}
 	
@@ -253,7 +253,7 @@ public abstract class Game extends ReflectionDBObject{
 	 * Add a move to the list of applyed moves.
 	 * @param m
 	 */
-	public final void addMove(Move m){
+	public final void addMove(CardBasedMove m){
 		moves.add(m);
 	}
 	
@@ -346,7 +346,7 @@ public abstract class Game extends ReflectionDBObject{
 		}
 		
 		BasicDBList moves = (BasicDBList)obj.get("Moves");
-		this.moves = new LinkedList<Move>();
+		this.moves = new LinkedList<CardBasedMove>();
 		for (Object move : moves) {
 			this.moves.add(new KCMove((BasicDBObject)move));
 		}

@@ -1,17 +1,20 @@
-package greycirclegames.games.kingscorner;
+package greycirclegames.games.card.kingscorner;
 
 import com.mongodb.BasicDBObject;
 
 import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import greycirclegames.User;
+import greycirclegames.games.card.Card;
+import greycirclegames.games.card.CardBasedMove;
+import greycirclegames.games.card.Pile;
 
 /**
  * A move for King's Corner.
  * @author George
  *
  */
-public class KCMove extends Move {
+public class KCMove extends CardBasedMove {
 
 	public KCMove(Player player, Pile origin, Pile moving, Pile destination){
 		super(player, origin, moving, destination);

@@ -1,4 +1,4 @@
-package greycirclegames.games.kingscorner;
+package greycirclegames.games.card;
 
 import java.util.Collections;
 import java.util.LinkedList;

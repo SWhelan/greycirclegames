@@ -6,9 +6,9 @@ import greycirclegames.DBHandler;
 import greycirclegames.Leaderboard;
 import greycirclegames.Player;
 import greycirclegames.User;
-import greycirclegames.games.kingscorner.KCMove;
-import greycirclegames.games.kingscorner.KingsCorner;
-import greycirclegames.games.kingscorner.Pile;
+import greycirclegames.games.card.Pile;
+import greycirclegames.games.card.kingscorner.KCMove;
+import greycirclegames.games.card.kingscorner.KingsCorner;
 import spark.utils.Assert;
 
 

@@ -1,4 +1,4 @@
-package greycirclegames.games.circles;
+package greycirclegames.games.board.circles;
 
 import greycirclegames.Player;
 

@@ -1,4 +1,4 @@
-package greycirclegames.games.kingscorner;
+package greycirclegames.games.card.kingscorner;
 
 import java.util.List;
 import java.util.Map;
@@ -10,6 +10,8 @@ import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import greycirclegames.games.Game;
 import greycirclegames.games.GameState;
+import greycirclegames.games.card.CardBasedMove;
+import greycirclegames.games.card.Pile;
 
 public class KingsCorner extends Game{
 
@@ -36,11 +38,11 @@ public class KingsCorner extends Game{
 		}
 		KCGameState gs = getGameState();
 		Pile curUserHand = gs.userHands.get(Integer.toString(getCurrentPlayerObject().get_id()));
-		Pile drawPile = gs.piles.get(PileIds.DRAW_PILE.getKey());
+		Pile drawPile = gs.piles.get(KCPileIds.DRAW_PILE.getKey());
 		if(!drawPile.isEmpty()){
 			Pile topCard = new Pile("Top card");
 			topCard.add(drawPile.getTop());
-			Move endTurn = new KCMove(getCurrentPlayerObject(), drawPile, topCard, curUserHand);
+			CardBasedMove endTurn = new KCMove(getCurrentPlayerObject(), drawPile, topCard, curUserHand);
 			endTurn.apply();
 			moves.add(endTurn);
 		}
@@ -60,7 +62,7 @@ public class KingsCorner extends Game{
 		Player cur = getCurrentPlayerObject();
 		Pile aiHand;
 		Map<Integer,Pile> visiblePiles = getGameState().getVisiblePiles();
-		Move m = null;
+		CardBasedMove m = null;
 		//While the game is still active and the current player is an AI
 		while(this.isActive && isAI(cur)){
 			result = true;

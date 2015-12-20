@@ -19,14 +19,14 @@ import greycirclegames.User;
 import greycirclegames.frontend.views.GameView;
 import greycirclegames.frontend.views.KingsCornerListView;
 import greycirclegames.frontend.views.LeaderboardView;
-import greycirclegames.games.kingscorner.ArtificialPlayer;
-import greycirclegames.games.kingscorner.Card;
-import greycirclegames.games.kingscorner.Card.Suit;
-import greycirclegames.games.kingscorner.KCMove;
-import greycirclegames.games.kingscorner.KingsCorner;
-import greycirclegames.games.kingscorner.Move;
-import greycirclegames.games.kingscorner.Pile;
-import greycirclegames.games.kingscorner.PileIds;
+import greycirclegames.games.card.Card;
+import greycirclegames.games.card.Card.Suit;
+import greycirclegames.games.card.CardBasedMove;
+import greycirclegames.games.card.Pile;
+import greycirclegames.games.card.kingscorner.ArtificialPlayer;
+import greycirclegames.games.card.kingscorner.KCMove;
+import greycirclegames.games.card.kingscorner.KCPileIds;
+import greycirclegames.games.card.kingscorner.KingsCorner;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -321,7 +321,7 @@ public class TemplateHandler {
 			origin = pile1;
 			moving.addAll(pile1);
 		}
-		Move move = new KCMove(player, origin, moving, destination);
+		CardBasedMove move = new KCMove(player, origin, moving, destination);
 		if(game.applyMove(move)){
 			if(game.getIsActive()){
 				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied successfully.");
@@ -462,7 +462,7 @@ public class TemplateHandler {
 	// Get the key for the pile HashMap from the string name of the pile
 	public static String getPileKeyFromString(String name){
 		return Integer.toString(
-				Arrays.stream(PileIds.values())
+				Arrays.stream(KCPileIds.values())
 				.filter(e -> e.name().equals(name))
 				.collect(Collectors.toList())
 				.get(0)

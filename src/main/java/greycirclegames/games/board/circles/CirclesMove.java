@@ -1,9 +1,9 @@
-package greycirclegames.games.circles;
+package greycirclegames.games.board.circles;
 
 import greycirclegames.games.GameState;
-import greycirclegames.games.kingscorner.Move;
+import greycirclegames.games.card.CardBasedMove;
 
-public class CirclesMove extends Move {
+public class CirclesMove extends CardBasedMove {
 	private int column;
 	private int row;
 	private Circle color;

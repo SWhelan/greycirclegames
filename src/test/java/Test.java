@@ -7,13 +7,13 @@ import java.util.Set;
 import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import greycirclegames.User;
-import greycirclegames.games.kingscorner.Card;
-import greycirclegames.games.kingscorner.KCGameState;
-import greycirclegames.games.kingscorner.KCMove;
-import greycirclegames.games.kingscorner.KingsCorner;
-import greycirclegames.games.kingscorner.Move;
-import greycirclegames.games.kingscorner.Pile;
-import greycirclegames.games.kingscorner.PileIds;
+import greycirclegames.games.card.Card;
+import greycirclegames.games.card.CardBasedMove;
+import greycirclegames.games.card.Pile;
+import greycirclegames.games.card.kingscorner.KCGameState;
+import greycirclegames.games.card.kingscorner.KCMove;
+import greycirclegames.games.card.kingscorner.KCPileIds;
+import greycirclegames.games.card.kingscorner.KingsCorner;
 import spark.utils.Assert;
 
 public class Test {
@@ -139,7 +139,7 @@ public class Test {
     	
     	int numCardsPlayed = 0;
     	for(Entry<String, Pile> e : kc.piles.entrySet()){
-    		if(!e.getKey().equals(PileIds.DRAW_PILE.getKey())){
+    		if(!e.getKey().equals(KCPileIds.DRAW_PILE.getKey())){
     			if(e.getValue().size() == 1){
     				numCardsPlayed++;
     			}else if(e.getValue().size() != 0){
@@ -171,7 +171,7 @@ public class Test {
     	dest.addOn(Card.make(13, Card.Suit.DIAMOND));
     	dest.addOn(Card.make(12, Card.Suit.SPADE));
     	
-    	Move m = new KCMove(p, origin, moving, dest);
+    	CardBasedMove m = new KCMove(p, origin, moving, dest);
     	Assert.isTrue(m.isValid(), "This should be a valid move.");
     }
     
@@ -189,7 +189,7 @@ public class Test {
     	dest.addOn(Card.make(13, Card.Suit.DIAMOND));
     	dest.addOn(Card.make(12, Card.Suit.SPADE));
     	
-    	Move m = new KCMove(p, origin, moving, dest);
+    	CardBasedMove m = new KCMove(p, origin, moving, dest);
     	Assert.isTrue(!m.isValid(), "This should not be a valid move.");
     }
     
@@ -207,7 +207,7 @@ public class Test {
     	dest.addOn(Card.make(13, Card.Suit.SPADE));
     	dest.addOn(Card.make(12, Card.Suit.DIAMOND));
     	
-    	Move m = new KCMove(p, origin, moving, dest);
+    	CardBasedMove m = new KCMove(p, origin, moving, dest);
     	Assert.isTrue(!m.isValid(), "This should not be a valid move.");
     }
     
@@ -226,7 +226,7 @@ public class Test {
     	dest.addOn(Card.make(13, Card.Suit.DIAMOND));
     	dest.addOn(Card.make(12, Card.Suit.SPADE));
     	
-    	Move m = new KCMove(p, origin, moving, dest);
+    	CardBasedMove m = new KCMove(p, origin, moving, dest);
     	m.apply();
     	
     	Pile appliedOrigin = new Pile("Origin");
@@ -260,7 +260,7 @@ public class Test {
     	KingsCorner kc = new KingsCorner(0, players);
     	KCGameState gs = (KCGameState) kc.getGameState();
     	
-    	Pile drawPile = gs.piles.get(PileIds.DRAW_PILE.getKey());
+    	Pile drawPile = gs.piles.get(KCPileIds.DRAW_PILE.getKey());
     	Card topCard = drawPile.getTop();
     	
     	Player currentPlayer = kc.getCurrentPlayerObject();
@@ -282,7 +282,7 @@ public class Test {
     	
     	Pile spoof = new Pile("Spoof North Pile");
     	spoof.addOn(Card.make(8, Card.Suit.CLUB));
-    	gs.piles.put(PileIds.NORTH_PILE.getKey(), spoof);
+    	gs.piles.put(KCPileIds.NORTH_PILE.getKey(), spoof);
     	Pile user0Hand = gs.userHands.get(Integer.toString(players.get(0).get_id()));
     	Card toMove = Card.make(7, Card.Suit.DIAMOND);
     	if(!user0Hand.contains(toMove)){
@@ -292,7 +292,7 @@ public class Test {
     	Pile moving = new Pile("Moving Pile");
     	moving.add(toMove);
     	
-    	Move move = new KCMove(players.get(0), user0Hand, moving, spoof);
+    	CardBasedMove move = new KCMove(players.get(0), user0Hand, moving, spoof);
     	
     	Assert.isTrue(move.isValid(), "This should be a valid move.");
     	Assert.isTrue(kc.applyMove(move), "This is a valid move and the game should not be over, so return should be true.");
@@ -304,8 +304,8 @@ public class Test {
     	expected.addOn(Card.make(8, Card.Suit.CLUB));
     	expected.addOn(toMove);
     	Assert.isTrue(expected.equals(spoof), "We expect this pile.");
-    	List<Move> moves = kc.getMoves();
-    	Move mostRecent = moves.get(moves.size()-1);
+    	List<CardBasedMove> moves = kc.getMoves();
+    	CardBasedMove mostRecent = moves.get(moves.size()-1);
     	
     	Assert.isTrue(mostRecent.getPlayerName().equals("Test user 0"), "Most recent's player is 0.");
     	Assert.isTrue(mostRecent.getOriginName().equals(user0Hand.getName()), "Most recent origin is user 0 hand.");
@@ -323,7 +323,7 @@ public class Test {
     	
     	Pile spoof = new Pile("Spoof North Pile");
     	spoof.addOn(Card.make(10, Card.Suit.CLUB));
-    	gs.piles.put(PileIds.NORTH_PILE.getKey(), spoof);
+    	gs.piles.put(KCPileIds.NORTH_PILE.getKey(), spoof);
     	Pile user0Hand = gs.userHands.get(Integer.toString(players.get(0).get_id()));
     	Card toMove = Card.make(7, Card.Suit.DIAMOND);
     	if(!user0Hand.contains(toMove)){
@@ -333,7 +333,7 @@ public class Test {
     	Pile moving = new Pile("Moving Pile");
     	moving.add(toMove);
     	
-    	Move move = new KCMove(players.get(0), user0Hand, moving, spoof);
+    	CardBasedMove move = new KCMove(players.get(0), user0Hand, moving, spoof);
     	
     	Assert.isTrue(!move.isValid(), "This should be an invalid move.");
     	Assert.isTrue(!kc.applyMove(move), "This is not a valid move, so return should be false.");

@@ -1,6 +1,6 @@
-package greycirclegames.games.kingscorner;
+package greycirclegames.games.card.kingscorner;
 
-public enum PileIds {
+public enum KCPileIds {
 	DRAW_PILE,
 	NORTH_PILE,
 	EAST_PILE,

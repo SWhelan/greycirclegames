@@ -11,8 +11,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-import greycirclegames.games.circles.Circles;
-import greycirclegames.games.kingscorner.KingsCorner;
+import greycirclegames.games.board.circles.Circles;
+import greycirclegames.games.card.kingscorner.KingsCorner;
 
 /**
  * @ author Thomas Pech

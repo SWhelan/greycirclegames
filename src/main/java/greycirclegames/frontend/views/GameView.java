@@ -7,10 +7,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import greycirclegames.Player;
-import greycirclegames.games.kingscorner.Card;
-import greycirclegames.games.kingscorner.KingsCorner;
-import greycirclegames.games.kingscorner.Pile;
-import greycirclegames.games.kingscorner.PileIds;
+import greycirclegames.games.card.Card;
+import greycirclegames.games.card.Pile;
+import greycirclegames.games.card.kingscorner.KCPileIds;
+import greycirclegames.games.card.kingscorner.KingsCorner;
 
 public class GameView {
 	Integer gameId;
@@ -43,17 +43,17 @@ public class GameView {
 			}
 		});	
 		Map<String, Pile> piles = game.getGameState().piles;
-		drawPile = makeCardView(piles.get(PileIds.DRAW_PILE.getKey()).getCards());
+		drawPile = makeCardView(piles.get(KCPileIds.DRAW_PILE.getKey()).getCards());
 		
-		northPile = makeCardView(piles.get(PileIds.NORTH_PILE.getKey()).getCards());
-		eastPile = makeCardView(piles.get(PileIds.EAST_PILE.getKey()).getCards());
-		southPile = makeCardView(piles.get(PileIds.SOUTH_PILE.getKey()).getCards());
-		westPile = makeCardView(piles.get(PileIds.WEST_PILE.getKey()).getCards());
+		northPile = makeCardView(piles.get(KCPileIds.NORTH_PILE.getKey()).getCards());
+		eastPile = makeCardView(piles.get(KCPileIds.EAST_PILE.getKey()).getCards());
+		southPile = makeCardView(piles.get(KCPileIds.SOUTH_PILE.getKey()).getCards());
+		westPile = makeCardView(piles.get(KCPileIds.WEST_PILE.getKey()).getCards());
 		
-		northEastPile = makeCardView(piles.get(PileIds.NORTH_EAST_PILE.getKey()).getCards());
-		southEastPile = makeCardView(piles.get(PileIds.SOUTH_EAST_PILE.getKey()).getCards());
-		southWestPile = makeCardView(piles.get(PileIds.SOUTH_WEST_PILE.getKey()).getCards());
-		northWestPile = makeCardView(piles.get(PileIds.NORTH_WEST_PILE.getKey()).getCards());
+		northEastPile = makeCardView(piles.get(KCPileIds.NORTH_EAST_PILE.getKey()).getCards());
+		southEastPile = makeCardView(piles.get(KCPileIds.SOUTH_EAST_PILE.getKey()).getCards());
+		southWestPile = makeCardView(piles.get(KCPileIds.SOUTH_WEST_PILE.getKey()).getCards());
+		northWestPile = makeCardView(piles.get(KCPileIds.NORTH_WEST_PILE.getKey()).getCards());
 		
 		northPile = removeMiddle(northPile);
 		eastPile = removeMiddle(eastPile);

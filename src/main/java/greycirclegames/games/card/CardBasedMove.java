@@ -1,17 +1,14 @@
-package greycirclegames.games.kingscorner;
-
-import com.mongodb.ReflectionDBObject;
+package greycirclegames.games.card;
 
 import greycirclegames.Player;
+import greycirclegames.games.Move;
 
 /**
  * A Move encapsulates a move of a card game.
  * @author George
  *
  */
-public abstract class Move extends ReflectionDBObject {
-	//The player who is proposing this move.
-	protected Player player;
+public abstract class CardBasedMove extends Move {
 	//The pile where the moved cards are coming from.
 	protected Pile origin;
 	//The pile which is moving (often may be a single card.
@@ -20,7 +17,7 @@ public abstract class Move extends ReflectionDBObject {
 	protected Pile destination;
 
 	//default constructor
-	public Move(){}
+	public CardBasedMove(){}
 	
 	/**
 	 * Constructor.
@@ -29,27 +26,11 @@ public abstract class Move extends ReflectionDBObject {
 	 * @param moving the card or pile being moved
 	 * @param destination the pile to place the card or pile onto
 	 */
-	public Move(Player player, Pile origin, Pile moving, Pile destination){
+	public CardBasedMove(Player player, Pile origin, Pile moving, Pile destination){
 		this.player = player;
 		this.origin = origin;
 		this.moving = moving;
 		this.destination = destination;
-	}
-	
-	/**
-	 * Gets the player.
-	 * @return The player.
-	 */
-	public Player getPlayer() {
-		return player;
-	}
-	
-	/**
-	 * Sets the player.
-	 * @param player
-	 */
-	public void setPlayer(Player player) {
-		this.player = player;
 	}
 	
 	/**

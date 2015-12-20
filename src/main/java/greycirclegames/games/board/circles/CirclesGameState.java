@@ -1,4 +1,4 @@
-package greycirclegames.games.circles;
+package greycirclegames.games.board.circles;
 
 import java.util.List;
 import java.util.Map.Entry;

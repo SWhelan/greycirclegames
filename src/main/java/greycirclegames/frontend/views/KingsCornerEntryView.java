@@ -5,7 +5,7 @@ import java.util.List;
 
 import greycirclegames.DBHandler;
 import greycirclegames.Player;
-import greycirclegames.games.kingscorner.KingsCorner;
+import greycirclegames.games.card.kingscorner.KingsCorner;
 
 public class KingsCornerEntryView {
 	public boolean isActive;

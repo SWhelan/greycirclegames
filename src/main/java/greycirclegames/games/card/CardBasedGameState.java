@@ -1,8 +1,8 @@
-package greycirclegames.games;
+package greycirclegames.games.card;
 
 import java.util.Map;
 
-import greycirclegames.games.kingscorner.Pile;
+import greycirclegames.games.GameState;
 
 public abstract class CardBasedGameState extends GameState {
 
