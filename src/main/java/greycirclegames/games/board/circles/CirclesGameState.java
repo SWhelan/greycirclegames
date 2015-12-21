@@ -1,8 +1,8 @@
 package greycirclegames.games.board.circles;
 
 import java.util.List;
-import java.util.Map.Entry;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 
 import greycirclegames.Player;
@@ -18,11 +18,31 @@ public class CirclesGameState extends GameState {
 	}
 	
 	public CirclesGameState(BasicDBObject obj) {
-		BasicDBObject board = (BasicDBObject)obj.get("Board");
-		for(Entry<String, Object> entry : board.entrySet()){
-			System.out.println(entry);
+		BasicDBList board = (BasicDBList)obj.get("Board");
+		int i = 0;
+		for(Object row : board){
+			int j = 0;
+			for(Object cell : (BasicDBList) row){
+				if(cell == null){
+					this.board[i][j] = null;
+				} else {
+					this.board[i][j] = new Circle(
+											(String)(((BasicDBObject)cell).get("Name")),
+											(String)((BasicDBObject)cell).get("Hex"));
+				}
+				j++;
+			}
+			i++;
 		}
-		System.out.println();
+	}
+	
+	private static void print2DArray(Object[][] board){
+		for(int i = 0; i < board.length; i++){
+			for(int j = 0; j < board[i].length; j++){
+				System.out.print(board[i][j]);
+			}
+			System.out.println();
+		}
 	}
 
 	@Override

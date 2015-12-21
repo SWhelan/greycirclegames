@@ -1,0 +1,24 @@
+{{> header}}
+{{#game}}
+	<div class="row">
+	<div class="col-md-6 col-md-offset-3">
+	<table class="table table-bordered">
+	{{#displayBoard}}
+		<tr>
+		{{#row}}
+			<td class="centeredCell">
+				{{#isAPiece}}
+				<div class="circle" style="background:{{hex}};">
+				{{/isAPiece}}
+				{{^isAPiece}}
+				<div class="space"></div>
+				{{/isAPiece}}
+			</td>
+		{{/row}}
+		</tr>		
+	{{/displayBoard}}
+	</table>
+	</div>
+	</div>
+{{/game}}
+{{> footer}}

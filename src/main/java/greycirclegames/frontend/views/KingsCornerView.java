@@ -12,7 +12,7 @@ import greycirclegames.games.card.Pile;
 import greycirclegames.games.card.kingscorner.KCPileIds;
 import greycirclegames.games.card.kingscorner.KingsCorner;
 
-public class GameView {
+public class KingsCornerView {
 	Integer gameId;
 	boolean isTurn;
 	boolean isActive;
@@ -32,7 +32,7 @@ public class GameView {
 	
 	List<String> moveHistory;
 	
-	public GameView(KingsCorner game, Player viewingPlayer){
+	public KingsCornerView(KingsCorner game, Player viewingPlayer){
 		gameId = game.get_id();
 		int currentPlayerId = game.getCurrentPlayerObject().get_id();
 		game.getPlayers().stream().forEach((e) -> { 

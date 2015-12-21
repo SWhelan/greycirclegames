@@ -88,6 +88,15 @@ public class DBHandler {
 		DBObject obj = cursor.next();
 		return new KingsCorner(obj);
 	}
+	
+	public static Circles getCirclesGame(int gameID) {
+		DB db = DatabaseConnector.getMongoDB();
+		DBCollection coll = db.getCollection("circlesgames");
+		DBObject query = new BasicDBObject("_id", gameID);
+		DBCursor cursor = coll.find(query);
+		DBObject obj = cursor.next();
+		return new Circles(obj);
+	}
 
 	public static List<KingsCorner> getKCGamesforUser(int userId) {
 		DB db = DatabaseConnector.getMongoDB();
@@ -100,6 +109,22 @@ public class DBHandler {
 		while(cursor.hasNext()) {
 			BasicDBObject obj = (BasicDBObject)cursor.next();
 			gamesList.add(new KingsCorner(obj));
+		}
+		return gamesList;
+	}
+	
+	// TODO generics or something/helper methods etc to remove duplicated code	
+	public static List<Circles> getCirclesGamesforUser(int userId) {
+		DB db = DatabaseConnector.getMongoDB();
+		DBCollection coll = db.getCollection("circlesgames");
+		DBObject query = new BasicDBObject("Players._id", userId);
+
+		DBCursor cursor = coll.find(query);
+
+		LinkedList<Circles> gamesList = new LinkedList<>();
+		while(cursor.hasNext()) {
+			BasicDBObject obj = (BasicDBObject)cursor.next();
+			gamesList.add(new Circles(obj));
 		}
 		return gamesList;
 	}

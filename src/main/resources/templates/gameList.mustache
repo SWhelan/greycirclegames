@@ -1,55 +1,119 @@
 {{> header}}
 <a href="{{CREATE_GAME_ROUTE}}"><button type="button" class="btn btn-primary btn-lg btn-block">New Game</button></a>
 <br/>
-{{#games}}
-<h3>Active Games:</h3>
-
-<h4>Games waiting on you:</h4>
-{{#currentTurn}}
-	<div class="gameListItem">
-		<a href = "{{GAMES_ROUTE}}/{{gameId}}">
+ <ul class="nav nav-tabs">
+   <li class="active"><a data-toggle="tab" href="#circles">Circles</a></li>
+   <li><a data-toggle="tab" href="#kingscorner">King's Corner</a></li>
+ </ul>
+ <br/>
+ <div class="tab-content">
+    <div id="circles" class="tab-pane fade in active">
+      <h1>Circles</h1>
+      {{#circlesgames}}
+		<h3>Active Games:</h3>
+		
+		<h4>Games waiting on you:</h4>
+		{{#currentTurn}}
+			<div class="gameListItem">
+				<a href = "{{CIRCLES_ROUTE}}/{{gameId}}">
+					Game Id: {{gameId}}
+					<br/>
+					Players:<br/>
+					{{#players}}{{.}}<br/>{{/players}}
+				</a>
+			<hr/>
+			</div>
+		{{/currentTurn}}
+		{{^currentTurn}}
+			<h5>No Games are waiting for you.</h5>
+		{{/currentTurn}}
+		
+		<h4>Games waiting on others:</h4>
+		{{#othersTurn}}
+			<div class="gameListItem">
+				<a href = "{{GAMES_ROUTE}}/{{gameId}}">
+					Game Id: {{gameId}}
+					<br/>
+					Players:<br/>
+					{{#players}}{{.}}<br/>{{/players}}
+					Current Player: {{currentPlayerName}}
+				</a>
+			<hr/>
+			</div>
+		{{/othersTurn}}
+		{{^othersTurn}}
+			<h5>No Games are waiting on others.</h5>
+		{{/othersTurn}}
+		
+		<h3>Past Games:</h3>
+		{{#ended}}
+			<div class="gameListItem">
 			Game Id: {{gameId}}
 			<br/>
 			Players:<br/>
 			{{#players}}{{.}}<br/>{{/players}}
-		</a>
-	<hr/>
-	</div>
-{{/currentTurn}}
-{{^currentTurn}}
-	<h5>No Games are waiting for you.</h5>
-{{/currentTurn}}
-
-<h4>Games waiting on others:</h4>
-{{#othersTurn}}
-	<div class="gameListItem">
-		<a href = "{{GAMES_ROUTE}}/{{gameId}}">
+			Winner: {{winner}}
+			<hr/>
+			</div>
+		{{/ended}}
+		{{^ended}}
+			<h5>You have no past games.</h5>
+		{{/ended}}
+		{{/circlesgames}}
+    </div>
+    <div id="kingscorner" class="tab-pane fade">
+    	<h1>King's Corner</h1>
+		{{#kcgames}}
+		<h3>Active Games:</h3>
+		
+		<h4>Games waiting on you:</h4>
+		{{#currentTurn}}
+			<div class="gameListItem">
+				<a href = "{{GAMES_ROUTE}}/{{gameId}}">
+					Game Id: {{gameId}}
+					<br/>
+					Players:<br/>
+					{{#players}}{{.}}<br/>{{/players}}
+				</a>
+			<hr/>
+			</div>
+		{{/currentTurn}}
+		{{^currentTurn}}
+			<h5>No Games are waiting for you.</h5>
+		{{/currentTurn}}
+		
+		<h4>Games waiting on others:</h4>
+		{{#othersTurn}}
+			<div class="gameListItem">
+				<a href = "{{GAMES_ROUTE}}/{{gameId}}">
+					Game Id: {{gameId}}
+					<br/>
+					Players:<br/>
+					{{#players}}{{.}}<br/>{{/players}}
+					Current Player: {{currentPlayerName}}
+				</a>
+			<hr/>
+			</div>
+		{{/othersTurn}}
+		{{^othersTurn}}
+			<h5>No Games are waiting on others.</h5>
+		{{/othersTurn}}
+		
+		<h3>Past Games:</h3>
+		{{#ended}}
+			<div class="gameListItem">
 			Game Id: {{gameId}}
 			<br/>
 			Players:<br/>
 			{{#players}}{{.}}<br/>{{/players}}
-			Current Player: {{currentPlayerName}}
-		</a>
-	<hr/>
+			Winner: {{winner}}
+			<hr/>
+			</div>
+		{{/ended}}
+		{{^ended}}
+			<h5>You have no past games.</h5>
+		{{/ended}}
+		{{/kcgames}}
 	</div>
-{{/othersTurn}}
-{{^othersTurn}}
-	<h5>No Games are waiting on others.</h5>
-{{/othersTurn}}
-
-<h3>Past Games:</h3>
-{{#ended}}
-	<div class="gameListItem">
-	Game Id: {{gameId}}
-	<br/>
-	Players:<br/>
-	{{#players}}{{.}}<br/>{{/players}}
-	Winner: {{winner}}
-	<hr/>
-	</div>
-{{/ended}}
-{{^ended}}
-	<h5>You have no past games.</h5>
-{{/ended}}
-{{/games}}
+</div>
 {{> footer}}

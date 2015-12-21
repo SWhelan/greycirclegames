@@ -16,8 +16,8 @@ import greycirclegames.GlobalConstants;
 import greycirclegames.NotFoundException;
 import greycirclegames.Player;
 import greycirclegames.User;
-import greycirclegames.frontend.views.GameView;
-import greycirclegames.frontend.views.KingsCornerListView;
+import greycirclegames.frontend.views.GameListView;
+import greycirclegames.frontend.views.KingsCornerView;
 import greycirclegames.frontend.views.LeaderboardView;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Card.Suit;
@@ -62,16 +62,17 @@ public class TemplateHandler {
 	
 	public static final String PUBLIC_ROUTE = "/public";
 	
-	private static final String HOME_TEMPLATE = "home.mustache";
-	private static final String LOGIN_TEMPLATE = "login.mustache";
-	private static final String REGISTER_TEMPLATE = "register.mustache";
-	private static final String CREATE_GAME_TEMPLATE = "createGame.mustache";
-	private static final String FRIENDS_TEMPLATE = "friends.mustache";
-	private static final String FRIEND_INFO_TEMPLATE = "friendInfo.mustache";
+	public static final String HOME_TEMPLATE = "home.mustache";
+	public static final String LOGIN_TEMPLATE = "login.mustache";
+	public static final String REGISTER_TEMPLATE = "register.mustache";
+	public static final String CREATE_GAME_TEMPLATE = "createGame.mustache";
+	public static final String FRIENDS_TEMPLATE = "friends.mustache";
+	public static final String FRIEND_INFO_TEMPLATE = "friendInfo.mustache";
 	public static final String GAME_LIST_TEMPLATE = "gameList.mustache";
-	private static final String KINGS_CORNERS_TEMPLATE = "kingscorners.mustache";
-	private static final String LEADERBOARD_TEMPLATE = "leaderboard.mustache";
-	private static final String TUTORIAL_TEMPLATE = "tutorial.mustache";
+	public static final String KINGS_CORNERS_TEMPLATE = "kingscorners.mustache";
+	public static final String LEADERBOARD_TEMPLATE = "leaderboard.mustache";
+	public static final String TUTORIAL_TEMPLATE = "tutorial.mustache";
+	public static final String CIRCLES_TEMPLATE = "circles.mustache";
 
 	public static void registerTemplates(){
 		// Ensure they are logged in or the url is public/doesn't require login
@@ -107,6 +108,7 @@ public class TemplateHandler {
         post(FRIENDS_REMOVE_ROUTE, 	(rq, rs) -> postRemoveFriend(rq, rs),	new MustacheTemplateEngine());
         
         post(CIRCLES_ROUTE + CREATE_GAME_ROUTE, (rq, rs) -> CirclesHandler.postCreateGame(rq, rs), new MustacheTemplateEngine());
+        get(CIRCLES_ROUTE + "/:id", (rq, rs) -> CirclesHandler.renderGame(rq, rs), new MustacheTemplateEngine());
         
         // Throw an error on 404s
         get("/*", (rq, rs) -> {
@@ -154,12 +156,19 @@ public class TemplateHandler {
 	
 	private static ModelAndView renderGameList(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		info.put("games", new KingsCornerListView(getUserIdFromCookies(rq)));
+		int userId = getUserIdFromCookies(rq); 
+		info.put("kcgames", new GameListView(DBHandler.getKCGamesforUser(userId), userId));
+		info.put("circlesgames", new GameListView(DBHandler.getCirclesGamesforUser(userId), userId));
 		return getModelAndView(info, GAME_LIST_TEMPLATE, rq, rs);
 	}
 	
-	private static ModelAndView renderGame(Request rq, Response rs) {
-		HashMap<String, Object> info = new HashMap<String, Object>();		
+	/**
+	 * 
+	 * @param rq
+	 * @return -1 if game id parameter not valid or paramter value
+	 */
+	
+	public static int getGameId(Request rq){
 		int gameId;
 		try {
 			gameId = Integer.parseInt(rq.queryParams("gameId"));
@@ -170,11 +179,20 @@ public class TemplateHandler {
 		try {
 			gameId = Integer.parseInt(rq.params(":id"));
 		} catch (NumberFormatException e){
+			return -1;
+		}
+		return gameId;
+	}
+	
+	private static ModelAndView renderGame(Request rq, Response rs) {
+		HashMap<String, Object> info = new HashMap<String, Object>();		
+		int gameId = getGameId(rq);
+		if(gameId < 0){
 			info.put("game", null);
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Game not found.");
 			return getModelAndView(info, KINGS_CORNERS_TEMPLATE, rq, rs);
 		}
-		info.put("game", new GameView(DBHandler.getKCGame(gameId), getUserFromCookies(rq)));
+		info.put("game", new KingsCornerView(DBHandler.getKCGame(gameId), getUserFromCookies(rq)));
 		return getModelAndView(info, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
 	
@@ -400,7 +418,7 @@ public class TemplateHandler {
 	/* Utilities */
 	
 	// Does the attempted url require the user to be logged in?
-	private static boolean requiresAuthentication(String path) {
+	protected static boolean requiresAuthentication(String path) {
 		if(	path == null || 
 			path.equals(HOME_ROUTE) || 
 			path.equals(LOGIN_ROUTE) || 
@@ -412,24 +430,24 @@ public class TemplateHandler {
 	}
 	
 	// Is the user logged in?
-	private static boolean isLoggedIn(Request rq){
+	protected static boolean isLoggedIn(Request rq){
 		return rq.cookie(GlobalConstants.USER_COOKIE_KEY) != null;
 	}
 	
 	// Is the login/password valid for the found user?
-	private static boolean checkLogin(User user, String password) {
+	protected static boolean checkLogin(User user, String password) {
 		if(user == null || !user.passwordMatches(password)){
 			return false;
 		}		
 		return true;
 	}
 	
-	/*
+	/**
 	 *  Get the user id from the cookies
 	 *  as each url that would use this ensures that the user is logged in
 	 *  ie has a cookie this parse int won't fail
 	 */
-	public static int getUserIdFromCookies(Request rq){
+	protected static int getUserIdFromCookies(Request rq){
 		try {
 			return Integer.parseInt(rq.cookie(GlobalConstants.USER_COOKIE_KEY));
 		} catch (NumberFormatException e){
@@ -437,22 +455,22 @@ public class TemplateHandler {
 		}
 	}
 	
-	/*
+	/**
 	 * Same as get user id but then also get the user with that id
 	 * form the database
 	 */
-	public static User getUserFromCookies(Request rq){
+	protected static User getUserFromCookies(Request rq){
 		return DBHandler.getUser(getUserIdFromCookies(rq));
 	}
 	
 	// Is the user with userId already friends with friendId?
-	public static boolean alreadyFriends(int userId, int friendId){
+	protected static boolean alreadyFriends(int userId, int friendId){
 		List<Player> friends = getFriendsFromDB(userId);
 		return friends.stream().anyMatch(e -> e.get_id() == friendId);
 	}
 	
 	// The database returns a list of ids get the list of Players
-	public static List<Player> getFriendsFromDB(int userId){
+	protected static List<Player> getFriendsFromDB(int userId){
 		return DBHandler.getFriendsForUser(userId)
 					.stream()
 					.map(e -> DBHandler.getUser((Integer)e))
@@ -460,7 +478,7 @@ public class TemplateHandler {
 	}
 	
 	// Get the key for the pile HashMap from the string name of the pile
-	public static String getPileKeyFromString(String name){
+	protected static String getPileKeyFromString(String name){
 		return Integer.toString(
 				Arrays.stream(KCPileIds.values())
 				.filter(e -> e.name().equals(name))
@@ -489,7 +507,7 @@ public class TemplateHandler {
 	 * A ModelAndView is passed to the Mustache Rendering Engine to render the response via
 	 * the template.
 	 */
-	public static ModelAndView getModelAndView(HashMap<String, Object> info, String templateName, Request rq, Response rs){
+	protected static ModelAndView getModelAndView(HashMap<String, Object> info, String templateName, Request rq, Response rs){
 		if(info == null){
 			return new ModelAndView(new HashMap<String, Object>(), templateName);
 		}
