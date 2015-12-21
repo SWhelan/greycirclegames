@@ -17,7 +17,7 @@ import spark.Response;
 
 public class CirclesHandler extends TemplateHandler{
 
-	public static ModelAndView postCreateGame(Request rq, Response rs) {
+	protected static ModelAndView postCreateGame(Request rq, Response rs) {
 		List<Player> players = new LinkedList<Player>();
 		
 		// Add the user that created the game as the first player
@@ -42,7 +42,7 @@ public class CirclesHandler extends TemplateHandler{
 		return getModelAndView(null, GAME_LIST_TEMPLATE, rq, rs);
 	}
 
-	public static ModelAndView renderGame(Request rq, Response rs) {
+	protected static ModelAndView renderGame(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();		
 		int gameId = getGameId(rq);
 		if(gameId < 0){

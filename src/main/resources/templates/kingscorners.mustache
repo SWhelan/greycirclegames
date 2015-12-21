@@ -164,7 +164,7 @@
 	isTurn = false;
 	window.onload = function (){
 		setTimeout(function (){
-			window.location.replace('{{GAMES_ROUTE}}/' + {{gameId}});
+			window.location.replace('{{KINGS_CORNER_ROUTE}}/' + {{gameId}});
 		}, 20000);
 	}
 	{{/isTurn}}
@@ -317,7 +317,7 @@
 		turnForm=document.createElement('FORM');
 		turnForm.name='turn';
 		turnForm.method='POST';
-		turnForm.action= '{{POST_TURN_ROUTE}}';
+		turnForm.action= '{{KINGS_CORNER_ROUTE}}{{POST_TURN_ROUTE}}';
 		
 		hiddenElement=document.createElement('INPUT');
 		hiddenElement.type='HIDDEN';
@@ -332,7 +332,7 @@
 		moveForm=document.createElement('FORM');
 		moveForm.name='makeMove';
 		moveForm.method='POST';
-		moveForm.action='{{POST_MOVE_ROUTE}}';
+		moveForm.action='{{KINGS_CORNER_ROUTE}}{{POST_MOVE_ROUTE}}';
 		
 		hiddenElement=document.createElement('INPUT');
 		hiddenElement.type='HIDDEN';
