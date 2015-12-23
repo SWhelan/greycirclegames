@@ -87,6 +87,20 @@
 	height: 50px;
 }
 
+@media screen and (max-width: 480px) {
+    .circle {
+        width: 20px;
+        height: 20px;
+        max-height: 20px;
+		max-width: 20px;
+    }
+    
+    .space {
+        width: 20px;
+        height: 20px;
+    }
+}
+
 .centeredCell {
 	text-align: center;
 }
