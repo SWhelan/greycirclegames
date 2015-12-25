@@ -6,9 +6,9 @@ public class CircleView {
 	public String hex;
 	public boolean isAPiece = true;
 	
-	public CircleView(int i, int j, String hex, Boolean isAPiece) {
-		this.row = i;
-		this.column = j;
+	public CircleView(int row, int column, String hex, Boolean isAPiece) {
+		this.row = row;
+		this.column =column;
 		this.hex = hex;
 		this.isAPiece = isAPiece;
 	}
