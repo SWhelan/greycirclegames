@@ -345,11 +345,6 @@ public abstract class Game extends ReflectionDBObject{
 			}
 		}
 		
-		BasicDBList moves = (BasicDBList)obj.get("Moves");
-		this.moves = new LinkedList<CardBasedMove>();
-		for (Object move : moves) {
-			this.moves.add(new KCMove((BasicDBObject)move));
-		}
 		this.players = this.turnOrder;
 		this.isActive = (Boolean)obj.get("IsActive");
 		this.winner_id = (Integer)obj.get("Winner_id");

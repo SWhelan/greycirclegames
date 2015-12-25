@@ -1,5 +1,7 @@
 package greycirclegames.games.board.circles;
 
+import com.mongodb.BasicDBObject;
+
 import greycirclegames.games.GameState;
 import greycirclegames.games.card.CardBasedMove;
 
@@ -14,6 +16,10 @@ public class CirclesMove extends CardBasedMove {
 		this.row = row;
 		this.color = color;
 		this.state = state;
+	}
+
+	public CirclesMove(BasicDBObject move) {
+		// TODO Auto-generated constructor stub
 	}
 
 	@Override

@@ -70,6 +70,8 @@ public class CirclesHandler extends TemplateHandler{
 		CirclesMove move = new CirclesMove(row, column, color, (CirclesGameState) game.getGameState());
 		if(move.isValid()){
 			move.apply();
+			//TODO fix history
+			//game.getMoves().add(move);
 			game.endTurn();
 			if(game.applyAIMoves()){
 				// It was an AI Player's turn

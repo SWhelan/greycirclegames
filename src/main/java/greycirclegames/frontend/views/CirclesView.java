@@ -15,6 +15,10 @@ public class CirclesView {
 	public String hex;
 	public boolean isTurn;
 	public boolean isActive;
+	public int yourCount;
+	public int theirCount;
+	public String yourColor;
+	public String theirColor;
 
 	public CirclesView(Circles game, User user) {
 		Circle[][] board = ((CirclesGameState)game.getGameState()).getBoard();
@@ -36,6 +40,30 @@ public class CirclesView {
 		int viewingPlayerIdCheck = user.get_id();
 		isTurn = currentPlayerIdCheck == viewingPlayerIdCheck; 
 		isActive = game.getIsActive();
+		
+		int light = 0;
+		int dark = 0;
+		for(int i = 0; i < board.length; i++){
+			for(int j = 0; j < board[i].length; j++){
+				if(board[i][j] != null && board[i][j].getHex().equals("#ffffff")){
+					light++;
+				} else if(board[i][j] != null) {
+					dark++;
+				}
+			}
+		}
+		if((int) game.getTurnOrder().get(0).get_id() == (int)user.get_id()){
+			yourCount = light;
+			theirCount = dark;
+			yourColor = "#ffffff";
+			theirColor = "#000000";
+		} else {
+			yourCount = dark; 
+			theirCount = light;
+			yourColor = "#000000";
+			theirColor = "#ffffff";
+		}
+		
 	}
 
 }

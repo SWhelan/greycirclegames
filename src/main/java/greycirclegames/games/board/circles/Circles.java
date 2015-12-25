@@ -62,6 +62,23 @@ public class Circles extends Game {
 	public void endTurn() {
 		if(gameIsOver()){
 			isActive = false;
+			int light = 0;
+			int dark = 0;
+			Circle[][] board = ((CirclesGameState) gameState).getBoard();
+			for(int i = 0; i < board.length; i++){
+				for(int j = 0; j < board[i].length; j++){
+					if(board[i][j].getHex().equals("#ffffff")){
+						light++;
+					} else {
+						dark++;
+					}
+				}
+			}
+			if(light > dark){
+				winner_id = turnOrder.get(0).get_id();
+			} else {
+				winner_id = turnOrder.get(1).get_id();
+			}
 		} else {
 			currentPlayer = (currentPlayer + 1) % turnOrder.size();
 		}
