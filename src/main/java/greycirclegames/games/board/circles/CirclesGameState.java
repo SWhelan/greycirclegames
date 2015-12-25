@@ -52,9 +52,9 @@ public class CirclesGameState extends GameState {
 			for(int j = 0; j < board[i].length; j++){
 				// TODO what if we change board size?
 				if((i == 3 && j == 3) || (i == 4 && j == 4)){
-					board[i][j] = new Circle("White", "#ffffff");
+					board[i][j] = new Circle("Light", "#ffffff");
 				} else if((i == 4 && j == 3) || (i == 3 && j == 4)){
-					board[i][j] = new Circle("Black", "#000000");
+					board[i][j] = new Circle("Dark", "#000000");
 				} else {
 					board[i][j] = null;
 				}

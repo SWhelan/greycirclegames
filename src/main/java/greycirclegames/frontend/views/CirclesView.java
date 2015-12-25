@@ -9,7 +9,10 @@ import greycirclegames.games.board.circles.Circles;
 import greycirclegames.games.board.circles.CirclesGameState;
 
 public class CirclesView {
-	public List<RowView> displayBoard = new ArrayList<RowView>(); 
+	public List<RowView> displayBoard = new ArrayList<RowView>();
+	public int gameId; 
+	public String name;
+	public String hex;
 
 	public CirclesView(Circles game, User user) {
 		Circle[][] board = ((CirclesGameState)game.getGameState()).getBoard();
@@ -24,6 +27,9 @@ public class CirclesView {
 			}
 			displayBoard.add(new RowView(row));
 		}
+		gameId = game.get_id();
+		name = game.turnColors.get(game.currentPlayer).getName();
+		hex = game.turnColors.get(game.currentPlayer).getHex();
 	}
 
 }

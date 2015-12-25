@@ -157,6 +157,12 @@ public class DBHandler {
 		DBCollection coll = db.getCollection("kcgames");
 		coll.save(game);
 	}
+	
+	public static void updateCirclesGame(Circles game) {
+		DB db = DatabaseConnector.getMongoDB();
+		DBCollection coll = db.getCollection("circlesgames");
+		coll.save(game);		
+	}
 
 	public static void updateLeaderboard(Leaderboard leaderboard) {
 		DB db = DatabaseConnector.getMongoDB();

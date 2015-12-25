@@ -11,7 +11,7 @@
 				<div class="circle" style="background:{{hex}};">
 				{{/isAPiece}}
 				{{^isAPiece}}
-				<div class="space"></div>
+				<div class="space" row="{{row}}" column ="{{column}}"></div>
 				{{/isAPiece}}
 			</td>
 		{{/row}}
@@ -20,5 +20,53 @@
 	</table>
 	</div>
 	</div>
+
+<script type="text/javascript">
+
+var selected;
+
+$(".space").click(function (){
+	selected = $(this);
+	submitMove();
+});
+
+function submitMove(){
+	moveForm=document.createElement('FORM');
+	moveForm.name='makeMove';
+	moveForm.method='POST';
+	moveForm.action='{{CIRCLES_ROUTE}}{{POST_TURN_ROUTE}}';
+	
+	hiddenElement=document.createElement('INPUT');
+	hiddenElement.type='HIDDEN';
+	hiddenElement.name='hex';
+	hiddenElement.value="{{hex}}";
+	moveForm.appendChild(hiddenElement);
+	hiddenElement=document.createElement('INPUT');
+	hiddenElement.type='HIDDEN';
+	hiddenElement.name='cardColorName';
+	hiddenElement.value="{{name}}";
+	moveForm.appendChild(hiddenElement);
+	hiddenElement=document.createElement('INPUT');
+	hiddenElement.type='HIDDEN';
+	hiddenElement.name='row';
+	hiddenElement.value=selected.attr("row");
+	moveForm.appendChild(hiddenElement);
+	hiddenElement=document.createElement('INPUT');
+	hiddenElement.type='HIDDEN';
+	hiddenElement.name='column';
+	hiddenElement.value=selected.attr("column");
+	moveForm.appendChild(hiddenElement);
+	hiddenElement=document.createElement('INPUT');
+	hiddenElement.type='HIDDEN';
+	hiddenElement.name='gameId';
+	hiddenElement.value={{gameId}};
+	moveForm.appendChild(hiddenElement);
+	moveForm.submit();
+	return;
+}
+
+
+
+</script>
 {{/game}}
 {{> footer}}

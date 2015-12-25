@@ -9,6 +9,7 @@ import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import greycirclegames.frontend.views.CirclesView;
+import greycirclegames.games.board.circles.Circle;
 import greycirclegames.games.board.circles.Circles;
 import greycirclegames.games.board.circles.CirclesArtificialPlayer;
 import spark.ModelAndView;
@@ -53,6 +54,27 @@ public class CirclesHandler extends TemplateHandler{
 		CirclesView view = new CirclesView(DBHandler.getCirclesGame(gameId), getUserFromCookies(rq));
 		info.put("game", view);
 		return getModelAndView(info, CIRCLES_TEMPLATE, rq, rs);
+	}
+
+	public static ModelAndView postTurn(Request rq, Response rs) {
+		String gameIdString = rq.queryParams("gameId");
+		int gameId = Integer.parseInt(gameIdString);
+		Circles game = DBHandler.getCirclesGame(gameId);
+		int row = Integer.parseInt(rq.queryParams("row"));
+		int column = Integer.parseInt(rq.queryParams("column"));
+		String name = rq.queryParams("cardColorName");
+		String hex = rq.queryParams("hex");
+		Circle color = new Circle(name, hex);
+		game.makeMove(row, column, color);
+		if(game.applyAIMoves()){
+			// It was an AI Player's turn
+			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn ended. AI Player(s) played.");
+		} else {
+			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
+		}
+		DBHandler.updateCirclesGame(game);
+		rs.redirect(CIRCLES_ROUTE + "/" + gameIdString);
+		return getModelAndView(null, CIRCLES_TEMPLATE, rq, rs);
 	}
 
 }

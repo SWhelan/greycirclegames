@@ -112,6 +112,10 @@ public class TemplateHandler {
         post(CIRCLES_ROUTE + CREATE_GAME_ROUTE, 
         		(rq, rs) -> CirclesHandler.postCreateGame(rq, rs), 
         		new MustacheTemplateEngine());
+        post(CIRCLES_ROUTE + POST_TURN_ROUTE,
+        		(rq, rs) -> CirclesHandler.postTurn(rq, rs),
+        		new MustacheTemplateEngine());
+        
         
         // Throw an error on 404s
         get("/*", (rq, rs) -> {

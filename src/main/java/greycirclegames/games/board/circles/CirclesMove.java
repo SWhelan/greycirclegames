@@ -9,7 +9,7 @@ public class CirclesMove extends CardBasedMove {
 	private Circle color;
 	private GameState state;
 	
-	public void Move(int column, int row, Circle color, CirclesGameState state){
+	public CirclesMove(int column, int row, Circle color, CirclesGameState state){
 		this.column = column;
 		this.row = row;
 		this.color = color;
