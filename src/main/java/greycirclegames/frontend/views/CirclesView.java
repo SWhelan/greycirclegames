@@ -13,6 +13,8 @@ public class CirclesView {
 	public int gameId; 
 	public String name;
 	public String hex;
+	public boolean isTurn;
+	public boolean isActive;
 
 	public CirclesView(Circles game, User user) {
 		Circle[][] board = ((CirclesGameState)game.getGameState()).getBoard();
@@ -30,6 +32,10 @@ public class CirclesView {
 		gameId = game.get_id();
 		name = game.turnColors.get(game.currentPlayer).getName();
 		hex = game.turnColors.get(game.currentPlayer).getHex();
+		int currentPlayerIdCheck = game.getCurrentPlayerObject().get_id();
+		int viewingPlayerIdCheck = user.get_id();
+		isTurn = currentPlayerIdCheck == viewingPlayerIdCheck; 
+		isActive = game.getIsActive();
 	}
 
 }

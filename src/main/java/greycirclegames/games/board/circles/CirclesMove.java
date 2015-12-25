@@ -25,7 +25,7 @@ public class CirclesMove extends CardBasedMove {
 		return 	shouldApplyNorth(board) || shouldApplyNorthEast(board) ||
 				shouldApplySouth(board) || shouldApplySouthEast(board) ||
 				shouldApplyWest(board) || shouldApplySouthWest(board) ||
-				shouldApplyEast(board) || shouldApplySouthWest(board);
+				shouldApplyEast(board) || shouldApplyNorthWest(board);
 	}
 
 	@Override
@@ -64,6 +64,7 @@ public class CirclesMove extends CardBasedMove {
 		if(shouldApplyNorthWest(board)){
 			applyNorthWest();
 		}
+		((CirclesGameState) state).getBoard()[row][column] = new Circle(color.getName(), color.getHex());
 	}
 
 	private void applyNorthWest() {
@@ -107,11 +108,11 @@ public class CirclesMove extends CardBasedMove {
 	}
 
 	private void applyEast() {
-		applyDirection(false, false, true, false);
+		applyDirection(false, false, false, true);
 	}
 
 	private boolean shouldApplyEast(Circle[][] board) {
-		return shouldApplyDirection(board, false, false, true, false);
+		return shouldApplyDirection(board, false, false, false, true);
 	}
 
 	private void applyNorthEast() {
@@ -123,18 +124,7 @@ public class CirclesMove extends CardBasedMove {
 	}
 
 	private void applyNorth() {
-		boolean done = false;
-		int i = row;
-		while(!done && i > -1){
-			Circle cell = ((CirclesGameState) state).getBoard()[i][column];
-			if(cell != null && cell.getHex().equals(color.getHex())){
-				done = true;
-			} else {
-				((CirclesGameState) state).getBoard()[i][column] = new Circle(color.getName(), color.getHex());
-			}
-			i = i - 1;
-		}
-		return;
+		applyDirection(true, false, false, false);
 	}
 
 	private boolean shouldApplyNorth(Circle[][] board) {
@@ -149,7 +139,7 @@ public class CirclesMove extends CardBasedMove {
 			Circle cell = ((CirclesGameState) state).getBoard()[i][j];
 			if(cell != null && cell.getHex().equals(color.getHex())){
 				done = true;
-			} else {
+			} else if(i != row || j != column){
 				((CirclesGameState) state).getBoard()[i][j] = new Circle(color.getName(), color.getHex());
 			}
 			if(rowDecreases){
@@ -165,7 +155,6 @@ public class CirclesMove extends CardBasedMove {
 				j = j + 1;
 			}
 		}
-		return;
 	}
 	
 	private boolean shouldApplyDirection(Circle[][]board, boolean rowDecreases, boolean rowIncreases, boolean columnDecreases, boolean columnIncreases){

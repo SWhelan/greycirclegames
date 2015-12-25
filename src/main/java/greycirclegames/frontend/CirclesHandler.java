@@ -12,6 +12,8 @@ import greycirclegames.frontend.views.CirclesView;
 import greycirclegames.games.board.circles.Circle;
 import greycirclegames.games.board.circles.Circles;
 import greycirclegames.games.board.circles.CirclesArtificialPlayer;
+import greycirclegames.games.board.circles.CirclesGameState;
+import greycirclegames.games.board.circles.CirclesMove;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -65,14 +67,20 @@ public class CirclesHandler extends TemplateHandler{
 		String name = rq.queryParams("cardColorName");
 		String hex = rq.queryParams("hex");
 		Circle color = new Circle(name, hex);
-		game.makeMove(row, column, color);
-		if(game.applyAIMoves()){
-			// It was an AI Player's turn
-			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn ended. AI Player(s) played.");
+		CirclesMove move = new CirclesMove(row, column, color, (CirclesGameState) game.getGameState());
+		if(move.isValid()){
+			move.apply();
+			game.endTurn();
+			if(game.applyAIMoves()){
+				// It was an AI Player's turn
+				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn ended. AI Player(s) played.");
+			} else {
+				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
+			}
+			DBHandler.updateCirclesGame(game);
 		} else {
-			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
+			rs.cookie(GlobalConstants.DISPLAY_ERROR, "Move was invalid and not applied.");
 		}
-		DBHandler.updateCirclesGame(game);
 		rs.redirect(CIRCLES_ROUTE + "/" + gameIdString);
 		return getModelAndView(null, CIRCLES_TEMPLATE, rq, rs);
 	}

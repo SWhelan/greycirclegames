@@ -1,0 +1,72 @@
+	var isTurn;
+	
+	{{#isTurn}}
+	isTurn = true;
+	{{/isTurn}}
+	{{^isTurn}}
+	isTurn = false;
+	window.onload = function (){
+		setTimeout(function (){
+			window.location.replace(window.location.pathname);
+		}, 20000);
+	}
+	{{/isTurn}}
+
+	var isActive;
+	
+	{{#isActive}}
+	isActive = true;
+	{{/isActive}}
+	{{^isActive}}
+	isActive = false;
+	handleGameOver();
+	{{/isActive}}
+	
+	
+	function notTurnAlert(){
+		displayError("It is not your turn.", true);
+		return;
+	}
+	
+	function handleGameOver(){
+		if(!isActive){
+			var message = "The game is over.";
+			if(isTurn){
+				message = message + " You won!";
+				displaySuccess(message, false);
+			} else {
+				message = message + " You lost.";
+				displayError(message, false);
+			}
+		}
+		return;
+	}
+	
+	function displaySuccess(message, remove){
+		displayMessage(message, "alert-success", remove);
+		return;
+	}
+	
+	function displayError(message, remove){
+		displayMessage(message, "alert-danger", remove);
+		return;
+	}
+	
+	function displayMessage(message, alertClass, remove){
+		$("#alert").addClass(alertClass);
+		$("#alert").html(message);
+		$("#alert").removeClass("hidden");
+		if(remove){
+			setTimeout(function(){
+				removeMessage(alertClass)
+			}, 5000);
+		}
+		return;
+	}
+	
+	function removeMessage(alertClass){
+		$("#alert").html("");
+		$("#alert").removeClass(alertClass);
+		$("#alert").addClass("hidden");
+		return;
+	}

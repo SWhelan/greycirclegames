@@ -59,10 +59,11 @@ public class Circles extends Game {
 		return false;
 	}
 
-	public void makeMove(int row, int column, Circle color) {
-		CirclesMove move = new CirclesMove(row, column, color, (CirclesGameState) this.getGameState());
-		if(move.isValid()){
-			move.apply();
+	public void endTurn() {
+		if(gameIsOver()){
+			isActive = false;
+		} else {
+			currentPlayer = (currentPlayer + 1) % turnOrder.size();
 		}
 	}
 
