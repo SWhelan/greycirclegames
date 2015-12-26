@@ -12,7 +12,6 @@ import greycirclegames.Player;
 import greycirclegames.frontend.views.KingsCornerView;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Card.Suit;
-import greycirclegames.games.card.CardBasedMove;
 import greycirclegames.games.card.Pile;
 import greycirclegames.games.card.kingscorner.ArtificialPlayer;
 import greycirclegames.games.card.kingscorner.KCMove;
@@ -94,7 +93,7 @@ public class KingsCornerHandler extends TemplateHandler{
 			origin = pile1;
 			moving.addAll(pile1);
 		}
-		CardBasedMove move = new KCMove(player, origin, moving, destination);
+		KCMove move = new KCMove(player, origin, moving, destination);
 		if(game.applyMove(move)){
 			if(game.getIsActive()){
 				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied successfully.");

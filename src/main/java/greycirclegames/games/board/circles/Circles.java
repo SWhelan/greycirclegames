@@ -11,7 +11,7 @@ import greycirclegames.Player;
 import greycirclegames.games.Game;
 import greycirclegames.games.GameState;
 
-public class Circles extends Game {
+public class Circles extends Game<CirclesMove, CirclesGameState> {
 	public List<Circle> turnColors;
 
 	public Circles(int id, List<Player> players){

@@ -292,7 +292,7 @@ public class Test {
     	Pile moving = new Pile("Moving Pile");
     	moving.add(toMove);
     	
-    	CardBasedMove move = new KCMove(players.get(0), user0Hand, moving, spoof);
+    	KCMove move = new KCMove(players.get(0), user0Hand, moving, spoof);
     	
     	Assert.isTrue(move.isValid(), "This should be a valid move.");
     	Assert.isTrue(kc.applyMove(move), "This is a valid move and the game should not be over, so return should be true.");
@@ -304,8 +304,8 @@ public class Test {
     	expected.addOn(Card.make(8, Card.Suit.CLUB));
     	expected.addOn(toMove);
     	Assert.isTrue(expected.equals(spoof), "We expect this pile.");
-    	List<CardBasedMove> moves = kc.getMoves();
-    	CardBasedMove mostRecent = moves.get(moves.size()-1);
+    	List<KCMove> moves = kc.getMoves();
+    	KCMove mostRecent = moves.get(moves.size()-1);
     	
     	Assert.isTrue(mostRecent.getPlayerName().equals("Test user 0"), "Most recent's player is 0.");
     	Assert.isTrue(mostRecent.getOriginName().equals(user0Hand.getName()), "Most recent origin is user 0 hand.");
@@ -333,7 +333,7 @@ public class Test {
     	Pile moving = new Pile("Moving Pile");
     	moving.add(toMove);
     	
-    	CardBasedMove move = new KCMove(players.get(0), user0Hand, moving, spoof);
+    	KCMove move = new KCMove(players.get(0), user0Hand, moving, spoof);
     	
     	Assert.isTrue(!move.isValid(), "This should be an invalid move.");
     	Assert.isTrue(!kc.applyMove(move), "This is not a valid move, so return should be false.");

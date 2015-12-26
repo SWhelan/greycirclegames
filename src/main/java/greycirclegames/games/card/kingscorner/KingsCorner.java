@@ -1,8 +1,10 @@
 package greycirclegames.games.card.kingscorner;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
@@ -10,10 +12,9 @@ import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import greycirclegames.games.Game;
 import greycirclegames.games.GameState;
-import greycirclegames.games.card.CardBasedMove;
 import greycirclegames.games.card.Pile;
 
-public class KingsCorner extends Game{
+public class KingsCorner extends Game<KCMove, KCGameState>{
 
 	public KingsCorner(int gameId, List<Player> players){
 		super(gameId, players);
@@ -22,6 +23,11 @@ public class KingsCorner extends Game{
 	//for creating a new kcgame from the mongo object
 	public KingsCorner(DBObject obj) {
 		super.gameFromDBObject(obj);
+		BasicDBList moves = (BasicDBList)obj.get("Moves");		
+		this.moves = new LinkedList<KCMove>();
+		for (Object move : moves) {		
+			this.moves.add(new KCMove((BasicDBObject)move));		
+		}
 		this.gameState = new KCGameState((BasicDBObject)obj.get("GameState"));
 	}
 	
@@ -42,7 +48,7 @@ public class KingsCorner extends Game{
 		if(!drawPile.isEmpty()){
 			Pile topCard = new Pile("Top card");
 			topCard.add(drawPile.getTop());
-			CardBasedMove endTurn = new KCMove(getCurrentPlayerObject(), drawPile, topCard, curUserHand);
+			KCMove endTurn = new KCMove(getCurrentPlayerObject(), drawPile, topCard, curUserHand);
 			endTurn.apply();
 			moves.add(endTurn);
 		}
@@ -62,7 +68,7 @@ public class KingsCorner extends Game{
 		Player cur = getCurrentPlayerObject();
 		Pile aiHand;
 		Map<Integer,Pile> visiblePiles = getGameState().getVisiblePiles();
-		CardBasedMove m = null;
+		KCMove m = null;
 		//While the game is still active and the current player is an AI
 		while(this.isActive && isAI(cur)){
 			result = true;

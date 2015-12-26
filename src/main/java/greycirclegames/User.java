@@ -10,8 +10,6 @@ import java.util.List;
 import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
 import com.mongodb.ReflectionDBObject;
-
-import greycirclegames.games.Game;
 	
 public class User extends ReflectionDBObject implements Player {
 	private static final int NUM_BITS = 128;
@@ -95,10 +93,6 @@ public class User extends ReflectionDBObject implements Player {
 	
 	public void setFriends(BasicDBList friends) {
 		this.friends = friends;
-	}
-	
-	public List<Game> getCurrentGames(){
-		return null;
 	}
 	
 	public void addFriend(int friendID) {
@@ -209,6 +203,7 @@ public class User extends ReflectionDBObject implements Player {
 			User f = DBHandler.getUser(friend_id);
 			toReturn.add(f);
 		}
+		
 		return toReturn;
 	}
 }

@@ -6,6 +6,8 @@ import java.util.List;
 import greycirclegames.DBHandler;
 import greycirclegames.Player;
 import greycirclegames.games.Game;
+import greycirclegames.games.GameState;
+import greycirclegames.games.Move;
 
 public class GameEntryView {
 	public boolean isActive;
@@ -14,12 +16,12 @@ public class GameEntryView {
 	public String currentPlayerName;
 	public int currentPlayerId;
 	public List<String> players = new LinkedList<String>();
-	public GameEntryView(Game game){
+	public GameEntryView(Game<? extends Move, ? extends GameState> game){
 		gameId = game.get_id();
 		currentPlayerName = game.getCurrentPlayerObject().getUserName();
 		currentPlayerId = game.getCurrentPlayerObject().get_id();
-		for(Player p : game.turnOrder){
-			players.add(p.getUserName());
+		for(Object p : game.turnOrder){
+			players.add(((Player)p).getUserName());
 		}
 		this.isActive = game.getIsActive();
 		

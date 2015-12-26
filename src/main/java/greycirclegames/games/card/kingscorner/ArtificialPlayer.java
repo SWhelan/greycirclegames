@@ -6,7 +6,6 @@ import com.mongodb.ReflectionDBObject;
 
 import greycirclegames.Player;
 import greycirclegames.games.card.Card;
-import greycirclegames.games.card.CardBasedMove;
 import greycirclegames.games.card.Pile;
 //TODO rethink data structures. Realized better approaches as implementing
 /**
@@ -45,19 +44,19 @@ public class ArtificialPlayer extends ReflectionDBObject implements Player {
 	 * @param tablePiles Piles on table (directional (visible) only)
 	 * @return A move that the AI can make (it is a valid move). 
 	 */
-	public CardBasedMove createMove(Pile AIHand, Map<Integer, Pile> tablePiles) {
+	public KCMove createMove(Pile AIHand, Map<Integer, Pile> tablePiles) {
 		//Let compatibleCards be all the possible cards that can be placed this turn. (findCompatibleCards)
 		Pile compatibleCards = findCompatibleCards(tablePiles);
 		//Let compatibleHand be the cards in the AI's hand that can be placed(findCompatibleHand)
 		Pile compatibleHand = findCompatibleHand(AIHand, compatibleCards);
 		//If any cards can be placed
-		if (!compatibleHand.isEmpty())
+		if (!compatibleHand.isEmpty()){
 			//determine a move and return it
 			return determineMove(AIHand, compatibleHand, tablePiles);
-		//otherwise
-		else
+		} else {
 			//do nothing (end the turn and draw a card)
 			return null;
+		}
 	}
 
 	/**

@@ -114,17 +114,6 @@ public abstract class CardBasedMove extends Move {
 	}
 	
 	/**
-	 * Returns true if the move is valid.
-	 * @return	True if the move is valid.
-	 */
-	public abstract boolean isValid();
-	
-	/**
-	 * Applies the move, if valid.
-	 */
-	public abstract void apply();
-	
-	/**
 	 * Generates a string describing the move.
 	 */
 	@Override
