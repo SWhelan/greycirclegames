@@ -35,12 +35,10 @@ public abstract class Game extends ReflectionDBObject{
 	protected List<CardBasedMove> moves;
 	//The list of players
 	protected List<Player> players;
-	//Whether or not the game is active ie curently playable.
+	//Whether or not the game is active ie currently playable.
 	//The meaning of this may differ from game to game, 
 	//but generally this means someone won or the game was cancelled
 	protected boolean isActive;
-	//Whether or not the outcome of this game has been updated in the leaderboard DB
-	protected boolean updatedLeaderboard;
 	//The id of the winner of the game (null if no winner)
 	protected Integer winner_id;
 
@@ -55,7 +53,11 @@ public abstract class Game extends ReflectionDBObject{
 	//default constructor, only used when reinitializing from the database
 	public Game(){}
 
-	//Make a completely new game
+	/**
+	 * Make a completely new game, with a random new game state
+	 * @param _id	The id of the game - this should be a unique value and should be input from the database.
+	 * @param players	The list of players of this game.  Order of this list is not important.
+	 */
 	public Game(int _id, List<Player> players){
 		this._id = _id;
 		turnOrder = new ArrayList<Player>();
@@ -65,22 +67,7 @@ public abstract class Game extends ReflectionDBObject{
 		this.moves = new LinkedList<CardBasedMove>();
 		this.players = players;
 		isActive = true;
-		updatedLeaderboard = false;
 		winner_id = null;
-	}
-
-	/**
-	 * Make a completely new game, with a random new game state
-	 * @param _id	The id of the game - this should be a unique value and should be input from the database.
-	 * @param players	The list of players of this game.  Order of this list is not important.
-	 */
-	public Game(int _id, GameState gameState, List<CardBasedMove> moves, List<Player> players, boolean active, boolean updatedLeaderboard){
-		this._id = _id;
-		this.gameState = gameState;
-		this.moves = moves;
-		this.players = players;
-		this.isActive = active;
-		this.updatedLeaderboard = updatedLeaderboard;
 	}
 
 	/**
@@ -90,27 +77,23 @@ public abstract class Game extends ReflectionDBObject{
 	 * @param moves	The list of moves which have been applied to this game.
 	 * @param players	The list of players involved in this game.
 	 * @param active	Whether or not this game is active.
-	 * @param updatedLeaderboard	Whether or not this game has been updated in the leaderboard.
 	 */
-	public boolean getUpdatedLeaderboard() {
-		return updatedLeaderboard;
+	public Game(int _id, GameState gameState, List<CardBasedMove> moves, List<Player> players, boolean active){
+		this._id = _id;
+		this.gameState = gameState;
+		this.moves = moves;
+		this.players = players;
+		this.isActive = active;
 	}
 
 	/**
-	 * Sets whether or not the leaderboard has been updated.
-	 * @param updatedLeaderboard	Whether or not the leaderboard has been updated.
-	 */
-	public void setUpdatedLeaderboard(boolean updatedLeaderboard) {
-		this.updatedLeaderboard = updatedLeaderboard;
-	}
-
-	/**
-	 * Returns true if this game has been updated in the leaderboard
+	 * Checks status of the game
+	 * @return if the game is active
 	 */
 	public boolean getIsActive() {
 		return isActive;
 	}
-
+	
 	/**
 	 * Sets whether the game is active.
 	 * @param isActive	Whether or not the game is active.
@@ -119,7 +102,11 @@ public abstract class Game extends ReflectionDBObject{
 		this.isActive = isActive;
 	}
 
-	//A game state for a completely new game
+	/**
+	 * Abstract method for creating a game state for a completely new game
+	 * @param players the list of players in turn order
+	 * @return a game state for a new game
+	 */
 	protected abstract GameState newGameState(List<Player> players);
 
 	/**
@@ -152,7 +139,7 @@ public abstract class Game extends ReflectionDBObject{
 
 	/**
 	 * Get the game state of the game
-	 * @return	The assosciated GameState object of this game.
+	 * @return	The associated GameState object of this game.
 	 */
 	public GameState getGameState() {
 		return gameState;
@@ -206,28 +193,6 @@ public abstract class Game extends ReflectionDBObject{
 		this.players = players;
 	}
 
-	/**
-	 * When a game is over, we can update the leaderboard to report the players' 
-	 * wins and losses.
-	 */
-	public void updateLeaderboard(){
-		if(gameIsOver() && !updatedLeaderboard){
-			assert winner_id != null : "The winner id should not be null here.";
-			for(Player p : players){
-				//If the player won
-				if(p.get_id() == winner_id){
-					//Reflect the win in the leaderboard and the player's history
-					p.updateWin(getGameTypeIdentifier());
-				}else{
-					//Otherwise reflect the loss
-					p.updateLoss(getGameTypeIdentifier());
-				}
-			}
-			//Since we have updated the leaderboard, we do not want this process to happen again.
-			this.updatedLeaderboard = true;
-		}
-	}
-
 	//Each type of game has a string identifier.
 	//For instance, all KingCorner objects have the game type identifier "King's Corner"
 	//	which is a constant in the constants file.
@@ -250,7 +215,7 @@ public abstract class Game extends ReflectionDBObject{
 	}
 
 	/**
-	 * Add a move to the list of applyed moves.
+	 * Add a move to the list of applied moves.
 	 * @param m
 	 */
 	public final void addMove(CardBasedMove m){
@@ -286,7 +251,6 @@ public abstract class Game extends ReflectionDBObject{
 	protected void changeToWinState(){
 		isActive = false;
 		winner_id = getCurrentPlayerObject().get_id();
-		this.updateLeaderboard();
 	}
 
 	/**
@@ -319,7 +283,7 @@ public abstract class Game extends ReflectionDBObject{
 	}
 
 	/**
-	 * Checks if th player is an AI for the King's Corner game.
+	 * Checks if the player is an AI for the King's Corner game.
 	 * @param p	A player
 	 * @return	True if the player is an AI.
 	 */
@@ -345,14 +309,12 @@ public abstract class Game extends ReflectionDBObject{
 			}
 		}
 		BasicDBList moves = (BasicDBList)obj.get("Moves");		
-		this.moves = new LinkedList<CardBasedMove>();		
+		this.moves = new LinkedList<CardBasedMove>();
 		for (Object move : moves) {		
 			this.moves.add(new KCMove((BasicDBObject)move));		
 		}
 		this.players = this.turnOrder;
 		this.isActive = (Boolean)obj.get("IsActive");
 		this.winner_id = (Integer)obj.get("Winner_id");
-		this.updatedLeaderboard = (Boolean)obj.get("UpdatedLeaderboard");
-
 	}
 }

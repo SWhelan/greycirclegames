@@ -39,7 +39,6 @@ public class TemplateHandler {
 	public static final String FRIENDS_ADD_ROUTE = "/addFriend";
 	public static final String FRIENDS_REMOVE_ROUTE = "/removeFriend";
 	public static final String GAMES_ROUTE = "/games";
-	public static final String LEADERBOARD_ROUTE = "/leaderboard";
 	public static final String TUTORIAL_ROUTE = "/tutorial";
 	public static final String LOGOUT_ROUTE = "/logout";
 	public static final String POST_MOVE_ROUTE = "/move";
@@ -59,7 +58,6 @@ public class TemplateHandler {
 	public static final String FRIEND_INFO_TEMPLATE = "friendInfo.mustache";
 	public static final String GAME_LIST_TEMPLATE = "gameList.mustache";
 	public static final String KINGS_CORNERS_TEMPLATE = "kingscorners.mustache";
-	public static final String LEADERBOARD_TEMPLATE = "leaderboard.mustache";
 	public static final String TUTORIAL_TEMPLATE = "tutorial.mustache";
 	public static final String CIRCLES_TEMPLATE = "circles.mustache";
 
@@ -287,7 +285,6 @@ public class TemplateHandler {
 		info.put("FRIENDS_ADD_ROUTE", FRIENDS_ADD_ROUTE);
 		info.put("FRIENDS_REMOVE_ROUTE", FRIENDS_REMOVE_ROUTE);
 		info.put("GAMES_ROUTE", GAMES_ROUTE);
-		info.put("LEADERBOARD_ROUTE", LEADERBOARD_ROUTE);
 		info.put("TUTORIAL_ROUTE", TUTORIAL_ROUTE);
 		info.put("LOGOUT_ROUTE", LOGOUT_ROUTE);
 		info.put("POST_MOVE_ROUTE", POST_MOVE_ROUTE);

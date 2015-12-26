@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import com.mongodb.BasicDBList;
 
 import greycirclegames.DBHandler;
-import greycirclegames.Leaderboard;
 import greycirclegames.Player;
 import greycirclegames.User;
 import greycirclegames.games.card.Pile;
@@ -85,24 +84,5 @@ public class DBTest {
 		Assert.isTrue(!kc.getIsActive(), "Demo game should be inactive!");
 
 		DBHandler.deleteKCGame(gameID);
-	}
-
-	//test CRUD operations for a KCGame
-	public void testLeaderboard() {
-				
-		int id1 = DBHandler.getNextUserID();
-		BasicDBList frands = new BasicDBList();
-		frands.add(id1);
-		User user = new User(id1,"goduser", "word", "salt", "email@gmail.com", frands);
-		DBHandler.createUser(user);
-
-		Leaderboard l = DBHandler.getLeaderboard();
-		l.addUser(user);
-		DBHandler.updateLeaderboard(l); 
-		
-		l = DBHandler.getLeaderboard();
-		
-		Assert.isTrue(l.getGameStats() != null, "gameStats were null!!!");
-		DBHandler.deleteUser(id1);
 	}
 }

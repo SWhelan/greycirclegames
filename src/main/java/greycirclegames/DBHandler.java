@@ -129,22 +129,6 @@ public class DBHandler {
 		return gamesList;
 	}
 
-	public static Leaderboard getLeaderboard() {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("leaderboard");
-		BasicDBObject obj = (BasicDBObject) coll.findOne();
-
-		if (obj == null) {
-			//leaderboard DNE, so create, insert, and return
-			Leaderboard lb = new Leaderboard();
-			coll.save(lb);
-			return lb;
-		}
-		else {
-			return new Leaderboard(obj);
-		}
-	}
-
 	// UPDATE
 	public static void updateUser(User user) {
 		DB db = DatabaseConnector.getMongoDB();
@@ -162,13 +146,6 @@ public class DBHandler {
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("circlesgames");
 		coll.save(game);		
-	}
-
-	public static void updateLeaderboard(Leaderboard leaderboard) {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("leaderboard");
-		coll.drop(); // delete old leaderboard
-		coll.save(leaderboard);
 	}
 
 	private static int getNextID(String idName) {

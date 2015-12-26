@@ -122,9 +122,6 @@ public class User extends ReflectionDBObject implements Player {
 		this.friends = friends;
 	}
 	
-	public Leaderboard getLeaderboard(){
-		return null;
-	}
 	public List<Game> getCurrentGames(){
 		return null;
 	}
@@ -236,10 +233,6 @@ public class User extends ReflectionDBObject implements Player {
 		winLossList.put(0, numWins);
 		winsAndLosses.put(game, winLossList);
 		DBHandler.updateUser(this);
-		
-		Leaderboard lb = DBHandler.getLeaderboard();
-		lb.addUser(this);
-		DBHandler.updateLeaderboard(lb);
 	}
 
 	@Override
@@ -249,10 +242,6 @@ public class User extends ReflectionDBObject implements Player {
 		winLossList.put(1, numLosses);
 		winsAndLosses.put(game, winLossList);
 		DBHandler.updateUser(this);
-		
-		Leaderboard lb = DBHandler.getLeaderboard();
-		lb.addUser(this);
-		DBHandler.updateLeaderboard(lb);
 	}
 
 	public List<User> getFriendsList() {
