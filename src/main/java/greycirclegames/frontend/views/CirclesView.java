@@ -19,6 +19,8 @@ public class CirclesView {
 	public int theirCount;
 	public String yourColor;
 	public String theirColor;
+	public String opponentName;
+	public boolean isWinner = false;
 
 	public CirclesView(Circles game, User user) {
 		Circle[][] board = ((CirclesGameState)game.getGameState()).getBoard();
@@ -57,11 +59,19 @@ public class CirclesView {
 			theirCount = dark;
 			yourColor = "#ffffff";
 			theirColor = "#000000";
+			opponentName = game.getTurnOrder().get(1).getUserName();
 		} else {
 			yourCount = dark; 
 			theirCount = light;
 			yourColor = "#000000";
 			theirColor = "#ffffff";
+			opponentName = game.getTurnOrder().get(0).getUserName();
+		}
+		if(!isActive){
+			int winnerId = game.getWinner_id();
+			if(winnerId == (int) user.get_id()){
+				isWinner = true;
+			}
 		}
 		
 	}

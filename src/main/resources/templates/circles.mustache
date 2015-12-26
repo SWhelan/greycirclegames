@@ -20,27 +20,18 @@
 	{{/displayBoard}}
 	</table>
 	</div>
+	<div id="info">
+		<p>It <b>is{{^isTurn}} not{{/isTurn}}</b> your turn.</p>
+		<h3>Score</h3>
+		<p>You: {{yourCount}}</p>
+		<p>{{opponentName}}: {{theirCount}}</p>
+		<p>You:</p>
+		<div class="circle" style="background:{{yourColor}};"></div>
+		<p>{{opponentName}}:</p>
+		<div class="circle" style="background:{{theirColor}};"></div>
 	</div>
-	<div class="row">
-	{{#isTurn}}
-	<p>It is your turn.</p>
-	{{/isTurn}}
-	{{^isTurn}}
-	<p>It is <b>not</b> your turn.</p>
-	{{/isTurn}}
-	<h3>Score</h3>
-	<p>You: {{yourCount}}</p>
-	<p>Them: {{theirCount}}</p>
 	</div>
-	<div class="row">
-	<p>You:</p>
-	<div class="circle" style="background:{{yourColor}};"></div>
-	</div>
-	<div class="row">
-	<p>Them:</p>
-	<div class="circle" style="background:{{theirColor}};"></div>
-	</div>
-<script type="text/javascript">
+<script type="text/javascript">	
 
 {{> gameJavaScript}}
 

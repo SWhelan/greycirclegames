@@ -88,6 +88,10 @@
 	cursor: pointer;
 }
 
+#info {
+	padding-left: 15px;
+}
+
 @media screen and (max-width: 480px) {
     .circle {
         width: 20px;

@@ -22,22 +22,24 @@
 	handleGameOver();
 	{{/isActive}}
 	
-	
 	function notTurnAlert(){
 		displayError("It is not your turn.", true);
 		return;
 	}
 	
 	function handleGameOver(){
+				console.log(isActive);
+	
 		if(!isActive){
 			var message = "The game is over.";
-			if(isTurn){
+			{{#isWinner}}
 				message = message + " You won!";
 				displaySuccess(message, false);
-			} else {
+			{{/isWinner}}
+			{{^isWinner}}
 				message = message + " You lost.";
 				displayError(message, false);
-			}
+			{{/isWinner}}
 		}
 		return;
 	}

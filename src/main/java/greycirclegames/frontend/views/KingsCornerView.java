@@ -31,6 +31,7 @@ public class KingsCornerView {
 	List<CardView> northWestPile;
 	
 	List<String> moveHistory;
+	boolean isWinner;
 	
 	public KingsCornerView(KingsCorner game, Player viewingPlayer){
 		gameId = game.get_id();
@@ -71,6 +72,11 @@ public class KingsCornerView {
 		Collections.reverse(this.moveHistory);
 		
 		isActive = game.getIsActive();
+		if(!isActive){
+			if(((int)game.getWinner_id()) == viewingPlayer.get_id()){
+				isWinner = true;
+			}
+		}
 	}
 	
 	private List<CardView> removeMiddle(List<CardView> pile){

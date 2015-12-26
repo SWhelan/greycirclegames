@@ -26,7 +26,7 @@ import greycirclegames.games.card.kingscorner.KCMove;
  *
  */
 public abstract class Game extends ReflectionDBObject{
-	
+
 	//The id of a game
 	protected int _id;
 	//The game state
@@ -43,7 +43,7 @@ public abstract class Game extends ReflectionDBObject{
 	protected boolean updatedLeaderboard;
 	//The id of the winner of the game (null if no winner)
 	protected Integer winner_id;
-	
+
 	/**
 	 * The turn order of the game in the current state.
 	 * Order does matter here.
@@ -54,7 +54,7 @@ public abstract class Game extends ReflectionDBObject{
 
 	//default constructor, only used when reinitializing from the database
 	public Game(){}
-	
+
 	//Make a completely new game
 	public Game(int _id, List<Player> players){
 		this._id = _id;
@@ -68,7 +68,7 @@ public abstract class Game extends ReflectionDBObject{
 		updatedLeaderboard = false;
 		winner_id = null;
 	}
-	
+
 	/**
 	 * Make a completely new game, with a random new game state
 	 * @param _id	The id of the game - this should be a unique value and should be input from the database.
@@ -82,7 +82,7 @@ public abstract class Game extends ReflectionDBObject{
 		this.isActive = active;
 		this.updatedLeaderboard = updatedLeaderboard;
 	}
-	
+
 	/**
 	 * Make a pre-existing game - used when reconstructing a game from the database
 	 * @param _id	The id of the game.  Since this is an old game, it should already be assigned an id in the DB.
@@ -103,7 +103,7 @@ public abstract class Game extends ReflectionDBObject{
 	public void setUpdatedLeaderboard(boolean updatedLeaderboard) {
 		this.updatedLeaderboard = updatedLeaderboard;
 	}
-	
+
 	/**
 	 * Returns true if this game has been updated in the leaderboard
 	 */
@@ -149,7 +149,7 @@ public abstract class Game extends ReflectionDBObject{
 	public Integer get_id() {
 		return _id;
 	}
-	
+
 	/**
 	 * Get the game state of the game
 	 * @return	The assosciated GameState object of this game.
@@ -157,7 +157,7 @@ public abstract class Game extends ReflectionDBObject{
 	public GameState getGameState() {
 		return gameState;
 	}
-	
+
 	/**
 	 * Get the moves that have happened in the game.
 	 * @return	A list of moves that have been applied to this game.
@@ -165,7 +165,7 @@ public abstract class Game extends ReflectionDBObject{
 	public final List<CardBasedMove> getMoves() {
 		return moves;
 	}
-	
+
 	/**
 	 * 
 	 * @return	A list of players involved in this game.
@@ -173,7 +173,7 @@ public abstract class Game extends ReflectionDBObject{
 	public final List<Player> getPlayers() {
 		return players;
 	}
-	
+
 	/**
 	 * Set the _id of the game.
 	 * @param _id	The game's id.
@@ -181,7 +181,7 @@ public abstract class Game extends ReflectionDBObject{
 	public void set_id(int _id) {
 		this._id = _id;
 	}
-	
+
 	/**
 	 * Set the gameState
 	 * @param gameState
@@ -189,7 +189,7 @@ public abstract class Game extends ReflectionDBObject{
 	public void setGameState(GameState gameState) {
 		this.gameState = gameState;
 	}
-	
+
 	/**
 	 * Set the past moves of this game.
 	 * @param moves	A list of moves previously applied to this game.
@@ -197,7 +197,7 @@ public abstract class Game extends ReflectionDBObject{
 	public void setMoves(List<CardBasedMove> moves) {
 		this.moves = moves;
 	}
-	
+
 	/**
 	 * Set the Players.
 	 * @param players	A list of players involved in this game.
@@ -205,7 +205,7 @@ public abstract class Game extends ReflectionDBObject{
 	public void setPlayers(List<Player> players) {
 		this.players = players;
 	}
-		
+
 	/**
 	 * When a game is over, we can update the leaderboard to report the players' 
 	 * wins and losses.
@@ -227,7 +227,7 @@ public abstract class Game extends ReflectionDBObject{
 			this.updatedLeaderboard = true;
 		}
 	}
-	
+
 	//Each type of game has a string identifier.
 	//For instance, all KingCorner objects have the game type identifier "King's Corner"
 	//	which is a constant in the constants file.
@@ -256,7 +256,7 @@ public abstract class Game extends ReflectionDBObject{
 	public final void addMove(CardBasedMove m){
 		moves.add(m);
 	}
-	
+
 	/**
 	 * Returns whether or not this game is over, ie someone won the game.
 	 * This method analyzes the game state to determine if someone has won, so
@@ -265,8 +265,8 @@ public abstract class Game extends ReflectionDBObject{
 	 * @return	True if a player has won.
 	 */
 	public abstract boolean gameIsOver();
-	
-	
+
+
 	public int getCurrentPlayer(){
 		return currentPlayer;
 	}
@@ -279,7 +279,7 @@ public abstract class Game extends ReflectionDBObject{
 	public void setTurnOrder(List<Player> turnOrder){
 		this.turnOrder = turnOrder;
 	}
-	
+
 	/**
 	 * Sets the game to a win state - meaning someone has won.
 	 */
@@ -288,7 +288,7 @@ public abstract class Game extends ReflectionDBObject{
 		winner_id = getCurrentPlayerObject().get_id();
 		this.updateLeaderboard();
 	}
-	
+
 	/**
 	 * Gets the Player object of the current player.
 	 * @return	The current Player
@@ -296,7 +296,7 @@ public abstract class Game extends ReflectionDBObject{
 	public Player getCurrentPlayerObject(){
 		return turnOrder.get(currentPlayer);
 	}
-	
+
 	/**
 	 * Sets the game to a non-winning end state.
 	 * For example, if a player quits the game, the whole game might end.
@@ -306,7 +306,7 @@ public abstract class Game extends ReflectionDBObject{
 		isActive = false;
 		winner_id = null;
 	}
-	
+
 	/**
 	 * Returns the winning player of the game, if there is one.
 	 * @return	The winning Player, or null if there is none.
@@ -317,7 +317,7 @@ public abstract class Game extends ReflectionDBObject{
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Checks if th player is an AI for the King's Corner game.
 	 * @param p	A player
@@ -331,7 +331,7 @@ public abstract class Game extends ReflectionDBObject{
 	public void gameFromDBObject(DBObject obj) {
 		this._id = (Integer)obj.get("_id");
 		this.currentPlayer = (Integer)obj.get("CurrentPlayer");
-		
+
 		BasicDBList turnOrder = (BasicDBList)obj.get("TurnOrder");
 		this.turnOrder = new LinkedList<Player>();
 		//We have to consider if a player is an Artificial Player or user when
@@ -344,11 +344,15 @@ public abstract class Game extends ReflectionDBObject{
 				this.turnOrder.add(new User((BasicDBObject)player));
 			}
 		}
-		
+		BasicDBList moves = (BasicDBList)obj.get("Moves");		
+		this.moves = new LinkedList<CardBasedMove>();		
+		for (Object move : moves) {		
+			this.moves.add(new KCMove((BasicDBObject)move));		
+		}
 		this.players = this.turnOrder;
 		this.isActive = (Boolean)obj.get("IsActive");
 		this.winner_id = (Integer)obj.get("Winner_id");
 		this.updatedLeaderboard = (Boolean)obj.get("UpdatedLeaderboard");
-		
+
 	}
 }
