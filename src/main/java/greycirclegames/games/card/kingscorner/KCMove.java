@@ -27,7 +27,7 @@ public class KCMove extends CardBasedMove {
 		BasicDBObject player = (BasicDBObject)obj.get("Player");
 		Integer playerId = (Integer)player.get("_id");
 		if(playerId < 0){
-			this.player = new ArtificialPlayer(playerId);
+			this.player = new KCArtificialPlayer(playerId);
 		} else {
 			this.player = new User(player);
 		}

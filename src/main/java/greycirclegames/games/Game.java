@@ -11,7 +11,7 @@ import com.mongodb.ReflectionDBObject;
 
 import greycirclegames.Player;
 import greycirclegames.User;
-import greycirclegames.games.card.kingscorner.ArtificialPlayer;
+import greycirclegames.games.card.kingscorner.KCArtificialPlayer;
 
 /**
  * The Game holds all the information about the game.
@@ -301,7 +301,7 @@ public abstract class Game<M extends Move, S extends GameState> extends Reflecti
 		for (Object player : turnOrder) {
 			int playerId = (Integer)((BasicDBObject) player).get("_id");
 			if(playerId < 0){
-				this.turnOrder.add(new ArtificialPlayer(playerId));
+				this.turnOrder.add((Player)new KCArtificialPlayer(playerId));
 			} else {
 				this.turnOrder.add(new User((BasicDBObject)player));
 			}

@@ -13,7 +13,7 @@ import greycirclegames.frontend.views.KingsCornerView;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Card.Suit;
 import greycirclegames.games.card.Pile;
-import greycirclegames.games.card.kingscorner.ArtificialPlayer;
+import greycirclegames.games.card.kingscorner.KCArtificialPlayer;
 import greycirclegames.games.card.kingscorner.KCMove;
 import greycirclegames.games.card.kingscorner.KingsCorner;
 import spark.ModelAndView;
@@ -55,7 +55,7 @@ public class KingsCornerHandler extends TemplateHandler{
 		
 		// Add the specified number of AI players to the list
 		for(int i = 1; i < numAiPlayers + 1; i++){
-			players.add(new ArtificialPlayer(i * -1));
+			players.add((Player)new KCArtificialPlayer(i * -1));
 		}
 		
 		// Create the game

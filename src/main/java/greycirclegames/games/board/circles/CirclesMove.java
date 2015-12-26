@@ -2,14 +2,13 @@ package greycirclegames.games.board.circles;
 
 import com.mongodb.BasicDBObject;
 
-import greycirclegames.games.GameState;
 import greycirclegames.games.card.CardBasedMove;
 
 public class CirclesMove extends CardBasedMove {
 	private int column;
 	private int row;
 	private Circle color;
-	private GameState state;
+	private CirclesGameState state;
 	
 	public CirclesMove(int row, int column, Circle color, CirclesGameState state){
 		this.column = column;
@@ -27,7 +26,7 @@ public class CirclesMove extends CardBasedMove {
 		if(!CirclesGameState.validPosition(column, row)){
 			return false;
 		}
-		Circle[][] board = ((CirclesGameState) state).getBoard();
+		Circle[][] board = state.getBoard();
 		return 	shouldApplyNorth(board) || shouldApplyNorthEast(board) ||
 				shouldApplySouth(board) || shouldApplySouthEast(board) ||
 				shouldApplyWest(board) || shouldApplySouthWest(board) ||
@@ -37,7 +36,7 @@ public class CirclesMove extends CardBasedMove {
 	@Override
 	public void apply() {
 		// I wrote this while watching star wars so probably not right.
-		Circle[][] board = ((CirclesGameState) state).getBoard();
+		Circle[][] board = state.getBoard();
 		// North
 		if(shouldApplyNorth(board)){
 			applyNorth();
@@ -70,7 +69,7 @@ public class CirclesMove extends CardBasedMove {
 		if(shouldApplyNorthWest(board)){
 			applyNorthWest();
 		}
-		((CirclesGameState) state).getBoard()[row][column] = new Circle(color.getName(), color.getHex());
+		state.getBoard()[row][column] = new Circle(color.getName(), color.getHex());
 	}
 
 	private void applyNorthWest() {
@@ -141,12 +140,12 @@ public class CirclesMove extends CardBasedMove {
 		boolean done = false;
 		int i = row;
 		int j = column;
-		while(!done && i > -1 && i < ((CirclesGameState) state).getBoard().length && j > -1 && j < ((CirclesGameState) state).getBoard()[i].length){
-			Circle cell = ((CirclesGameState) state).getBoard()[i][j];
+		while(!done && i > -1 && i < state.getBoard().length && j > -1 && j < state.getBoard()[i].length){
+			Circle cell = state.getBoard()[i][j];
 			if(cell != null && cell.getHex().equals(color.getHex())){
 				done = true;
 			} else if(i != row || j != column){
-				((CirclesGameState) state).getBoard()[i][j] = new Circle(color.getName(), color.getHex());
+				state.getBoard()[i][j] = new Circle(color.getName(), color.getHex());
 			}
 			if(rowDecreases){
 				i = i - 1;

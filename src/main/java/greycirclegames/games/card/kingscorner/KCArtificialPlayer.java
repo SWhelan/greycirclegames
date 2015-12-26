@@ -2,40 +2,23 @@ package greycirclegames.games.card.kingscorner;
 
 import java.util.Map;
 
-import com.mongodb.ReflectionDBObject;
-
-import greycirclegames.Player;
+import greycirclegames.ArtificialPlayer;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Pile;
-//TODO rethink data structures. Realized better approaches as implementing
+
 /**
  * Class representing the artificial player
  * @author Kirtan
  *
  */
-public class ArtificialPlayer extends ReflectionDBObject implements Player {
-	/**
-	 * Artificial Player's ID
-	 */
-	private int playerID;
-	private String userName;
+public class KCArtificialPlayer extends ArtificialPlayer {
 
 	/**
 	 * Constructor of artificial player. 
-	 * @param playerID Player's id
+	 * @param id Player's id
 	 */
-	public ArtificialPlayer(int playerID) {
-		super();
-		this.playerID = playerID;
-		this.userName = "Computer Player " + Integer.toString(Math.abs(playerID));
-	}
-	
-	/**
-	 * Returns the artificial player's id
-	 * @return player id
-	 */
-	public Integer getPlayerID() {
-		return playerID;
+	public KCArtificialPlayer(int id) {
+		super(id);
 	}
 	
 	/**
@@ -206,7 +189,7 @@ public class ArtificialPlayer extends ReflectionDBObject implements Player {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + playerID;
+		result = prime * result + _id;
 		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
 		return result;
 	}
@@ -219,8 +202,8 @@ public class ArtificialPlayer extends ReflectionDBObject implements Player {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ArtificialPlayer other = (ArtificialPlayer) obj;
-		if (playerID != other.playerID)
+		KCArtificialPlayer other = (KCArtificialPlayer) obj;
+		if (_id != other._id)
 			return false;
 		if (userName == null) {
 			if (other.userName != null)
@@ -228,26 +211,6 @@ public class ArtificialPlayer extends ReflectionDBObject implements Player {
 		} else if (!userName.equals(other.userName))
 			return false;
 		return true;
-	}
-
-	@Override
-	public Integer get_id() {
-		return playerID;
-	}
-
-	@Override
-	public String getUserName() {
-		return userName;
-	}
-
-	@Override
-	public void updateWin(String game) {
-		//Do nothing - we do not store stats for ai players currently
-	}
-
-	@Override
-	public void updateLoss(String game) {
-		//Do nothing - we do not store stats for ai players currently
 	}
 	
 }

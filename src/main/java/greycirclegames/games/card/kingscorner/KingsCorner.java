@@ -74,7 +74,7 @@ public class KingsCorner extends Game<KCMove, KCGameState>{
 			result = true;
 			aiHand = getGameState().userHands.get(Integer.toString(cur.get_id()));
 
-			ArtificialPlayer ai = (ArtificialPlayer) cur;
+			KCArtificialPlayer ai = (KCArtificialPlayer) cur;
 			boolean hasMove = true;
 			//Get as many moves from the player as we can (until null)
 			while(this.isActive && hasMove){
