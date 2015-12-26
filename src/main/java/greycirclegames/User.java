@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.ReflectionDBObject;
 
@@ -26,8 +25,6 @@ public class User extends ReflectionDBObject implements Player {
 	private String email;
 	//List of ids of friends
 	private BasicDBList friends;
-	//Maps Game type ids to wins and losses
-	private BasicDBObject winsAndLosses;
 	
 	public User(int _id, String userName, String password, String salt,
 			String email, BasicDBList friends){
@@ -37,18 +34,6 @@ public class User extends ReflectionDBObject implements Player {
 		this.salt = salt;
 		this.email = email;
 		this.friends = friends;
-		intializeWinsAndLosses();
-	}
-	
-	public User(int _id, String userName, String password, String salt,
-			String email, BasicDBList friends, BasicDBObject wlmap){
-		this._id = _id;
-		this.userName = userName;
-		this.password = password;
-		this.salt = salt;
-		this.email = email;
-		this.friends = friends;
-		this.winsAndLosses = wlmap;
 	}
 
 	public User(int _id, String email) {
@@ -61,17 +46,7 @@ public class User extends ReflectionDBObject implements Player {
 				(String)obj.get("Password"),
 				(String)obj.get("Salt"),
 				(String)obj.get("Email"),
-				(BasicDBList)obj.get("Friends"),
-				(BasicDBObject)obj.get("WinsAndLosses"));
-	}
-	
-	
-	private void intializeWinsAndLosses() {
-		winsAndLosses = new BasicDBObject();
-		BasicDBList winLossList = new BasicDBList();
-		winLossList.add(0);
-		winLossList.add(0);
-		winsAndLosses.put(GlobalConstants.KINGS_CORNER, winLossList);
+				(BasicDBList)obj.get("Friends"));
 	}
 
 	public Integer get_id() {
@@ -132,16 +107,7 @@ public class User extends ReflectionDBObject implements Player {
 	
 	public void destroyFriendship(Integer friendID) {
 		this.friends.remove(friendID);
-	}
-
-	public BasicDBObject getWinsAndLosses() {
-		return winsAndLosses;
-	}
-
-	public void setWinsAndLosses(BasicDBObject winsAndLosses) {
-		this.winsAndLosses = winsAndLosses;
-	}
-	
+	}	
 
 	@Override
 	public int hashCode() {
@@ -228,20 +194,12 @@ public class User extends ReflectionDBObject implements Player {
 
 	@Override
 	public void updateWin(String game) {
-		BasicDBList winLossList = ((BasicDBList)winsAndLosses.get(game));
-		int numWins = (Integer)winLossList.get(0) + 1;
-		winLossList.put(0, numWins);
-		winsAndLosses.put(game, winLossList);
-		DBHandler.updateUser(this);
+	
 	}
 
 	@Override
 	public void updateLoss(String game) {
-		BasicDBList winLossList = ((BasicDBList)winsAndLosses.get(game));
-		int numLosses = (Integer)winLossList.get(1) + 1;
-		winLossList.put(1, numLosses);
-		winsAndLosses.put(game, winLossList);
-		DBHandler.updateUser(this);
+	
 	}
 
 	public List<User> getFriendsList() {
