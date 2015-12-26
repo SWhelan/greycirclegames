@@ -1,8 +1,6 @@
 package greycirclegames;
 
-import com.mongodb.ReflectionDBObject;
-
-public class ArtificialPlayer extends ReflectionDBObject implements Player {
+public class ArtificialPlayer implements Player {
 	protected int _id;
 	protected String userName;
 	
