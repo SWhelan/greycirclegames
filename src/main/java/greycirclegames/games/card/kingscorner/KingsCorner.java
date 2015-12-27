@@ -11,7 +11,6 @@ import com.mongodb.DBObject;
 import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import greycirclegames.games.Game;
-import greycirclegames.games.GameState;
 import greycirclegames.games.card.Pile;
 
 public class KingsCorner extends Game<KCMove, KCGameState>{
@@ -52,7 +51,7 @@ public class KingsCorner extends Game<KCMove, KCGameState>{
 			endTurn.apply();
 			moves.add(endTurn);
 		}
-		currentPlayer = (currentPlayer + 1) % turnOrder.size();
+		currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
 		
 		return true;
 	}
@@ -93,16 +92,9 @@ public class KingsCorner extends Game<KCMove, KCGameState>{
 		return result;
 	}
 	
-	/**
-	 * Returns the GameState as a KCGameState object.
-	 */
-	public KCGameState getGameState(){
-		return (KCGameState) super.getGameState();
-	}
-	
 	@Override
-	protected final GameState newGameState(List<Player> players) {
-		GameState game = new KCGameState();
+	protected final KCGameState newGameState(List<Player> players) {
+		KCGameState game = new KCGameState();
 		game.initializeToNewGameState(players);
 		return game;
 	}
@@ -122,5 +114,10 @@ public class KingsCorner extends Game<KCMove, KCGameState>{
 	@Override
 	protected String getGameTypeIdentifier() {
 		return GlobalConstants.KINGS_CORNER;
+	}
+
+	@Override
+	protected int determineWinnerId() {
+		return players.get(currentPlayerIndex).get_id();
 	}
 }

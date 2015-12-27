@@ -36,8 +36,8 @@ public class CirclesView {
 			displayBoard.add(new RowView(row));
 		}
 		gameId = game.get_id();
-		name = game.turnColors.get(game.currentPlayer).getName();
-		hex = game.turnColors.get(game.currentPlayer).getHex();
+		name = game.turnColors.get(game.currentPlayerIndex).getName();
+		hex = game.turnColors.get(game.currentPlayerIndex).getHex();
 		int currentPlayerIdCheck = game.getCurrentPlayerObject().get_id();
 		int viewingPlayerIdCheck = user.get_id();
 		isTurn = currentPlayerIdCheck == viewingPlayerIdCheck; 
@@ -54,18 +54,18 @@ public class CirclesView {
 				}
 			}
 		}
-		if((int) game.getTurnOrder().get(0).get_id() == (int)user.get_id()){
+		if((int) game.getPlayers().get(0).get_id() == (int)user.get_id()){
 			yourCount = light;
 			theirCount = dark;
 			yourColor = "#ffffff";
 			theirColor = "#000000";
-			opponentName = game.getTurnOrder().get(1).getUserName();
+			opponentName = game.getPlayers().get(1).getUserName();
 		} else {
 			yourCount = dark; 
 			theirCount = light;
 			yourColor = "#000000";
 			theirColor = "#ffffff";
-			opponentName = game.getTurnOrder().get(0).getUserName();
+			opponentName = game.getPlayers().get(0).getUserName();
 		}
 		if(!isActive){
 			int winnerId = game.getWinner_id();

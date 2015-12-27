@@ -20,7 +20,7 @@ public class GameEntryView {
 		gameId = game.get_id();
 		currentPlayerName = game.getCurrentPlayerObject().getUserName();
 		currentPlayerId = game.getCurrentPlayerObject().get_id();
-		for(Object p : game.turnOrder){
+		for(Object p : game.players){
 			players.add(((Player)p).getUserName());
 		}
 		this.isActive = game.getIsActive();

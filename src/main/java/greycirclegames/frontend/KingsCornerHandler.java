@@ -55,7 +55,7 @@ public class KingsCornerHandler extends TemplateHandler{
 		
 		// Add the specified number of AI players to the list
 		for(int i = 1; i < numAiPlayers + 1; i++){
-			players.add((Player)new KCArtificialPlayer(i * -1));
+			players.add(new KCArtificialPlayer(i * -1));
 		}
 		
 		// Create the game

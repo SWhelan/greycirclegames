@@ -1,6 +1,5 @@
 package greycirclegames.games;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,79 +24,54 @@ import greycirclegames.games.card.kingscorner.KCArtificialPlayer;
  */
 public abstract class Game<M extends Move, S extends GameState> extends ReflectionDBObject{
 
-	//The id of a game
-	protected int _id;
-	//The game state
-	protected GameState gameState;
-	//The list of moves
-	protected List<M> moves;
-	//The list of players
-	protected List<Player> players;
-	//Whether or not the game is active ie currently playable.
-	//The meaning of this may differ from game to game, 
-	//but generally this means someone won or the game was cancelled
-	protected boolean isActive;
-	//The id of the winner of the game (null if no winner)
-	protected Integer winner_id;
-
 	/**
-	 * The turn order of the game in the current state.
-	 * Order does matter here.
+	 * The id of a game
+	 * This starts with an underscore because of database.
 	 */
-	public List<Player> turnOrder;
-	// The index of turn order, NOT the id of the current player.
-	public int currentPlayer;
+	protected int _id;
+	/**
+	 * Game State saves information about board or card piles etc
+	 */
+	protected S gameState;
+	/**
+	 * List of moves that have been played to save game history
+	 */
+	protected List<M> moves;
+	/**
+	 * True if the game is still being played
+	 * False if the game has been won or cancelled 
+	 */
+	protected boolean isActive;
+	/**
+	 * The id of the winner of the game (null if no winner)
+	 */
+	protected Integer winner_id;
+	/**
+	 * List of players in order of turn.
+	 */
+	public List<Player> players;
+	/**
+	 * The INDEX of the players list NOT THE PLAYER'S ID  
+	 */
+	public int currentPlayerIndex;
 
-	//default constructor, only used when reinitializing from the database
-	public Game(){}
+	public Game(){
+		// Default constructor for database
+	}
 
 	/**
 	 * Make a completely new game, with a random new game state
 	 * @param _id	The id of the game - this should be a unique value and should be input from the database.
-	 * @param players	The list of players of this game.  Order of this list is not important.
+	 * @param players The list of players of this game in turn order.
 	 */
 	public Game(int _id, List<Player> players){
 		this._id = _id;
-		turnOrder = new ArrayList<Player>();
-		turnOrder.addAll(players);
-		currentPlayer = 0;
+		this.players = players;
+		currentPlayerIndex = 0;
 		this.gameState = newGameState(players);
 		this.moves = new LinkedList<M>();
-		this.players = players;
 		isActive = true;
 		winner_id = null;
-	}
-
-	/**
-	 * Make a pre-existing game - used when reconstructing a game from the database
-	 * @param _id	The id of the game.  Since this is an old game, it should already be assigned an id in the DB.
-	 * @param gameState	A GameState object that reflects the current state of this game. 
-	 * @param moves	The list of moves which have been applied to this game.
-	 * @param players	The list of players involved in this game.
-	 * @param active	Whether or not this game is active.
-	 */
-	public Game(int _id, GameState gameState, List<M> moves, List<Player> players, boolean active){
-		this._id = _id;
-		this.gameState = gameState;
-		this.moves = moves;
-		this.players = players;
-		this.isActive = active;
-	}
-
-	/**
-	 * Checks status of the game
-	 * @return if the game is active
-	 */
-	public boolean getIsActive() {
-		return isActive;
-	}
-	
-	/**
-	 * Sets whether the game is active.
-	 * @param isActive	Whether or not the game is active.
-	 */
-	public void setIsActive(boolean isActive) {
-		this.isActive = isActive;
 	}
 
 	/**
@@ -105,8 +79,31 @@ public abstract class Game<M extends Move, S extends GameState> extends Reflecti
 	 * @param players the list of players in turn order
 	 * @return a game state for a new game
 	 */
-	protected abstract GameState newGameState(List<Player> players);
+	protected abstract S newGameState(List<Player> players);
 
+	/**
+	 * Each type of game has a string identifier.
+	 * For instance, all KingCorner objects have the game type identifier "King's Corner"
+	 * which is a constant in the constants file.
+	 * @return
+	 */
+	protected abstract String getGameTypeIdentifier();
+	
+	/**
+	 * Returns whether or not this game is over, ie someone won the game.
+	 * This method analyzes the game state to determine if someone has won, so
+	 * it may return true even if isActive is true.  However, if this function returns
+	 * true, isActive should be set to false.
+	 * @return	True if a player has won.
+	 */
+	public abstract boolean gameIsOver();
+	
+	/**
+	 * Once the game is over determine who won.
+	 * @return
+	 */
+	protected abstract int determineWinnerId();
+	
 	/**
 	 * Apply a move to the game.  User data will be captured, and from that we will
 	 * construct a move and pass it here to apply it to this game.
@@ -129,118 +126,11 @@ public abstract class Game<M extends Move, S extends GameState> extends Reflecti
 	}
 
 	/**
-	 * Get the id of the game.
-	 */
-	public Integer get_id() {
-		return _id;
-	}
-
-	/**
-	 * Get the game state of the game
-	 * @return	The associated GameState object of this game.
-	 */
-	public GameState getGameState() {
-		return gameState;
-	}
-
-	/**
-	 * Get the moves that have happened in the game.
-	 * @return	A list of moves that have been applied to this game.
-	 */
-	public final List<M> getMoves() {
-		return moves;
-	}
-
-	/**
-	 * 
-	 * @return	A list of players involved in this game.
-	 */
-	public final List<Player> getPlayers() {
-		return players;
-	}
-
-	/**
-	 * Set the _id of the game.
-	 * @param _id	The game's id.
-	 */
-	public void set_id(int _id) {
-		this._id = _id;
-	}
-
-	/**
-	 * Set the gameState
-	 * @param gameState
-	 */
-	public void setGameState(GameState gameState) {
-		this.gameState = gameState;
-	}
-
-	/**
-	 * Set the past moves of this game.
-	 * @param moves	A list of moves previously applied to this game.
-	 */
-	public void setMoves(List<M> moves) {
-		this.moves = moves;
-	}
-
-	/**
-	 * Set the Players.
-	 * @param players	A list of players involved in this game.
-	 */
-	public void setPlayers(List<Player> players) {
-		this.players = players;
-	}
-
-	//Each type of game has a string identifier.
-	//For instance, all KingCorner objects have the game type identifier "King's Corner"
-	//	which is a constant in the constants file.
-	protected abstract String getGameTypeIdentifier();
-
-	/**
-	 * Returns the id of the winner of the game, or null if no one has won currently.
-	 * @return	The id of the winner of the game, or null if no one has won currently.
-	 */
-	public Integer getWinner_id() {
-		return winner_id;
-	}
-
-	/**
-	 * Sets the winner of the game.
-	 * @param winner_id	The id of the player who won this game.
-	 */
-	public void setWinner_id(Integer winner_id) {
-		this.winner_id = winner_id;
-	}
-
-	/**
 	 * Add a move to the list of applied moves.
 	 * @param m
 	 */
-	public final void addMove(M m){
+	public void addMove(M m){
 		moves.add(m);
-	}
-
-	/**
-	 * Returns whether or not this game is over, ie someone won the game.
-	 * This method analyzes the game state to determine if someone has won, so
-	 * it may return true even if isActive is true.  However, if this function returns
-	 * true, isActive should be set to false.
-	 * @return	True if a player has won.
-	 */
-	public abstract boolean gameIsOver();
-
-
-	public int getCurrentPlayer(){
-		return currentPlayer;
-	}
-	public void setCurrentPlayer(int currentPlayer){
-		this.currentPlayer = currentPlayer;
-	}
-	public List<Player> getTurnOrder(){
-		return turnOrder;
-	}
-	public void setTurnOrder(List<Player> turnOrder){
-		this.turnOrder = turnOrder;
 	}
 
 	/**
@@ -248,15 +138,7 @@ public abstract class Game<M extends Move, S extends GameState> extends Reflecti
 	 */
 	protected void changeToWinState(){
 		isActive = false;
-		winner_id = getCurrentPlayerObject().get_id();
-	}
-
-	/**
-	 * Gets the Player object of the current player.
-	 * @return	The current Player
-	 */
-	public Player getCurrentPlayerObject(){
-		return turnOrder.get(currentPlayer);
+		this.winner_id = determineWinnerId();
 	}
 
 	/**
@@ -279,6 +161,14 @@ public abstract class Game<M extends Move, S extends GameState> extends Reflecti
 		}
 		return null;
 	}
+	
+	/**
+	 * Gets the Player object of the current player.
+	 * @return	The current Player
+	 */
+	public Player getCurrentPlayerObject(){
+		return players.get(currentPlayerIndex);
+	}
 
 	/**
 	 * Checks if the player is an AI for the King's Corner game.
@@ -290,24 +180,87 @@ public abstract class Game<M extends Move, S extends GameState> extends Reflecti
 		return id < 0;
 	}
 
+	/**
+	 * Create a game from a DBObject
+	 * @param obj the database object
+	 */
 	public void gameFromDBObject(DBObject obj) {
 		this._id = (Integer)obj.get("_id");
-		this.currentPlayer = (Integer)obj.get("CurrentPlayer");
+		this.currentPlayerIndex = (Integer)obj.get("CurrentPlayerIndex");
 
-		BasicDBList turnOrder = (BasicDBList)obj.get("TurnOrder");
-		this.turnOrder = new LinkedList<Player>();
+		BasicDBList players = (BasicDBList)obj.get("Players");
+		this.players = new LinkedList<Player>();
 		//We have to consider if a player is an Artificial Player or user when
 		//constructing from the database
-		for (Object player : turnOrder) {
+		for (Object player : players) {
 			int playerId = (Integer)((BasicDBObject) player).get("_id");
 			if(playerId < 0){
-				this.turnOrder.add((Player)new KCArtificialPlayer(playerId));
+				this.players.add(new KCArtificialPlayer(playerId));
 			} else {
-				this.turnOrder.add(new User((BasicDBObject)player));
+				this.players.add(new User((BasicDBObject)player));
 			}
 		}
-		this.players = this.turnOrder;
 		this.isActive = (Boolean)obj.get("IsActive");
 		this.winner_id = (Integer)obj.get("Winner_id");
+	}
+
+	public Integer get_id() {
+		return _id;
+	}
+
+	public void set_id(int _id) {
+		this._id = _id;
+	}
+
+	public S getGameState() {
+		return gameState;
+	}
+
+	public void setGameState(S gameState) {
+		this.gameState = gameState;
+	}
+
+	public List<M> getMoves() {
+		return moves;
+	}
+
+	public void setMoves(List<M> moves) {
+		this.moves = moves;
+	}
+	
+	/* 
+	 * Methods MUST be get/setFieldName to be saved in DB
+	 * DB looks at methods not fields.
+	 */
+	public boolean getIsActive() {
+		return isActive;
+	}
+
+	public void setIsActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public Integer getWinner_id() {
+		return winner_id;
+	}
+
+	public void setWinner_id(Integer winner_id) {
+		this.winner_id = winner_id;
+	}
+
+	public List<Player> getPlayers() {
+		return players;
+	}
+
+	public void setPlayers(List<Player> players) {
+		this.players = players;
+	}
+
+	public int getCurrentPlayerIndex() {
+		return currentPlayerIndex;
+	}
+
+	public void setCurrentPlayerIndex(int currentPlayerIndex) {
+		this.currentPlayerIndex = currentPlayerIndex;
 	}
 }

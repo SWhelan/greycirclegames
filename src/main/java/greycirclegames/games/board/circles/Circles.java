@@ -9,7 +9,6 @@ import com.mongodb.DBObject;
 import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import greycirclegames.games.Game;
-import greycirclegames.games.GameState;
 
 public class Circles extends Game<CirclesMove, CirclesGameState> {
 	public List<Circle> turnColors;
@@ -27,7 +26,7 @@ public class Circles extends Game<CirclesMove, CirclesGameState> {
 	}
 	
 	@Override
-	protected GameState newGameState(List<Player> players) {
+	protected CirclesGameState newGameState(List<Player> players) {
 		CirclesGameState game = new CirclesGameState();
 		game.initializeToNewGameState(players);
 		turnColors = new ArrayList<Circle>();
@@ -61,26 +60,30 @@ public class Circles extends Game<CirclesMove, CirclesGameState> {
 
 	public void endTurn() {
 		if(gameIsOver()){
-			isActive = false;
-			int light = 0;
-			int dark = 0;
-			Circle[][] board = ((CirclesGameState) gameState).getBoard();
-			for(int i = 0; i < board.length; i++){
-				for(int j = 0; j < board[i].length; j++){
-					if(board[i][j].getHex().equals("#ffffff")){
-						light++;
-					} else {
-						dark++;
-					}
+			super.changeToWinState();
+		} else {
+			currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+		}
+	}
+
+	@Override
+	protected int determineWinnerId() {
+		int light = 0;
+		int dark = 0;
+		Circle[][] board = ((CirclesGameState) gameState).getBoard();
+		for(int i = 0; i < board.length; i++){
+			for(int j = 0; j < board[i].length; j++){
+				if(board[i][j].getHex().equals("#ffffff")){
+					light++;
+				} else {
+					dark++;
 				}
 			}
-			if(light > dark){
-				winner_id = turnOrder.get(0).get_id();
-			} else {
-				winner_id = turnOrder.get(1).get_id();
-			}
+		}
+		if(light > dark){
+			return players.get(0).get_id();
 		} else {
-			currentPlayer = (currentPlayer + 1) % turnOrder.size();
+			return players.get(1).get_id();
 		}
 	}
 

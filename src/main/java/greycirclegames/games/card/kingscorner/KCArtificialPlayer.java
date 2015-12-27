@@ -14,6 +14,11 @@ import greycirclegames.games.card.Pile;
 public class KCArtificialPlayer extends ArtificialPlayer {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 196984379870L;
+
+	/**
 	 * Constructor of artificial player. 
 	 * @param id Player's id
 	 */
