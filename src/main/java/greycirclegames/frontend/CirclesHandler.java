@@ -40,9 +40,9 @@ public class CirclesHandler extends TemplateHandler{
 		// Create the game
 		Circles game = new Circles(DBHandler.getNextGameID(), players);
 		DBHandler.createCirclesGame(game);
-		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created.");
-		rs.redirect(GAMES_ROUTE);
-		return getModelAndView(null, GAME_LIST_TEMPLATE, rq, rs);
+		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
+		rs.redirect(CIRCLES_ROUTE + "/" + Integer.toString(game.get_id()));
+		return getModelAndView(null, CIRCLES_TEMPLATE, rq, rs);
 	}
 
 	protected static ModelAndView renderGame(Request rq, Response rs) {

@@ -61,9 +61,9 @@ public class KingsCornerHandler extends TemplateHandler{
 		// Create the game
 		KingsCorner game = new KingsCorner(DBHandler.getNextGameID(), players);
 		DBHandler.createKCGame(game);
-		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created.");
-		rs.redirect(GAMES_ROUTE);
-		return getModelAndView(null, GAME_LIST_TEMPLATE, rq, rs);
+		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
+		rs.redirect(KINGS_CORNER_ROUTE + "/" + Integer.toString(game.get_id()));
+		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
 	
 	protected static ModelAndView postMove(Request rq, Response rs) {
