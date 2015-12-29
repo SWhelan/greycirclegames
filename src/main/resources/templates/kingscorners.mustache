@@ -8,7 +8,7 @@
 			<td>
 				<div class="gamePile pile" pile="NORTH_WEST_PILE">
 					{{#northWestPile}}
-						<div class="card {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
+						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
 						{{displayNumber}} {{{suit.html}}}
 						</div>
 					{{/northWestPile}}
@@ -20,7 +20,7 @@
 			<td>
 				<div class="gamePile pile" pile="NORTH_PILE">
 					{{#northPile}}
-						<div class="card {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
+						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
 						{{displayNumber}} {{{suit.html}}}
 						</div>
 					{{/northPile}}
@@ -32,7 +32,7 @@
 			<td>
 				<div class="gamePile pile" pile="NORTH_EAST_PILE">
 					{{#northEastPile}}
-						<div class="card {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
+						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
 						{{displayNumber}} {{{suit.html}}}
 						</div>
 					{{/northEastPile}}
@@ -47,7 +47,7 @@
 			<td>
 				<div class="gamePile pile" pile="WEST_PILE">
 					{{#westPile}}
-						<div class="card {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
+						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
 						{{displayNumber}} {{{suit.html}}}
 						</div>
 					{{/westPile}}
@@ -58,13 +58,13 @@
 			</td>
 			<td>
 				<div class="gamePile pile">
-					<div id="drawPile" class="card" pile="DRAW_PILE">Draw ({{drawPile.size}})</div>
+					<div id="drawPile" class="card noSelectText" pile="DRAW_PILE">Draw ({{drawPile.size}})</div>
 				</div>
 			</td>
 			<td>
 				<div class="gamePile pile" pile="EAST_PILE">
 					{{#eastPile}}
-						<div class="card {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
+						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
 						{{displayNumber}} {{{suit.html}}}
 						</div>
 					{{/eastPile}}
@@ -79,7 +79,7 @@
 			<td>
 				<div class="gamePile pile" pile="SOUTH_WEST_PILE">
 					{{#southWestPile}}
-						<div class="card {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
+						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
 						{{displayNumber}} {{{suit.html}}}
 						</div>
 					{{/southWestPile}}
@@ -91,7 +91,7 @@
 			<td>
 				<div class="gamePile pile" pile="SOUTH_PILE">
 					{{#southPile}}
-						<div class="card {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
+						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
 						{{displayNumber}} {{{suit.html}}}
 						</div>
 					{{/southPile}}
@@ -103,7 +103,7 @@
 			<td>
 				<div class="gamePile pile" pile="SOUTH_EAST_PILE">
 					{{#southEastPile}}
-						<div class="card {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
+						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
 						{{displayNumber}} {{{suit.html}}}
 						</div>
 					{{/southEastPile}}
@@ -119,7 +119,7 @@
 	Your hand ({{#userHand.size}}{{userHand.size}}{{/userHand.size}} Remaining Cards){{#isTurn}}<b> It's your turn!</b>{{/isTurn}}:
 	<div class="viewingHand">
 		{{#userHand}}
-			<div class="userCard card {{#isRed}}red{{/isRed}} {{^isTurn}}greyedOut{{/isTurn}}" number="{{number}}" suit="{{suit.displayName}}">
+			<div class="userCard card noSelectText {{#isRed}}red{{/isRed}} {{^isTurn}}greyedOut{{/isTurn}}" number="{{number}}" suit="{{suit.displayName}}">
 			{{displayNumber}} {{{suit.html}}}
 			</div>
 		{{/userHand}}
