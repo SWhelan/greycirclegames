@@ -168,8 +168,9 @@ public class TemplateHandler {
 		if(	path == null || 
 			path.equals(HOME_ROUTE) || 
 			path.equals(LOGIN_ROUTE) || 
-			path.equals(REGISTER_ROUTE) || 
-			path.equals(TUTORIAL_ROUTE)){
+			path.equals(REGISTER_ROUTE) ||
+			path.equals(TUTORIAL_ROUTE) ||
+			path.startsWith(PUBLIC_ROUTE)){
 			return false;
 		}
 		return true;
