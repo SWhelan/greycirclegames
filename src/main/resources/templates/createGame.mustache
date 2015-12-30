@@ -19,13 +19,14 @@
 				<option value="{{_id}}">{{userName}}</option>
 			{{/friends}}
 			</select>
+			<input type="hidden" id="ai" name="ai" value="false">
 			</div>
 			<button type="submit" class="btn btn-primary btn-lg btn-block">Create Game</button>
 		</form>
 		<br/>
 		{{/hasFriends}}
 		<form action="{{CIRCLES_ROUTE}}{{CREATE_GAME_ROUTE}}" method="POST">
-			<input type="hidden" id="ai" value="true">
+			<input type="hidden" id="ai" name="ai" value="true">
 			<button type="submit" class="btn btn-primary btn-lg btn-block">Play Against Computer</button>
 		</form>
     </div>

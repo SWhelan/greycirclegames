@@ -33,7 +33,7 @@ public class CirclesHandler extends TemplateHandler{
 					.forEach(e -> players.add(e));
 		}
 		
-		if(rq.queryMap("ai") != null){
+		if(rq.queryParams("ai").equals("true")){
 			players.add(new CirclesArtificialPlayer(-1));
 		}
 		
