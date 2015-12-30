@@ -82,8 +82,8 @@ public class ApplicationHandler extends TemplateHandler {
 		newUser.setUserName(email);
 		DBHandler.createUser(newUser);
 		rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(newUser.get_id()));
-		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "New user successfully created. You have been logged in.");
-		rs.redirect(GAMES_ROUTE);
+		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "New user successfully created. You have been logged in. You should create a game or add friends to get started.");
+		rs.redirect(CREATE_GAME_ROUTE);
 		return getModelAndView(null, REGISTER_TEMPLATE, rq, rs);
 	}
 	
