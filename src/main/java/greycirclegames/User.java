@@ -46,7 +46,7 @@ public class User extends ReflectionDBObject implements Player {
 	
 	public User(int _id, String userName, String password, String salt,
 			String email, BasicDBList friends){
-		this(_id, email, password, salt, email, friends, false, false, false, false);
+		this(_id, userName, password, salt, email, friends, false, false, false, false);
 	}
 
 	public User(int _id, String email) {

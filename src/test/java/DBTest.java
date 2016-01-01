@@ -40,9 +40,9 @@ public class DBTest {
 		User u2 = DBHandler.getUser(id2);
 		User u3 = DBHandler.getUser(id3);
 
-		Assert.isTrue(u1.getUserName().equals("newName"), "UNEXPECTED userName!!!!");
-		Assert.isTrue(u2.getUserName().equals("goduser2"), "UNEXPECTED userName!!!!");
-		Assert.isTrue(u3.getUserName().equals("goduser3"), "UNEXPECTED userName!!!!");
+		Assert.isTrue(u1.getUserName().equals("newName"), "UNEXPECTED userName 1!!!!");
+		Assert.isTrue(u2.getUserName().equals("goduser2"), "UNEXPECTED userName 2!!!!");
+		Assert.isTrue(u3.getUserName().equals("goduser3"), "UNEXPECTED userName 3!!!!");
 
 		DBHandler.deleteUser(id1);
 		DBHandler.deleteUser(id2);
