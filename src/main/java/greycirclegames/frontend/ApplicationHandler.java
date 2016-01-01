@@ -1,5 +1,6 @@
 package greycirclegames.frontend;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import greycirclegames.User;
 import greycirclegames.frontend.views.GameListView;
+import greycirclegames.frontend.views.UserView;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -98,6 +100,65 @@ public class ApplicationHandler extends TemplateHandler {
 		}
 		rs.header(GlobalConstants.DISPLAY_ERROR, "Your username or password is incorrect.");
 		return renderLogin(rq, rs);
+	}
+
+	protected static ModelAndView renderEditUser(Request rq, Response rs) {
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		info.put("user", new UserView(getUserFromCookies(rq)));
+		return getModelAndView(info, EDIT_USER_TEMPLATE, rq, rs);
+	}
+	
+	protected static ModelAndView postEditUser(Request rq, Response rs) {		
+		User user = getUserFromCookies(rq);
+		List<String> errorMessage = new ArrayList<String>();
+		String userName = rq.queryParams("userName");
+		String email = rq.queryParams("email");
+		String currentPassword = rq.queryParams("currentPassword");
+		String newPassword = rq.queryParams("newPassword");
+		String newPasswordAgain = rq.queryParams("newPasswordAgain");
+		boolean emailForNewFriends = rq.queryParams("emailForNewFriends").equals("true")?true:false;
+		boolean emailForNewGames = rq.queryParams("emailForNewGames").equals("true")?true:false;
+		boolean emailForTurn = rq.queryParams("emailForTurn").equals("true")?true:false;
+		boolean emailForGameOver = rq.queryParams("emailForGameOver").equals("true")?true:false;
+		boolean noError = true;
+		if(DBHandler.getUserByUserName(userName) == null){
+			user.setUserName(userName);
+		} else {
+			noError = false;
+			errorMessage.add("That username is already taken.");
+		}
+		if(email.equals("") || DBHandler.getUserByEmail(email) == null){
+			user.setEmail(email);
+		} else {
+			noError = false;
+			errorMessage.add("That email has already been registered.");
+		}
+		
+		if(!currentPassword.equals("") || !newPassword.equals("") || !newPasswordAgain.equals("")){
+			if(user.passwordMatches(currentPassword)){
+				if(newPassword.equals(newPasswordAgain)){
+					String newSalt = User.generateSalt();
+					String hashedNewPassword = User.hashPassword(newSalt, newPassword);
+					user.setSalt(newSalt);
+					user.setPassword(hashedNewPassword);
+				} else {
+					noError = false;
+					errorMessage.add("New password entries did not match.");
+				}
+			} else {
+				noError = false;
+				errorMessage.add("Current password was not correct.");
+			}
+		}
+		
+		if(noError){
+			DBHandler.updateUser(user);
+			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "User was updated successfully.");
+		} else {
+			rs.cookie(GlobalConstants.DISPLAY_ERROR, errorMessage.toString());
+		}
+		rs.redirect(EDIT_USER_ROUTE);
+		return getModelAndView(null, EDIT_USER_TEMPLATE, rq, rs);
 	}
 
 }

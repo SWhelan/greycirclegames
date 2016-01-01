@@ -132,6 +132,10 @@
 	font-weight: bold;
 }
 
+#emailOptions {
+	padding-left: 30px;
+}
+
 /* Utilities */
 .bottom{
 	margin-bottom: -60px;

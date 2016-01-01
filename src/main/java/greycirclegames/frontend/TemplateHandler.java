@@ -34,6 +34,7 @@ public class TemplateHandler {
 	public static final String HOME_ROUTE = "/";
 	public static final String LOGIN_ROUTE = "/login";
 	public static final String REGISTER_ROUTE = "/register";
+	public static final String EDIT_USER_ROUTE = "/editUser";
 	public static final String CREATE_GAME_ROUTE = "/new";
 	public static final String FRIENDS_ROUTE = "/friends";
 	public static final String FRIENDS_ADD_ROUTE = "/addFriend";
@@ -53,13 +54,14 @@ public class TemplateHandler {
 	public static final String HOME_TEMPLATE = "home.mustache";
 	public static final String LOGIN_TEMPLATE = "login.mustache";
 	public static final String REGISTER_TEMPLATE = "register.mustache";
+	public static final String EDIT_USER_TEMPLATE = "editUser.mustache";
 	public static final String CREATE_GAME_TEMPLATE = "createGame.mustache";
 	public static final String FRIENDS_TEMPLATE = "friends.mustache";
 	public static final String FRIEND_INFO_TEMPLATE = "friendInfo.mustache";
 	public static final String GAME_LIST_TEMPLATE = "gameList.mustache";
 	public static final String KINGS_CORNERS_TEMPLATE = "kingscorners.mustache";
 	public static final String TUTORIAL_TEMPLATE = "tutorial.mustache";
-	public static final String CIRCLES_TEMPLATE = "circles.mustache";
+	public static final String CIRCLES_TEMPLATE = "circles.mustache";	
 
 	public static void registerTemplates(){
 		// Ensure they are logged in or the url is public/doesn't require login
@@ -76,12 +78,14 @@ public class TemplateHandler {
         get(HOME_ROUTE, 			(rq, rs) -> ApplicationHandler.renderHome(rq, rs), 		new MustacheTemplateEngine());
         get(REGISTER_ROUTE, 		(rq, rs) -> ApplicationHandler.renderRegister(rq, rs), 	new MustacheTemplateEngine());
         get(LOGIN_ROUTE, 			(rq, rs) -> ApplicationHandler.renderLogin(rq, rs), 		new MustacheTemplateEngine());
+        get(EDIT_USER_ROUTE,		(rq, rs) -> ApplicationHandler.renderEditUser(rq, rs),	new MustacheTemplateEngine());
         get(TUTORIAL_ROUTE, 		(rq, rs) -> ApplicationHandler.renderTutorial(rq, rs), 	new MustacheTemplateEngine());
         get(LOGOUT_ROUTE, 			(rq, rs) -> ApplicationHandler.logout(rq, rs));
         get(GAMES_ROUTE, 			(rq, rs) -> ApplicationHandler.renderGameList(rq, rs), 	new MustacheTemplateEngine());
         get(CREATE_GAME_ROUTE, 		(rq, rs) -> ApplicationHandler.renderCreateGame(rq, rs), 	new MustacheTemplateEngine());
         post(REGISTER_ROUTE, 		(rq, rs) -> ApplicationHandler.postRegister(rq, rs), 		new MustacheTemplateEngine());
         post(LOGIN_ROUTE, 			(rq, rs) -> ApplicationHandler.postLogin(rq, rs), 			new MustacheTemplateEngine());
+        post(EDIT_USER_ROUTE,		(rq, rs) -> ApplicationHandler.postEditUser(rq, rs),	new MustacheTemplateEngine());
 
         // Routes involving adding, removing, or viewing friends
         get(FRIENDS_ROUTE, 			(rq, rs) -> FriendsHandler.renderFriends(rq, rs), 		new MustacheTemplateEngine());
@@ -281,6 +285,7 @@ public class TemplateHandler {
 		info.put("HOME_ROUTE", HOME_ROUTE);
 		info.put("LOGIN_ROUTE", LOGIN_ROUTE);
 		info.put("REGISTER_ROUTE", REGISTER_ROUTE);
+		info.put("EDIT_USER_ROUTE", EDIT_USER_ROUTE);
 		info.put("CREATE_GAME_ROUTE", CREATE_GAME_ROUTE);
 		info.put("FRIENDS_ROUTE", FRIENDS_ROUTE);
 		info.put("FRIENDS_ADD_ROUTE", FRIENDS_ADD_ROUTE);

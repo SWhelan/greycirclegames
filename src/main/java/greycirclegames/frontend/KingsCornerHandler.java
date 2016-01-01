@@ -117,7 +117,7 @@ public class KingsCornerHandler extends TemplateHandler{
 		game.endTurn();
 		if(game.applyAIMoves()){
 			// It was an AI Player's turn
-			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn ended. AI Player(s) played.");
+			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn ended. Computer Player(s) played.");
 		} else {
 			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
 		}
