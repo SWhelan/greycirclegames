@@ -2,7 +2,7 @@
 {{#user}}
 <form class="form-horizontal" action="{{EDIT_USER_ROUTE}}" method="POST">
 	<div class="form-group">
-    <label for="userName" class="col-sm-2 control-label">User Name</label>
+    <label for="userName" class="col-sm-2 control-label">User Name*</label>
     <div class="col-sm-10">
       <input type="text" class="form-control" name="userName" id="userName" placeholder="User Name" value="{{userName}}">
     </div>
@@ -17,10 +17,10 @@
   <div class="form-group">
   	<label class="col-sm-2 control-label">Send me emails</label>
     <div class="col-sm-10" id="emailOptions">
-      <label class="checkbox"><input type="checkbox" name="emailForNewFriends" id="emailForNewFriends" checked value="">When someone adds me as a friend</label>
-      <label class="checkbox"><input type="checkbox" name="emailForNewGames" id="emailForNewGames" checked value="">When someone creates a game with me</label>
-      <label class="checkbox"><input type="checkbox" name="emailForTurn" id="emailForTurn" checked value="">When it is my turn in an ongoing game</label>
-      <label class="checkbox"><input type="checkbox" name="emailForGameOver" id="emailForGameOver" checked value="">When an ongoing game has ended</label>
+      <label class="checkbox"><input type="checkbox" name="emailForNewFriend" id="emailForNewFriend" {{#emailForNewFriend}}checked{{/emailForNewFriend}} value="">When someone adds me as a friend</label>
+      <label class="checkbox"><input type="checkbox" name="emailForNewGame" id="emailForNewGame" {{#emailForNewGame}}checked{{/emailForNewGame}} value="">When someone creates a game with me</label>
+      <label class="checkbox"><input type="checkbox" name="emailForTurn" id="emailForTurn" {{#emailForTurn}}checked{{/emailForTurn}} value="">When it is my turn in an ongoing game that includes other humans (doesn't send if you are playing against only computer players)</label>
+      <label class="checkbox"><input type="checkbox" name="emailForGameOver" id="emailForGameOver" {{#emailForGameOver}}checked{{/emailForGameOver}} value="">When an ongoing game has ended</label>
     </div>
   </div>
   <h5>Change Your Password</h5>

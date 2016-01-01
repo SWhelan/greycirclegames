@@ -116,22 +116,51 @@ public class ApplicationHandler extends TemplateHandler {
 		String currentPassword = rq.queryParams("currentPassword");
 		String newPassword = rq.queryParams("newPassword");
 		String newPasswordAgain = rq.queryParams("newPasswordAgain");
-		boolean emailForNewFriends = rq.queryParams("emailForNewFriends").equals("true")?true:false;
-		boolean emailForNewGames = rq.queryParams("emailForNewGames").equals("true")?true:false;
-		boolean emailForTurn = rq.queryParams("emailForTurn").equals("true")?true:false;
-		boolean emailForGameOver = rq.queryParams("emailForGameOver").equals("true")?true:false;
-		boolean noError = true;
-		if(DBHandler.getUserByUserName(userName) == null){
-			user.setUserName(userName);
-		} else {
-			noError = false;
-			errorMessage.add("That username is already taken.");
+		boolean emailForNewFriend = rq.queryParams("emailForNewFriend") != null ?true:false;
+		boolean emailForNewGame = rq.queryParams("emailForNewGame") != null ?true:false;
+		boolean emailForTurn = rq.queryParams("emailForTurn") != null ?true:false;
+		boolean emailForGameOver = rq.queryParams("emailForGameOver") != null ?true:false;
+		
+		if(	user.getEmailForNewFriend() != emailForNewFriend ||
+			user.getEmailForNewGame() != emailForNewGame ||
+			user.getEmailForTurn() != emailForTurn ||
+			user.getEmailForGameOver() != emailForGameOver){
+				// Only change if there was a change (to conserve DB hits)
+				user.setEmailForNewFriend(emailForNewFriend);
+				user.setEmailForNewGame(emailForNewGame);
+				user.setEmailForTurn(emailForTurn);
+				user.setEmailForGameOver(emailForGameOver);
+				// Update just the email settings in case there are errors with other sections.
+				DBHandler.updateUser(user);
 		}
-		if(email.equals("") || DBHandler.getUserByEmail(email) == null){
-			user.setEmail(email);
-		} else {
-			noError = false;
-			errorMessage.add("That email has already been registered.");
+		
+		boolean noError = true;
+		boolean change = false;
+		if(!userName.equals(user.getUserName())){
+			if(DBHandler.getUserByUserName(userName) == null){
+				user.setUserName(userName);
+				change = true;
+			} else if(userName.equals("")){
+				noError = false;
+				errorMessage.add("A username is required.");
+			} else {
+				noError = false;
+				errorMessage.add("That username is already taken.");
+			}
+		}
+		if(!email.equals(user.getEmail())){
+			if((email.equals("") || DBHandler.getUserByEmail(email) == null)){
+				user.setEmail(email);
+				change = true;
+			} else {
+				noError = false;
+				errorMessage.add("That email has already been registered.");
+			}
+		}
+		if(change){
+			// Update after just the username and password in case errors with other section
+			DBHandler.updateUser(user);
+			change = false;
 		}
 		
 		if(!currentPassword.equals("") || !newPassword.equals("") || !newPasswordAgain.equals("")){
@@ -141,6 +170,7 @@ public class ApplicationHandler extends TemplateHandler {
 					String hashedNewPassword = User.hashPassword(newSalt, newPassword);
 					user.setSalt(newSalt);
 					user.setPassword(hashedNewPassword);
+					change = true;
 				} else {
 					noError = false;
 					errorMessage.add("New password entries did not match.");
@@ -152,10 +182,14 @@ public class ApplicationHandler extends TemplateHandler {
 		}
 		
 		if(noError){
-			DBHandler.updateUser(user);
+			if(change){
+				DBHandler.updateUser(user);
+			}
 			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "User was updated successfully.");
 		} else {
-			rs.cookie(GlobalConstants.DISPLAY_ERROR, errorMessage.toString());
+			StringBuilder builder = new StringBuilder();
+			errorMessage.stream().forEach(e -> {builder.append(e); builder.append(" ");});
+			rs.cookie(GlobalConstants.DISPLAY_ERROR, builder.toString());
 		}
 		rs.redirect(EDIT_USER_ROUTE);
 		return getModelAndView(null, EDIT_USER_TEMPLATE, rq, rs);

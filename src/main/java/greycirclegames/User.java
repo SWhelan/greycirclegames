@@ -23,15 +23,30 @@ public class User extends ReflectionDBObject implements Player {
 	private String email;
 	//List of ids of friends
 	private BasicDBList friends;
+	private boolean emailForNewFriend;
+	private boolean emailForNewGame;
+	private boolean emailForTurn;
+	private boolean emailForGameOver;
+	
 	
 	public User(int _id, String userName, String password, String salt,
-			String email, BasicDBList friends){
+			String email, BasicDBList friends, boolean emailForNewFriend, boolean emailForNewGame,
+			boolean emailForTurn, boolean emailForGameOver){
 		this._id = _id;
 		this.userName = userName;
 		this.password = password;
 		this.salt = salt;
 		this.email = email;
 		this.friends = friends;
+		this.emailForNewFriend = emailForNewFriend;
+		this.emailForNewGame = emailForNewGame;
+		this.emailForTurn = emailForTurn;
+		this.emailForGameOver = emailForGameOver;
+	}
+	
+	public User(int _id, String userName, String password, String salt,
+			String email, BasicDBList friends){
+		this(_id, email, password, salt, email, friends, false, false, false, false);
 	}
 
 	public User(int _id, String email) {
@@ -39,12 +54,16 @@ public class User extends ReflectionDBObject implements Player {
 	}
 
 	public User(DBObject obj) {
-		this((Integer)obj.get("_id"),
+		this(	(Integer)obj.get("_id"),
 				(String)obj.get("UserName"),
 				(String)obj.get("Password"),
 				(String)obj.get("Salt"),
 				(String)obj.get("Email"),
-				(BasicDBList)obj.get("Friends"));
+				(BasicDBList)obj.get("Friends"),
+				(boolean)obj.get("EmailForNewFriend"),
+				(boolean)obj.get("EmailForNewGame"),
+				(boolean)obj.get("EmailForTurn"),
+				(boolean)obj.get("EmailForGameOver"));
 	}
 
 	public Integer get_id() {
@@ -101,7 +120,39 @@ public class User extends ReflectionDBObject implements Player {
 	
 	public void destroyFriendship(Integer friendID) {
 		this.friends.remove(friendID);
-	}	
+	}
+	
+	public boolean getEmailForNewFriend() {
+		return emailForNewFriend;
+	}
+
+	public void setEmailForNewFriend(boolean emailForNewFriend) {
+		this.emailForNewFriend = emailForNewFriend;
+	}
+
+	public boolean getEmailForNewGame() {
+		return emailForNewGame;
+	}
+
+	public void setEmailForNewGame(boolean emailForNewGame) {
+		this.emailForNewGame = emailForNewGame;
+	}
+
+	public boolean getEmailForTurn() {
+		return emailForTurn;
+	}
+
+	public void setEmailForTurn(boolean emailForTurn) {
+		this.emailForTurn = emailForTurn;
+	}
+
+	public boolean getEmailForGameOver() {
+		return emailForGameOver;
+	}
+
+	public void setEmailForGameOver(boolean emailForGameOver) {
+		this.emailForGameOver = emailForGameOver;
+	}
 
 	@Override
 	public int hashCode() {
