@@ -7,10 +7,10 @@ import greycirclegames.games.card.CardBasedMove;
 public class CirclesMove extends CardBasedMove {
 	private int column;
 	private int row;
-	private Circle color;
+	private CirclePiece color;
 	private CirclesGameState state;
 	
-	public CirclesMove(int row, int column, Circle color, CirclesGameState state){
+	public CirclesMove(int row, int column, CirclePiece color, CirclesGameState state){
 		this.column = column;
 		this.row = row;
 		this.color = color;
@@ -26,7 +26,7 @@ public class CirclesMove extends CardBasedMove {
 		if(!CirclesGameState.validPosition(column, row)){
 			return false;
 		}
-		Circle[][] board = state.getBoard();
+		CirclePiece[][] board = state.getBoard();
 		return 	shouldApplyNorth(board) || shouldApplyNorthEast(board) ||
 				shouldApplySouth(board) || shouldApplySouthEast(board) ||
 				shouldApplyWest(board) || shouldApplySouthWest(board) ||
@@ -36,7 +36,7 @@ public class CirclesMove extends CardBasedMove {
 	@Override
 	public void apply() {
 		// I wrote this while watching star wars so probably not right.
-		Circle[][] board = state.getBoard();
+		CirclePiece[][] board = state.getBoard();
 		// North
 		if(shouldApplyNorth(board)){
 			applyNorth();
@@ -69,14 +69,14 @@ public class CirclesMove extends CardBasedMove {
 		if(shouldApplyNorthWest(board)){
 			applyNorthWest();
 		}
-		state.getBoard()[row][column] = new Circle(color.getName(), color.getHex());
+		state.getBoard()[row][column] = new CirclePiece(color.getName(), color.getHex());
 	}
 
 	private void applyNorthWest() {
 		applyDirection(true, false, true, false);		
 	}
 
-	private boolean shouldApplyNorthWest(Circle[][] board) {
+	private boolean shouldApplyNorthWest(CirclePiece[][] board) {
 		return shouldApplyDirection(board, true, false, true, false);
 	}
 
@@ -84,7 +84,7 @@ public class CirclesMove extends CardBasedMove {
 		applyDirection(false, false, true, false);		
 	}
 
-	private boolean shouldApplyWest(Circle[][] board) {
+	private boolean shouldApplyWest(CirclePiece[][] board) {
 		return shouldApplyDirection(board, false, false, true, false);
 	}
 
@@ -92,7 +92,7 @@ public class CirclesMove extends CardBasedMove {
 		applyDirection(false, true, true, false);
 	}
 
-	private boolean shouldApplySouthWest(Circle[][] board) {
+	private boolean shouldApplySouthWest(CirclePiece[][] board) {
 		return shouldApplyDirection(board, false, true, true, false);
 	}
 
@@ -100,7 +100,7 @@ public class CirclesMove extends CardBasedMove {
 		applyDirection(false, true, false, false);	
 	}
 
-	private boolean shouldApplySouth(Circle[][] board) {
+	private boolean shouldApplySouth(CirclePiece[][] board) {
 		return shouldApplyDirection(board, false, true, false, false);
 	}
 
@@ -108,7 +108,7 @@ public class CirclesMove extends CardBasedMove {
 		applyDirection(false, true, false, true);	
 	}
 
-	private boolean shouldApplySouthEast(Circle[][] board) {
+	private boolean shouldApplySouthEast(CirclePiece[][] board) {
 		return shouldApplyDirection(board, false, true, false, true);
 	}
 
@@ -116,7 +116,7 @@ public class CirclesMove extends CardBasedMove {
 		applyDirection(false, false, false, true);
 	}
 
-	private boolean shouldApplyEast(Circle[][] board) {
+	private boolean shouldApplyEast(CirclePiece[][] board) {
 		return shouldApplyDirection(board, false, false, false, true);
 	}
 
@@ -124,7 +124,7 @@ public class CirclesMove extends CardBasedMove {
 		applyDirection(true, false, false, true);
 	}
 
-	private boolean shouldApplyNorthEast(Circle[][] board) {
+	private boolean shouldApplyNorthEast(CirclePiece[][] board) {
 		return shouldApplyDirection(board, true, false, false, true);
 	}
 
@@ -132,7 +132,7 @@ public class CirclesMove extends CardBasedMove {
 		applyDirection(true, false, false, false);
 	}
 
-	private boolean shouldApplyNorth(Circle[][] board) {
+	private boolean shouldApplyNorth(CirclePiece[][] board) {
 		return shouldApplyDirection(board, true, false, false, false);
 	}
 	
@@ -141,11 +141,11 @@ public class CirclesMove extends CardBasedMove {
 		int i = row;
 		int j = column;
 		while(!done && i > -1 && i < state.getBoard().length && j > -1 && j < state.getBoard()[i].length){
-			Circle cell = state.getBoard()[i][j];
+			CirclePiece cell = state.getBoard()[i][j];
 			if(cell != null && cell.getHex().equals(color.getHex())){
 				done = true;
 			} else if(i != row || j != column){
-				state.getBoard()[i][j] = new Circle(color.getName(), color.getHex());
+				state.getBoard()[i][j] = new CirclePiece(color.getName(), color.getHex());
 			}
 			if(rowDecreases){
 				i = i - 1;
@@ -162,15 +162,15 @@ public class CirclesMove extends CardBasedMove {
 		}
 	}
 	
-	private boolean shouldApplyDirection(Circle[][]board, boolean rowDecreases, boolean rowIncreases, boolean columnDecreases, boolean columnIncreases){
+	private boolean shouldApplyDirection(CirclePiece[][]board, boolean south, boolean north, boolean west, boolean east){
  		boolean result = false;
 		boolean done = false;
 		int i = row;
 		int j = column;
 		int count = 0;
 		while(!done && i > -1 && i < board.length && j > -1 && j < board[i].length){
-			Circle cell = board[i][j];
-			if(i != row && cell == null){
+			CirclePiece cell = board[i][j];
+			if((i != row || j != column) && cell == null){
 				done = true;
 				result = false;
 			} else if(cell != null && cell.getHex().equals(color.getHex())){
@@ -180,16 +180,16 @@ public class CirclesMove extends CardBasedMove {
 			if(cell != null && !cell.getHex().equals(color.getHex())){
 				count++;
 			}
-			if(rowDecreases){
+			if(south){
 				i = i - 1;
 			}
-			if(rowIncreases){
+			if(north){
 				i = i + 1;
 			}
-			if(columnDecreases){
+			if(west){
 				j = j - 1;
 			}
-			if(columnIncreases){
+			if(east){
 				j = j + 1;
 			}
 		}

@@ -9,7 +9,7 @@ import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import greycirclegames.frontend.views.CirclesView;
-import greycirclegames.games.board.circles.Circle;
+import greycirclegames.games.board.circles.CirclePiece;
 import greycirclegames.games.board.circles.Circles;
 import greycirclegames.games.board.circles.CirclesArtificialPlayer;
 import greycirclegames.games.board.circles.CirclesGameState;
@@ -66,7 +66,7 @@ public class CirclesHandler extends TemplateHandler{
 		int column = Integer.parseInt(rq.queryParams("column"));
 		String name = rq.queryParams("cardColorName");
 		String hex = rq.queryParams("hex");
-		Circle color = new Circle(name, hex);
+		CirclePiece color = new CirclePiece(name, hex);
 		CirclesMove move = new CirclesMove(row, column, color, (CirclesGameState) game.getGameState());
 		if(move.isValid()){
 			move.apply();

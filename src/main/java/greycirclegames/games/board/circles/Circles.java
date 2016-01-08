@@ -11,7 +11,7 @@ import greycirclegames.Player;
 import greycirclegames.games.Game;
 
 public class Circles extends Game<CirclesMove, CirclesGameState> {
-	public List<Circle> turnColors;
+	public List<CirclePiece> turnColors;
 
 	public Circles(int id, List<Player> players){
 		super(id, players);
@@ -20,18 +20,18 @@ public class Circles extends Game<CirclesMove, CirclesGameState> {
 	public Circles(DBObject obj){
 		super.gameFromDBObject(obj);
 		this.gameState = new CirclesGameState((BasicDBObject)obj.get("GameState"));
-		turnColors = new ArrayList<Circle>();
-		turnColors.add(new Circle("Light", "#ffffff"));
-		turnColors.add(new Circle("Dark", "#000000"));
+		turnColors = new ArrayList<CirclePiece>();
+		turnColors.add(new CirclePiece("Light", "#ffffff"));
+		turnColors.add(new CirclePiece("Dark", "#000000"));
 	}
 	
 	@Override
 	protected CirclesGameState newGameState(List<Player> players) {
 		CirclesGameState game = new CirclesGameState();
 		game.initializeToNewGameState(players);
-		turnColors = new ArrayList<Circle>();
-		turnColors.add(new Circle("Light", "#ffffff"));
-		turnColors.add(new Circle("Dark", "#000000"));
+		turnColors = new ArrayList<CirclePiece>();
+		turnColors.add(new CirclePiece("Light", "#ffffff"));
+		turnColors.add(new CirclePiece("Dark", "#000000"));
 		return game;
 	}
 
@@ -42,7 +42,7 @@ public class Circles extends Game<CirclesMove, CirclesGameState> {
 
 	@Override
 	public boolean gameIsOver() {
-		Circle[][] board = ((CirclesGameState) gameState).getBoard();
+		CirclePiece[][] board = ((CirclesGameState) gameState).getBoard();
 		for(int i = 0; i < board.length; i++){
 			for(int j = 0; j < board[i].length; j++){
 				if(board[i][j] == null){
@@ -70,7 +70,7 @@ public class Circles extends Game<CirclesMove, CirclesGameState> {
 	protected int determineWinnerId() {
 		int light = 0;
 		int dark = 0;
-		Circle[][] board = ((CirclesGameState) gameState).getBoard();
+		CirclePiece[][] board = ((CirclesGameState) gameState).getBoard();
 		for(int i = 0; i < board.length; i++){
 			for(int j = 0; j < board[i].length; j++){
 				if(board[i][j].getHex().equals("#ffffff")){

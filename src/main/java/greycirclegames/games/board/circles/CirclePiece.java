@@ -3,16 +3,16 @@ package greycirclegames.games.board.circles;
 import com.mongodb.BasicDBObject;
 import com.mongodb.ReflectionDBObject;
 
-public class Circle extends ReflectionDBObject {	
+public class CirclePiece extends ReflectionDBObject {
 	private String name;
 	private String hex;
 	
-	public Circle(String name, String hex){
+	public CirclePiece(String name, String hex){
 		this.name = name;
 		this.hex = hex;
 	}
 	
-	public Circle(BasicDBObject obj){
+	public CirclePiece(BasicDBObject obj){
 		this.name = (String)obj.get("Name");
 		this.hex = (String)obj.get("Hex");
 	}

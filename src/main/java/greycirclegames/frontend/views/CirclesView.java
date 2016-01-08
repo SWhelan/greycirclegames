@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import greycirclegames.User;
-import greycirclegames.games.board.circles.Circle;
+import greycirclegames.games.board.circles.CirclePiece;
 import greycirclegames.games.board.circles.Circles;
 import greycirclegames.games.board.circles.CirclesGameState;
 
@@ -23,7 +23,7 @@ public class CirclesView {
 	public boolean isWinner = false;
 
 	public CirclesView(Circles game, User user) {
-		Circle[][] board = ((CirclesGameState)game.getGameState()).getBoard();
+		CirclePiece[][] board = ((CirclesGameState)game.getGameState()).getBoard();
 		for(int i = 0; i < board.length; i++){		
 			ArrayList<CircleView> row = new ArrayList<CircleView>();
 			for(int j = 0; j < board[i].length; j++){

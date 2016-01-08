@@ -11,7 +11,7 @@ import greycirclegames.games.GameState;
 public class CirclesGameState extends GameState {
 	private static final int ROWS = 8;
 	private static final int COLUMNS = 8;
-	private Circle[][] board = new Circle[ROWS][COLUMNS];
+	private CirclePiece[][] board = new CirclePiece[ROWS][COLUMNS];
 	
 	public CirclesGameState(){
 		super();
@@ -26,7 +26,7 @@ public class CirclesGameState extends GameState {
 				if(cell == null){
 					this.board[i][j] = null;
 				} else {
-					this.board[i][j] = new Circle(
+					this.board[i][j] = new CirclePiece(
 											(String)(((BasicDBObject)cell).get("Name")),
 											(String)((BasicDBObject)cell).get("Hex"));
 				}
@@ -52,9 +52,9 @@ public class CirclesGameState extends GameState {
 			for(int j = 0; j < board[i].length; j++){
 				// TODO what if we change board size?
 				if((i == 3 && j == 3) || (i == 4 && j == 4)){
-					board[i][j] = new Circle("Light", "#ffffff");
+					board[i][j] = new CirclePiece("Light", "#ffffff");
 				} else if((i == 4 && j == 3) || (i == 3 && j == 4)){
-					board[i][j] = new Circle("Dark", "#000000");
+					board[i][j] = new CirclePiece("Dark", "#000000");
 				} else {
 					board[i][j] = null;
 				}
@@ -62,15 +62,15 @@ public class CirclesGameState extends GameState {
 		}
 	}
 	
-	public void setBoard(Circle[][] board){
+	public void setBoard(CirclePiece[][] board){
 		this.board = board;
 	}
 
-	public Circle[][] getBoard() {
+	public CirclePiece[][] getBoard() {
 		return board;
 	}
 	
-	public boolean setPiece(int column, int row, Circle piece){
+	public boolean setPiece(int column, int row, CirclePiece piece){
 		if(!validPosition(column, row)){
 			return false;
 		}
