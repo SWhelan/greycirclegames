@@ -33,16 +33,16 @@ public class DBTest {
 		DBHandler.createUser(user3);
 
 		User u1 = DBHandler.getUser(id1);
-		u1.setUserName("newName");
+		u1.setUsername("newName");
 		DBHandler.updateUser(u1);
 
 		u1 = DBHandler.getUser(id1);
 		User u2 = DBHandler.getUser(id2);
 		User u3 = DBHandler.getUser(id3);
 
-		Assert.isTrue(u1.getUserName().equals("newName"), "UNEXPECTED userName 1!!!!");
-		Assert.isTrue(u2.getUserName().equals("goduser2"), "UNEXPECTED userName 2!!!!");
-		Assert.isTrue(u3.getUserName().equals("goduser3"), "UNEXPECTED userName 3!!!!");
+		Assert.isTrue(u1.getUsername().equals("newName"), "UNEXPECTED username 1!!!!");
+		Assert.isTrue(u2.getUsername().equals("goduser2"), "UNEXPECTED username 2!!!!");
+		Assert.isTrue(u3.getUsername().equals("goduser3"), "UNEXPECTED username 3!!!!");
 
 		DBHandler.deleteUser(id1);
 		DBHandler.deleteUser(id2);

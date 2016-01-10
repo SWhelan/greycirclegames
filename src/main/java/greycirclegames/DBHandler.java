@@ -67,10 +67,10 @@ public class DBHandler {
 		}
 	}
 
-	public static Player getUserByUserName(String userName) {
+	public static User getUserByUsername(String username) {
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("users");
-		DBObject query = new BasicDBObject("UserName", userName);
+		DBObject query = new BasicDBObject("Username", username);
 		DBCursor cursor = coll.find(query);
 		try {
 			DBObject obj = cursor.next();

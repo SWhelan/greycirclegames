@@ -18,17 +18,17 @@ public class GameEntryView {
 	public List<String> players = new LinkedList<String>();
 	public GameEntryView(Game<? extends Move, ? extends GameState> game){
 		gameId = game.get_id();
-		currentPlayerName = game.getCurrentPlayerObject().getUserName();
+		currentPlayerName = game.getCurrentPlayerObject().getUsername();
 		currentPlayerId = game.getCurrentPlayerObject().get_id();
 		for(Object p : game.players){
-			players.add(((Player)p).getUserName());
+			players.add(((Player)p).getUsername());
 		}
 		this.isActive = game.getIsActive();
 		
 		if(!game.getIsActive()){
 			Player user = DBHandler.getUser(game.getWinner_id());
 			if(user != null){
-				this.winner = user.getUserName();
+				this.winner = user.getUsername();
 			} else {
 				this.winner = "A Computer Player";
 			}

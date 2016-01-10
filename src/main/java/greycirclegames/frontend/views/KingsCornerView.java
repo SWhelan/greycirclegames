@@ -40,7 +40,7 @@ public class KingsCornerView {
 			if(e.equals(viewingPlayer)){
 				userHand = makeCardView(game.getGameState().userHands.get(Integer.toString(viewingPlayer.get_id())).getCards());
 			} else {
-				otherPlayers.add(new HandView(makeCardView(game.getGameState().userHands.get(Integer.toString(e.get_id())).getCards()), e.getUserName(), e.get_id() == currentPlayerId));
+				otherPlayers.add(new HandView(makeCardView(game.getGameState().userHands.get(Integer.toString(e.get_id())).getCards()), e.getUsername(), e.get_id() == currentPlayerId));
 			}
 		});	
 		Map<String, Pile> piles = game.getGameState().piles;

@@ -4,11 +4,11 @@ import com.mongodb.ReflectionDBObject;
 
 public class ArtificialPlayer extends ReflectionDBObject implements Player {
 	protected int _id;
-	protected String userName;
+	protected String username;
 	
 	public ArtificialPlayer(int id){
 		this._id = id;
-		this.userName = "Computer Player " + Integer.toString(Math.abs(this._id));
+		this.username = "Computer Player " + Integer.toString(Math.abs(this._id));
 	}
 	
 	@Override
@@ -17,8 +17,8 @@ public class ArtificialPlayer extends ReflectionDBObject implements Player {
 	}
 
 	@Override
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public class ArtificialPlayer extends ReflectionDBObject implements Player {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result + _id;
-		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -51,10 +51,10 @@ public class ArtificialPlayer extends ReflectionDBObject implements Player {
 		ArtificialPlayer other = (ArtificialPlayer) obj;
 		if (_id != other._id)
 			return false;
-		if (userName == null) {
-			if (other.userName != null)
+		if (username == null) {
+			if (other.username != null)
 				return false;
-		} else if (!userName.equals(other.userName))
+		} else if (!username.equals(other.username))
 			return false;
 		return true;
 	}

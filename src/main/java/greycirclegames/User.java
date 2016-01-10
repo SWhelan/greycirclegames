@@ -10,30 +10,28 @@ import java.util.List;
 import com.mongodb.BasicDBList;
 import com.mongodb.DBObject;
 import com.mongodb.ReflectionDBObject;
-	
+
 public class User extends ReflectionDBObject implements Player {
 	private static final int NUM_BITS = 128;
 	private static final int RADIX = 32;
 	private static final String ALGORITHM = "SHA-256";
 	private int _id;
-	private String userName;
+	private String username;
 	private String password;
 
 	private String salt;
 	private String email;
-	//List of ids of friends
+	// List of ids of friends
 	private BasicDBList friends;
 	private boolean emailForNewFriend;
 	private boolean emailForNewGame;
 	private boolean emailForTurn;
 	private boolean emailForGameOver;
-	
-	
-	public User(int _id, String userName, String password, String salt,
-			String email, BasicDBList friends, boolean emailForNewFriend, boolean emailForNewGame,
-			boolean emailForTurn, boolean emailForGameOver){
+
+	public User(int _id, String username, String password, String salt, String email, BasicDBList friends,
+			boolean emailForNewFriend, boolean emailForNewGame, boolean emailForTurn, boolean emailForGameOver) {
 		this._id = _id;
-		this.userName = userName;
+		this.username = username;
 		this.password = password;
 		this.salt = salt;
 		this.email = email;
@@ -43,10 +41,9 @@ public class User extends ReflectionDBObject implements Player {
 		this.emailForTurn = emailForTurn;
 		this.emailForGameOver = emailForGameOver;
 	}
-	
-	public User(int _id, String userName, String password, String salt,
-			String email, BasicDBList friends){
-		this(_id, userName, password, salt, email, friends, false, false, false, false);
+
+	public User(int _id, String username, String password, String salt, String email, BasicDBList friends) {
+		this(_id, username, password, salt, email, friends, false, false, false, false);
 	}
 
 	public User(int _id, String email) {
@@ -54,16 +51,10 @@ public class User extends ReflectionDBObject implements Player {
 	}
 
 	public User(DBObject obj) {
-		this(	(Integer)obj.get("_id"),
-				(String)obj.get("UserName"),
-				(String)obj.get("Password"),
-				(String)obj.get("Salt"),
-				(String)obj.get("Email"),
-				(BasicDBList)obj.get("Friends"),
-				(boolean)obj.get("EmailForNewFriend"),
-				(boolean)obj.get("EmailForNewGame"),
-				(boolean)obj.get("EmailForTurn"),
-				(boolean)obj.get("EmailForGameOver"));
+		this((Integer) obj.get("_id"), (String) obj.get("Username"), (String) obj.get("Password"),
+				(String) obj.get("Salt"), (String) obj.get("Email"), (BasicDBList) obj.get("Friends"),
+				(boolean) obj.get("EmailForNewFriend"), (boolean) obj.get("EmailForNewGame"),
+				(boolean) obj.get("EmailForTurn"), (boolean) obj.get("EmailForGameOver"));
 	}
 
 	public Integer get_id() {
@@ -74,14 +65,14 @@ public class User extends ReflectionDBObject implements Player {
 		this._id = _id;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
-	
+
 	public String getPassword() {
 		return password;
 	}
@@ -89,7 +80,7 @@ public class User extends ReflectionDBObject implements Player {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public String getSalt() {
 		return salt;
 	}
@@ -106,22 +97,22 @@ public class User extends ReflectionDBObject implements Player {
 		this.email = email;
 	}
 
-	public BasicDBList getFriends(){
+	public BasicDBList getFriends() {
 		return friends;
 	}
-	
+
 	public void setFriends(BasicDBList friends) {
 		this.friends = friends;
 	}
-	
+
 	public void addFriend(int friendID) {
 		this.friends.add(friendID);
 	}
-	
+
 	public void destroyFriendship(Integer friendID) {
 		this.friends.remove(friendID);
 	}
-	
+
 	public boolean getEmailForNewFriend() {
 		return emailForNewFriend;
 	}
@@ -162,7 +153,7 @@ public class User extends ReflectionDBObject implements Player {
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
 		result = prime * result + ((salt == null) ? 0 : salt.hashCode());
-		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -192,69 +183,69 @@ public class User extends ReflectionDBObject implements Player {
 				return false;
 		} else if (!salt.equals(other.salt))
 			return false;
-		if (userName == null) {
-			if (other.userName != null)
+		if (username == null) {
+			if (other.username != null)
 				return false;
-		} else if (!userName.equals(other.userName))
+		} else if (!username.equals(other.username))
 			return false;
 		return true;
 	}
-	
-	public boolean sendFriendRequest(User user){
+
+	public boolean sendFriendRequest(User user) {
 		return false;
 	}
-	
-	public boolean acceptFriendRequest(User user){
+
+	public boolean acceptFriendRequest(User user) {
 		return false;
 	}
-	
-	public static User make(String userName, String email, String password){
+
+	public static User make(String username, String email, String password) {
 		return null;
 	}
-	
-	public static User login(String userName, String email, String password){
+
+	public static User login(String username, String email, String password) {
 		return null;
 	}
-	
-	public static String generateSalt(){
+
+	public static String generateSalt() {
 		SecureRandom random = new SecureRandom();
 		return new BigInteger(NUM_BITS, random).toString(RADIX);
 	}
-	
+
 	public static String hashPassword(String salt, String password) {
 		try {
 			MessageDigest md = MessageDigest.getInstance(ALGORITHM);
 			md.update((password + salt).getBytes());
 			return new String(md.digest());
-		} catch (NoSuchAlgorithmException e){
-			//Shouldn't reach here as SHA-256 is required to be built in.
+		} catch (NoSuchAlgorithmException e) {
+			// Shouldn't reach here as SHA-256 is required to be built in.
 			e.printStackTrace();
 			return null;
 		}
 	}
-	
+
 	public boolean passwordMatches(String password) {
 		return this.password.equals(hashPassword(this.salt, password));
 	}
 
 	@Override
 	public void updateWin(String game) {
-	
+
 	}
 
 	@Override
 	public void updateLoss(String game) {
-	
+
 	}
 
 	public List<User> getFriendsList() {
 		List<User> toReturn = new LinkedList<User>();
-		for(Object o : friends){
-			Integer friend_id = (Integer)o;
+		for (Object o : friends) {
+			Integer friend_id = (Integer) o;
 			User f = DBHandler.getUser(friend_id);
 			toReturn.add(f);
 		}
-		
+
 		return toReturn;
 	}
 }

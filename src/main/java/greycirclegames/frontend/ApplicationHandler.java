@@ -29,9 +29,9 @@ public class ApplicationHandler extends TemplateHandler {
 	
 	protected static ModelAndView renderLogin(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		String email = rq.queryParams("email");
+		String username = rq.queryParams("username");
 		String password = rq.queryParams("password");
-		info.put("email", email);
+		info.put("username", username);
 		info.put("password", password);
 		return getModelAndView(info, LOGIN_TEMPLATE, rq, rs);
 	}
@@ -63,15 +63,25 @@ public class ApplicationHandler extends TemplateHandler {
 	}
 	
 	protected static ModelAndView postRegister(Request rq, Response rs) {
+		String username = rq.queryParams("username");
 		String email = rq.queryParams("email").toLowerCase();
 		String password = rq.queryParams("password");
 		String passwordAgain = rq.queryParams("password-again");
-		User user = DBHandler.getUserByEmail(email);
+		if(username.equals("")) {
+			rs.header(GlobalConstants.DISPLAY_ERROR, "Username is required.");
+			return renderRegister(rq, rs);
+		}
+		User user = DBHandler.getUserByUsername(username);
 		if(user != null){
+			rs.header(GlobalConstants.DISPLAY_ERROR, "Username already in use.");
+			return renderRegister(rq, rs);
+		}
+		user = DBHandler.getUserByEmail(email);
+		if(user != null && !email.equals("")){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Email already in use.");
 			return renderRegister(rq, rs);
 		}
-		
+			
 		if(!password.equals(passwordAgain)){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Passwords do not match.");
 			return renderRegister(rq, rs);
@@ -81,7 +91,7 @@ public class ApplicationHandler extends TemplateHandler {
 		String salt = User.generateSalt();
 		newUser.setSalt(salt);
 		newUser.setPassword(User.hashPassword(salt, password));
-		newUser.setUserName(email);
+		newUser.setUsername(username);
 		DBHandler.createUser(newUser);
 		rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(newUser.get_id()));
 		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "New user successfully created. You have been logged in. You should create a game or add friends to get started.");
@@ -90,9 +100,9 @@ public class ApplicationHandler extends TemplateHandler {
 	}
 	
 	protected static ModelAndView postLogin(Request rq, Response rs) {
-		String email = rq.queryParams("email").toLowerCase();
+		String username = rq.queryParams("username");
 		String password = rq.queryParams("password");
-		User user = DBHandler.getUserByEmail(email);
+		User user = DBHandler.getUserByUsername(username);
 		if(checkLogin(user, password)){
 			rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(user.get_id()));
 			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Logged in successfully.");
@@ -111,7 +121,7 @@ public class ApplicationHandler extends TemplateHandler {
 	protected static ModelAndView postEditUser(Request rq, Response rs) {		
 		User user = getUserFromCookies(rq);
 		List<String> errorMessage = new ArrayList<String>();
-		String userName = rq.queryParams("userName");
+		String username = rq.queryParams("username");
 		String email = rq.queryParams("email");
 		String currentPassword = rq.queryParams("currentPassword");
 		String newPassword = rq.queryParams("newPassword");
@@ -136,11 +146,11 @@ public class ApplicationHandler extends TemplateHandler {
 		
 		boolean noError = true;
 		boolean change = false;
-		if(!userName.equals(user.getUserName())){
-			if(DBHandler.getUserByUserName(userName) == null){
-				user.setUserName(userName);
+		if(!username.equals(user.getUsername())){
+			if(DBHandler.getUserByUsername(username) == null){
+				user.setUsername(username);
 				change = true;
-			} else if(userName.equals("")){
+			} else if(username.equals("")){
 				noError = false;
 				errorMessage.add("A username is required.");
 			} else {

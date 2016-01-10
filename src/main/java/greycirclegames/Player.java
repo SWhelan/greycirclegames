@@ -26,7 +26,7 @@ public interface Player {
 	 * For computer players, this is something like "Computer player 1"
 	 * @return	Name of the player.
 	 */
-	public String getUserName();
+	public String getUsername();
 	
 	/**
 	 * On the event of winning a game, call this function

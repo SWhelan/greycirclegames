@@ -86,7 +86,7 @@ public abstract class CardBasedMove extends Move {
 	 * @return
 	 */
 	public String getPlayerName() {
-		return player.getUserName();
+		return player.getUsername();
 	}
 
 	/**
@@ -136,7 +136,7 @@ public abstract class CardBasedMove extends Move {
 				count++;
 			};
 		}
-		return this.player.getUserName() + " moved " + builder.toString() + "from " + this.origin.getName() + " onto " + this.destination.getName();
+		return this.player.getUsername() + " moved " + builder.toString() + "from " + this.origin.getName() + " onto " + this.destination.getName();
 	}
 	
 	/**
@@ -145,8 +145,8 @@ public abstract class CardBasedMove extends Move {
 	 *
 	 */
 	public class Test{
-		public boolean namesEqual(String userName, String originName, String movingName, String destinationName){
-			return userName.equals(player.getUserName()) &&
+		public boolean namesEqual(String username, String originName, String movingName, String destinationName){
+			return username.equals(player.getUsername()) &&
 					origin.getName().equals(originName) &&
 					moving.getName().equals(movingName) &&
 					destination.getName().equals(movingName);

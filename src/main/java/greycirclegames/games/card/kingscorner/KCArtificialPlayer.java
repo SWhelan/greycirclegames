@@ -195,7 +195,7 @@ public class KCArtificialPlayer extends ArtificialPlayer {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + _id;
-		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
+		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
 
@@ -210,10 +210,10 @@ public class KCArtificialPlayer extends ArtificialPlayer {
 		KCArtificialPlayer other = (KCArtificialPlayer) obj;
 		if (_id != other._id)
 			return false;
-		if (userName == null) {
-			if (other.userName != null)
+		if (username == null) {
+			if (other.username != null)
 				return false;
-		} else if (!userName.equals(other.userName))
+		} else if (!username.equals(other.username))
 			return false;
 		return true;
 	}

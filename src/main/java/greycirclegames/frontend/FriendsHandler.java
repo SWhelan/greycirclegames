@@ -35,23 +35,27 @@ public class FriendsHandler extends TemplateHandler {
 	
 	protected static ModelAndView postAddFriend(Request rq, Response rs){
 		String searchValue = rq.queryParams("searchValue").toLowerCase();
-		Player user2 = DBHandler.getUserByEmail(searchValue);
-		if(user2 == null){
-			user2 = DBHandler.getUserByUserName(searchValue);
-		}
-		if(user2 == null){
-			rs.cookie(GlobalConstants.DISPLAY_ERROR, "No user was found with that search.");
-		} else if (user2.get_id() == getUserIdFromCookies(rq)){
-			rs.cookie(GlobalConstants.DISPLAY_ERROR, "You can not add your self as a friend.");
-		} else if(alreadyFriends(getUserIdFromCookies(rq), user2.get_id())){
-			rs.cookie(GlobalConstants.DISPLAY_ERROR, "You are already friends with " + user2.getUserName());
+		if(searchValue.equals("")) {
+			rs.cookie(GlobalConstants.DISPLAY_ERROR, "Please enter an email or username.");
 		} else {
-			if(!DBHandler.addFriend(getUserIdFromCookies(rq), user2.get_id())){
-				rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
-			} else if(!DBHandler.addFriend(user2.get_id(), getUserIdFromCookies(rq))){
-				rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
+			Player user2 = DBHandler.getUserByUsername(searchValue);
+			if(user2 == null){
+				user2 = DBHandler.getUserByEmail(searchValue);
+			}
+			if(user2 == null){
+				rs.cookie(GlobalConstants.DISPLAY_ERROR, "No user was found with that search.");
+			} else if (user2.get_id() == getUserIdFromCookies(rq)){
+				rs.cookie(GlobalConstants.DISPLAY_ERROR, "You cannot add yourself as a friend.");
+			} else if(alreadyFriends(getUserIdFromCookies(rq), user2.get_id())){
+				rs.cookie(GlobalConstants.DISPLAY_ERROR, "You are already friends with " + user2.getUsername());
 			} else {
-				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The requested friend has been added.");
+				if(!DBHandler.addFriend(getUserIdFromCookies(rq), user2.get_id())){
+					rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
+				} else if(!DBHandler.addFriend(user2.get_id(), getUserIdFromCookies(rq))){
+					rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
+				} else {
+					rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The requested friend has been added.");
+				}
 			}
 		}
 		rs.redirect(FRIENDS_ROUTE);

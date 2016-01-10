@@ -29,7 +29,7 @@ public class DatabaseConnector {
 			if (environmentURI != null) {
 				MONGO_DATABASE_URI = environmentURI;
 			}
-			MongoClientURI uri  = new MongoClientURI(MONGO_DATABASE_URI); 
+			MongoClientURI uri  = new MongoClientURI(MONGO_DATABASE_URI);
 			MongoClient client = new MongoClient(uri);
 			db = client.getDB(uri.getDatabase());
 		}

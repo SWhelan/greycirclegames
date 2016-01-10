@@ -16,7 +16,7 @@
 			<label for="friends">Friends:</label>
 			<select class="form-control" name="friends" id="friends">
 			{{#friends}}
-				<option value="{{_id}}">{{userName}}</option>
+				<option value="{{_id}}">{{username}}</option>
 			{{/friends}}
 			</select>
 			<input type="hidden" id="ai" name="ai" value="false">
@@ -41,7 +41,7 @@
 			<select multiple class="form-control" name="friends" id="friends">
 			<option value="-1"></option>
 			{{#friends}}
-			<option value="{{_id}}">{{userName}}</option>
+			<option value="{{_id}}">{{username}}</option>
 			{{/friends}}
 			</select>
 			</div>

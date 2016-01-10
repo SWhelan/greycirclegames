@@ -4,12 +4,12 @@ import java.util.List;
 
 public class HandView {
 	public List<CardView> cards;
-	public String userName;
+	public String username;
 	public boolean isCurrentPlayer;
 	
-	public HandView(List<CardView> cards, String userName, boolean isCurrentPlayer){
+	public HandView(List<CardView> cards, String username, boolean isCurrentPlayer){
 		this.cards = cards;
-		this.userName = userName;
+		this.username = username;
 		this.isCurrentPlayer = isCurrentPlayer;
 	}
 }

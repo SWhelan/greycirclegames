@@ -64,7 +64,7 @@ public class KCGameState extends CardBasedGameState {
 		//Initialize user hands
 		userHands = new HashMap<String, Pile>();
 		for(Player p : players){
-			userHands.put(Integer.toString(p.get_id()), new Pile(p.getUserName()+"'s Pile"));
+			userHands.put(Integer.toString(p.get_id()), new Pile(p.getUsername()+"'s Pile"));
 		}
 		
 		Pile drawPile = piles.get(KCPileIds.DRAW_PILE.getKey());

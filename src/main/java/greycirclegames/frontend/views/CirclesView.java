@@ -59,13 +59,13 @@ public class CirclesView {
 			theirCount = dark;
 			yourColor = "#ffffff";
 			theirColor = "#000000";
-			opponentName = game.getPlayers().get(1).getUserName();
+			opponentName = game.getPlayers().get(1).getUsername();
 		} else {
 			yourCount = dark; 
 			theirCount = light;
 			yourColor = "#000000";
 			theirColor = "#ffffff";
-			opponentName = game.getPlayers().get(0).getUserName();
+			opponentName = game.getPlayers().get(0).getUsername();
 		}
 		if(!isActive){
 			int winnerId = game.getWinner_id();
