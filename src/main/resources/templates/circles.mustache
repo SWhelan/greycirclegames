@@ -9,10 +9,10 @@
 		{{#row}}
 			<td class="centeredCell {{^isTurn}}greyedOut{{/isTurn}}">
 				{{#isAPiece}}
-				<div class="circle" style="background:{{hex}};">
+				<div class="circle {{color}}">
 				{{/isAPiece}}
 				{{^isAPiece}}
-				<div class="space" row="{{row}}" column ="{{column}}"></div>
+				<div class="space" row="{{row}}" column="{{column}}"></div>
 				{{/isAPiece}}
 			</td>
 		{{/row}}
@@ -26,9 +26,9 @@
 		<p>You: {{yourCount}}</p>
 		<p>{{opponentName}}: {{theirCount}}</p>
 		<p>You:</p>
-		<div class="circle" style="background:{{yourColor}};"></div>
+		<div class="circle {{yourColor}}"></div>
 		<p>{{opponentName}}:</p>
-		<div class="circle" style="background:{{theirColor}};"></div>
+		<div class="circle {{theirColor}}"></div>
 	</div>
 	</div>
 <script type="text/javascript">	
@@ -62,8 +62,8 @@ function submitMove(){
 	
 	hiddenElement=document.createElement('INPUT');
 	hiddenElement.type='HIDDEN';
-	hiddenElement.name='hex';
-	hiddenElement.value="{{hex}}";
+	hiddenElement.name='color';
+	hiddenElement.value="{{color}}";
 	moveForm.appendChild(hiddenElement);
 	hiddenElement=document.createElement('INPUT');
 	hiddenElement.type='HIDDEN';

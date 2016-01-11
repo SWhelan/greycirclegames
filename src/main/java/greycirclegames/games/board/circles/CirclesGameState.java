@@ -5,13 +5,14 @@ import java.util.List;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 
+import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import greycirclegames.games.GameState;
 
 public class CirclesGameState extends GameState {
-	private static final int ROWS = 8;
-	private static final int COLUMNS = 8;
-	private CirclePiece[][] board = new CirclePiece[ROWS][COLUMNS];
+	private static final int ROWS = GlobalConstants.CIRCLES_ROWS;
+	private static final int COLUMNS = GlobalConstants.CIRCLES_COLUMNS;
+	private String[][] board = new String[ROWS][COLUMNS];
 	
 	public CirclesGameState(){
 		super();
@@ -26,9 +27,7 @@ public class CirclesGameState extends GameState {
 				if(cell == null){
 					this.board[i][j] = null;
 				} else {
-					this.board[i][j] = new CirclePiece(
-											(String)(((BasicDBObject)cell).get("Name")),
-											(String)((BasicDBObject)cell).get("Hex"));
+					this.board[i][j] = (String)cell;
 				}
 				j++;
 			}
@@ -43,9 +42,9 @@ public class CirclesGameState extends GameState {
 			for(int j = 0; j < board[i].length; j++){
 				// TODO what if we change board size?
 				if((i == 3 && j == 3) || (i == 4 && j == 4)){
-					board[i][j] = new CirclePiece("Light", "#ffffff");
+					board[i][j] = GlobalConstants.COLOR.WHITE;
 				} else if((i == 4 && j == 3) || (i == 3 && j == 4)){
-					board[i][j] = new CirclePiece("Dark", "#000000");
+					board[i][j] = GlobalConstants.COLOR.BLACK;
 				} else {
 					board[i][j] = null;
 				}
@@ -53,19 +52,19 @@ public class CirclesGameState extends GameState {
 		}
 	}
 	
-	public void setBoard(CirclePiece[][] board){
+	public void setBoard(String[][] board){
 		this.board = board;
 	}
 
-	public CirclePiece[][] getBoard() {
+	public String[][] getBoard() {
 		return board;
 	}
 	
-	public boolean setPiece(int column, int row, CirclePiece piece){
+	public boolean setPiece(int column, int row, String color){
 		if(!validPosition(column, row)){
 			return false;
 		}
-		board[row][column] = piece;
+		board[row][column] = color;
 		return true;
 	}
 	

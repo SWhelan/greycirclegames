@@ -11,7 +11,7 @@ import greycirclegames.Player;
 import greycirclegames.games.Game;
 
 public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtificialPlayer> {
-	public List<CirclePiece> turnColors;
+	public List<String> turnColors;
 
 	public Circles(int id, List<Player> players){
 		super(id, players);
@@ -20,18 +20,18 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 	public Circles(DBObject obj){
 		super.gameFromDBObject(obj);
 		this.gameState = new CirclesGameState((BasicDBObject)obj.get("GameState"));
-		turnColors = new ArrayList<CirclePiece>();
-		turnColors.add(new CirclePiece("Light", "#ffffff"));
-		turnColors.add(new CirclePiece("Dark", "#000000"));
+		turnColors = new ArrayList<String>();
+		turnColors.add(GlobalConstants.COLOR.WHITE);
+		turnColors.add(GlobalConstants.COLOR.BLACK);
 	}
 	
 	@Override
 	protected CirclesGameState newGameState(List<Player> players) {
 		CirclesGameState game = new CirclesGameState();
 		game.initializeToNewGameState(players);
-		turnColors = new ArrayList<CirclePiece>();
-		turnColors.add(new CirclePiece("Light", "#ffffff"));
-		turnColors.add(new CirclePiece("Dark", "#000000"));
+		turnColors = new ArrayList<String>();
+		turnColors.add(GlobalConstants.COLOR.WHITE);
+		turnColors.add(GlobalConstants.COLOR.BLACK);
 		return game;
 	}
 
@@ -42,7 +42,7 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 
 	@Override
 	public boolean gameIsOver() {
-		CirclePiece[][] board = ((CirclesGameState) gameState).getBoard();
+		String[][] board = ((CirclesGameState) gameState).getBoard();
 		for(int i = 0; i < board.length; i++){
 			for(int j = 0; j < board[i].length; j++){
 				if(board[i][j] == null){
@@ -71,10 +71,10 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 	protected int determineWinnerId() {
 		int light = 0;
 		int dark = 0;
-		CirclePiece[][] board = ((CirclesGameState) gameState).getBoard();
+		String[][] board = ((CirclesGameState) gameState).getBoard();
 		for(int i = 0; i < board.length; i++){
 			for(int j = 0; j < board[i].length; j++){
-				if(board[i][j].getHex().equals("#ffffff")){
+				if(board[i][j].equals(GlobalConstants.COLOR.WHITE)){
 					light++;
 				} else {
 					dark++;
