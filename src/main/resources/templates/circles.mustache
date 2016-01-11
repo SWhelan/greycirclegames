@@ -12,7 +12,7 @@
 				<div class="circle {{color}}">
 				{{/isAPiece}}
 				{{^isAPiece}}
-				<div class="space" row="{{row}}" column="{{column}}"></div>
+				<div class="space {{#isAPossibleMove}}circlesPossibleMove{{/isAPossibleMove}}" row="{{row}}" column="{{column}}"></div>
 				{{/isAPiece}}
 			</td>
 		{{/row}}

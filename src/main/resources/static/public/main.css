@@ -73,6 +73,16 @@
 	margin-right: -30px;
 }
 
+/* Colors */
+
+.white {
+	background: #FFFFFF;
+}
+
+.black {
+	background: #000000;
+}
+
 .red {
 	color: red;
 }
@@ -91,12 +101,12 @@
 	display: inline-block;
 }
 
-.white {
-	background: #FFFFFF;
-}
-
-.black {
-	background: #000000;
+.circlesPossibleMove {
+	background: rgba(221,221,221,.5);
+	-moz-box-shadow: 0px 0px 20px rgba(221,221,221,.5);
+	-webkit-box-shadow: 0px 0px 20px rgba(221,221,221,.5);
+	box-shadow: 0px 0px 20px rgba(221,221,221,.5);
+	border-radius: 50%;
 }
 
 .space {
