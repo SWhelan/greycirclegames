@@ -2,7 +2,11 @@ package greycirclegames;
 
 import com.mongodb.ReflectionDBObject;
 
-public class ArtificialPlayer extends ReflectionDBObject implements Player {
+import greycirclegames.games.Game;
+import greycirclegames.games.GameState;
+import greycirclegames.games.Move;
+
+public abstract class ArtificialPlayer extends ReflectionDBObject implements Player {
 	protected int _id;
 	protected String username;
 	
@@ -20,6 +24,8 @@ public class ArtificialPlayer extends ReflectionDBObject implements Player {
 	public String getUsername() {
 		return username;
 	}
+	
+	public abstract Move createMove(Game<? extends Move, ? extends  GameState, ? extends ArtificialPlayer> game);
 
 	@Override
 	public void updateWin(String game) {

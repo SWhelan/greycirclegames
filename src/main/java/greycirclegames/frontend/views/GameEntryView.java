@@ -3,6 +3,7 @@ package greycirclegames.frontend.views;
 import java.util.LinkedList;
 import java.util.List;
 
+import greycirclegames.ArtificialPlayer;
 import greycirclegames.DBHandler;
 import greycirclegames.Player;
 import greycirclegames.games.Game;
@@ -16,7 +17,7 @@ public class GameEntryView {
 	public String currentPlayerName;
 	public int currentPlayerId;
 	public List<String> players = new LinkedList<String>();
-	public GameEntryView(Game<? extends Move, ? extends GameState> game){
+	public GameEntryView(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game){
 		gameId = game.get_id();
 		currentPlayerName = game.getCurrentPlayerObject().getUsername();
 		currentPlayerId = game.getCurrentPlayerObject().get_id();

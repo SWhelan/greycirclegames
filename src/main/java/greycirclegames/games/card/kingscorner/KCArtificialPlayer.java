@@ -3,7 +3,11 @@ package greycirclegames.games.card.kingscorner;
 import java.util.Map;
 
 import greycirclegames.ArtificialPlayer;
+import greycirclegames.games.Game;
+import greycirclegames.games.GameState;
+import greycirclegames.games.Move;
 import greycirclegames.games.card.Card;
+import greycirclegames.games.card.CardBasedGameState;
 import greycirclegames.games.card.Pile;
 
 /**
@@ -217,5 +221,11 @@ public class KCArtificialPlayer extends ArtificialPlayer {
 			return false;
 		return true;
 	}
+
+    @Override
+    public Move createMove(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game) {
+        KCGameState state = (KCGameState) game.getGameState();
+        return createMove(state.getUserHands().get(Integer.toString(game.getCurrentPlayerObject().get_id())), state.getVisiblePiles());
+    }
 	
 }

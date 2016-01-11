@@ -1,6 +1,9 @@
 package greycirclegames.games.board.circles;
 
 import greycirclegames.ArtificialPlayer;
+import greycirclegames.games.Game;
+import greycirclegames.games.GameState;
+import greycirclegames.games.Move;
 
 public class CirclesArtificialPlayer extends ArtificialPlayer {
 	/**
@@ -11,5 +14,11 @@ public class CirclesArtificialPlayer extends ArtificialPlayer {
 	public CirclesArtificialPlayer(int id){
 		super(id);
 	}
+
+    @Override
+    public Move createMove(Game<? extends Move, ? extends  GameState, ? extends ArtificialPlayer> game) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 	
 }

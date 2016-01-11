@@ -13,7 +13,7 @@ import greycirclegames.Player;
 import greycirclegames.games.Game;
 import greycirclegames.games.card.Pile;
 
-public class KingsCorner extends Game<KCMove, KCGameState>{
+public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 
 	public KingsCorner(int gameId, List<Player> players){
 		super(gameId, players);
@@ -35,7 +35,7 @@ public class KingsCorner extends Game<KCMove, KCGameState>{
 	 * In King's Corner, a turn end is marked by drawing a card,
 	 * so in this method, a card is drawn for the player.
 	 * A card does not need to be drawn in addition to calling endTurn.
-	 * @return	True if the tun was successfully ended.
+	 * @return	True if the turn was successfully ended.
 	 */
 	public boolean endTurn(){
 		if(gameIsOver()){
@@ -54,42 +54,6 @@ public class KingsCorner extends Game<KCMove, KCGameState>{
 		currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
 		
 		return true;
-	}
-	
-	/**
-	 * If the current move is an AI, we can call this method to play the AI's moves.
-	 * Also, if the next player(s) is also an AI, this method will play all those
-	 * AI's moves.
-	 * @return	True if any AI moves were made.
-	 */
-	public boolean applyAIMoves(){
-		boolean result = false;
-		Player cur = getCurrentPlayerObject();
-		Pile aiHand;
-		Map<Integer,Pile> visiblePiles = getGameState().getVisiblePiles();
-		KCMove m = null;
-		//While the game is still active and the current player is an AI
-		while(this.isActive && isAI(cur)){
-			result = true;
-			aiHand = getGameState().userHands.get(Integer.toString(cur.get_id()));
-
-			KCArtificialPlayer ai = (KCArtificialPlayer) cur;
-			boolean hasMove = true;
-			//Get as many moves from the player as we can (until null)
-			while(this.isActive && hasMove){
-				m = ai.createMove(aiHand, visiblePiles);
-				if(m != null){
-					this.applyMove(m);
-				}else{
-					hasMove = false;
-				}				
-			}
-			//End the turn
-			this.endTurn();
-			//Get next player
-			cur = getCurrentPlayerObject();
-		}
-		return result;
 	}
 	
 	@Override

@@ -10,7 +10,7 @@ import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import greycirclegames.games.Game;
 
-public class Circles extends Game<CirclesMove, CirclesGameState> {
+public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtificialPlayer> {
 	public List<CirclePiece> turnColors;
 
 	public Circles(int id, List<Player> players){
@@ -58,12 +58,13 @@ public class Circles extends Game<CirclesMove, CirclesGameState> {
 		return false;
 	}
 
-	public void endTurn() {
+	public boolean endTurn() {
 		if(gameIsOver()){
 			super.changeToWinState();
 		} else {
 			currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
 		}
+		return true;
 	}
 
 	@Override

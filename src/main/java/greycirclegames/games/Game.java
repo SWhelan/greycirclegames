@@ -8,6 +8,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.ReflectionDBObject;
 
+import greycirclegames.ArtificialPlayer;
 import greycirclegames.Player;
 import greycirclegames.User;
 import greycirclegames.games.card.kingscorner.KCArtificialPlayer;
@@ -22,7 +23,7 @@ import greycirclegames.games.card.kingscorner.KCArtificialPlayer;
  * @author George
  *
  */
-public abstract class Game<M extends Move, S extends GameState> extends ReflectionDBObject{
+public abstract class Game<M extends Move, S extends GameState, A extends ArtificialPlayer> extends ReflectionDBObject{
 
 	/**
 	 * The id of a game
@@ -124,7 +125,42 @@ public abstract class Game<M extends Move, S extends GameState> extends Reflecti
 		}
 		return false;
 	}
+	
+	public abstract boolean endTurn();
 
+    /**
+     * If the current move is an AI, we can call this method to play the AI's moves.
+     * Also, if the next player(s) is also an AI, this method will play all those
+     * AI's moves.
+     * @return  True if any AI moves were made.
+     */
+    public boolean applyAIMoves(){
+        boolean result = false;
+        Player currentPlayer = getCurrentPlayerObject();
+        M m = null;
+        //While the game is still active and the current player is an AI
+        while(this.isActive && isAI(currentPlayer)){
+            result = true;
+
+            A ai = (A)currentPlayer;
+            boolean hasMove = true;
+            //Get as many moves from the player as we can (until null)
+            while(this.isActive && hasMove){
+                m = (M)ai.createMove(this);
+                if(m != null){
+                    this.applyMove(m);
+                }else{
+                    hasMove = false;
+                }               
+            }
+            //End the turn
+            this.endTurn();
+            //Get next player
+            currentPlayer = getCurrentPlayerObject();
+        }
+        return result;
+    }
+    
 	/**
 	 * Add a move to the list of applied moves.
 	 * @param m
