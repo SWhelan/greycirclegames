@@ -11,7 +11,6 @@ import com.mongodb.ReflectionDBObject;
 import greycirclegames.ArtificialPlayer;
 import greycirclegames.Player;
 import greycirclegames.User;
-import greycirclegames.games.card.kingscorner.KCArtificialPlayer;
 
 /**
  * The Game holds all the information about the game.
@@ -231,14 +230,26 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 		for (Object player : players) {
 			int playerId = (Integer)((BasicDBObject) player).get("_id");
 			if(playerId < 0){
-				this.players.add(new KCArtificialPlayer(playerId));
+				this.players.add(this.makeArtificialPlayerFromDB(playerId));
 			} else {
 				this.players.add(new User((BasicDBObject)player));
 			}
 		}
+		BasicDBList moves = (BasicDBList)obj.get("Moves");		
+		this.moves = new LinkedList<M>();
+		for (Object move : moves) {		
+			this.moves.add(makeMoveFromDB((BasicDBObject) move));		
+		}
+		this.gameState = makeGameStateFromDB((BasicDBObject)obj.get("GameState"));
 		this.isActive = (Boolean)obj.get("IsActive");
 		this.winner_id = (Integer)obj.get("Winner_id");
 	}
+
+	protected abstract S makeGameStateFromDB(BasicDBObject dbObject);
+	
+	protected abstract M makeMoveFromDB(BasicDBObject move);
+
+	protected abstract A makeArtificialPlayerFromDB(int playerId);
 
 	public Integer get_id() {
 		return _id;

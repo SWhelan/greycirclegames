@@ -11,7 +11,6 @@ import greycirclegames.Player;
 import greycirclegames.frontend.views.CirclesView;
 import greycirclegames.games.board.circles.Circles;
 import greycirclegames.games.board.circles.CirclesArtificialPlayer;
-import greycirclegames.games.board.circles.CirclesGameState;
 import greycirclegames.games.board.circles.CirclesMove;
 import spark.ModelAndView;
 import spark.Request;
@@ -64,11 +63,10 @@ public class CirclesHandler extends TemplateHandler{
 		int row = Integer.parseInt(rq.queryParams("row"));
 		int column = Integer.parseInt(rq.queryParams("column"));
 		String color = rq.queryParams("color");
-		CirclesMove move = new CirclesMove(row, column, color, (CirclesGameState) game.getGameState());
+		CirclesMove move = new CirclesMove(row, column, color, game.getGameState(), getUserFromCookies(rq));
 		if(move.isValid()){
 			move.apply();
-			//TODO fix history
-			//game.getMoves().add(move);
+			game.addMove(move);
 			game.endTurn();
 			if(game.applyAIMoves()){
 				// It was an AI Player's turn

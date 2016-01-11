@@ -2,6 +2,8 @@ package greycirclegames.games.board.circles;
 
 import com.mongodb.BasicDBObject;
 
+import greycirclegames.Player;
+import greycirclegames.User;
 import greycirclegames.games.Move;
 
 public class CirclesMove extends Move {
@@ -10,15 +12,25 @@ public class CirclesMove extends Move {
 	private String color;
 	private CirclesGameState state;
 	
-	public CirclesMove(int row, int column, String color, CirclesGameState state){
+	public CirclesMove(int row, int column, String color, CirclesGameState state, Player player){
 		this.column = column;
 		this.row = row;
 		this.color = color;
 		this.state = state;
+		this.player = player;
 	}
 
-	public CirclesMove(BasicDBObject move) {
-		// TODO Auto-generated constructor stub
+	public CirclesMove(BasicDBObject obj) {
+		this.column = (Integer)obj.get("Column");
+		this.row = (Integer)obj.get("Row");
+		this.color = (String)obj.get("Color");
+		BasicDBObject player = (BasicDBObject)obj.get("Player");
+		Integer playerId = (Integer)player.get("_id");
+		if(playerId < 0){
+			this.player = new CirclesArtificialPlayer(playerId);
+		} else {
+			this.player = new User(player);
+		}
 	}
 
 	@Override
@@ -69,6 +81,8 @@ public class CirclesMove extends Move {
 		if(shouldApplyNorthWest(board)){
 			applyNorthWest();
 		}
+		
+		// Set the one they clicked last because the validation depends on that being null
 		state.getBoard()[row][column] = color;
 	}
 
@@ -136,7 +150,7 @@ public class CirclesMove extends Move {
 		return shouldApplyDirection(board, true, false, false, false);
 	}
 	
-	private void applyDirection(boolean rowDecreases, boolean rowIncreases, boolean columnDecreases, boolean columnIncreases) {
+	private void applyDirection(boolean south, boolean north, boolean west, boolean east) {
 		boolean done = false;
 		int i = row;
 		int j = column;
@@ -147,16 +161,16 @@ public class CirclesMove extends Move {
 			} else if(i != row || j != column){
 				state.getBoard()[i][j] = color;
 			}
-			if(rowDecreases){
+			if(south){
 				i = i - 1;
 			}
-			if(rowIncreases){
+			if(north){
 				i = i + 1;
 			}
-			if(columnDecreases){
+			if(west){
 				j = j - 1;
 			}
-			if(columnIncreases){
+			if(east){
 				j = j + 1;
 			}
 		}
@@ -195,6 +209,23 @@ public class CirclesMove extends Move {
 		}
 		return result && count > 0;
 	}
-	
 
+	public int getColumn() {
+		return column;
+	}
+	public void setColumn(int column) {
+		this.column = column;
+	}
+	public int getRow() {
+		return row;
+	}
+	public void setRow(int row) {
+		this.row = row;
+	}
+	public String getColor() {
+		return color;
+	}
+	public void setColor(String color) {
+		this.color = color;
+	}
 }

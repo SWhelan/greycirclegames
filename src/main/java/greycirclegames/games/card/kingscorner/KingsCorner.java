@@ -1,10 +1,7 @@
 package greycirclegames.games.card.kingscorner;
 
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
@@ -22,12 +19,6 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 	//for creating a new kcgame from the mongo object
 	public KingsCorner(DBObject obj) {
 		super.gameFromDBObject(obj);
-		BasicDBList moves = (BasicDBList)obj.get("Moves");		
-		this.moves = new LinkedList<KCMove>();
-		for (Object move : moves) {		
-			this.moves.add(new KCMove((BasicDBObject)move));		
-		}
-		this.gameState = new KCGameState((BasicDBObject)obj.get("GameState"));
 	}
 	
 	/**
@@ -83,5 +74,20 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 	@Override
 	protected int determineWinnerId() {
 		return players.get(currentPlayerIndex).get_id();
+	}
+
+	@Override
+	protected KCArtificialPlayer makeArtificialPlayerFromDB(int playerId) {
+		return new KCArtificialPlayer(playerId);
+	}
+
+	@Override
+	protected KCMove makeMoveFromDB(BasicDBObject move) {
+		return new KCMove((BasicDBObject)move);
+	}
+
+	@Override
+	protected KCGameState makeGameStateFromDB(BasicDBObject dbObject) {
+		return new KCGameState(dbObject);
 	}
 }

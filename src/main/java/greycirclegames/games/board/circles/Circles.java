@@ -88,4 +88,19 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 		}
 	}
 
+	@Override
+	protected CirclesArtificialPlayer makeArtificialPlayerFromDB(int playerId) {
+		return new CirclesArtificialPlayer(playerId);
+	}
+
+	@Override
+	protected CirclesMove makeMoveFromDB(BasicDBObject move) {
+		return new CirclesMove(move);
+	}
+
+	@Override
+	protected CirclesGameState makeGameStateFromDB(BasicDBObject dbObject) {
+		return new CirclesGameState(dbObject);
+	}
+	
 }

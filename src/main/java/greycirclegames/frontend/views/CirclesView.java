@@ -68,7 +68,7 @@ public class CirclesView {
             ArrayList<CircleView> row = new ArrayList<CircleView>();
             for(int j = 0; j < board[i].length; j++){
                 if(board[i][j] == null){
-                    if(new CirclesMove(i, j, yourColor, gameState).isValid()) {
+                    if(new CirclesMove(i, j, yourColor, gameState, user).isValid()) {
                         row.add(new CircleView(i, j, true));
                     } else {
                         row.add(new CircleView(i, j, false));
