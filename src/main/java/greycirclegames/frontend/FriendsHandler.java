@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import greycirclegames.DBHandler;
+import greycirclegames.EmailHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import spark.ModelAndView;
@@ -34,12 +35,13 @@ public class FriendsHandler extends TemplateHandler {
 	}
 	
 	protected static ModelAndView postAddFriend(Request rq, Response rs){
-		String searchValue = rq.queryParams("searchValue").toLowerCase();
+		String searchValue = rq.queryParams("searchValue");
 		if(searchValue.equals("")) {
 			rs.cookie(GlobalConstants.DISPLAY_ERROR, "Please enter an email or username.");
 		} else {
 			Player user2 = DBHandler.getUserByUsername(searchValue);
 			if(user2 == null){
+				searchValue = searchValue.toLowerCase();
 				user2 = DBHandler.getUserByEmail(searchValue);
 			}
 			if(user2 == null){
@@ -55,6 +57,7 @@ public class FriendsHandler extends TemplateHandler {
 					rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
 				} else {
 					rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The requested friend has been added.");
+					EmailHandler.sendNewFriendIfWanted(getUserIdFromCookies(rq), user2.get_id());
 				}
 			}
 		}

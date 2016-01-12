@@ -87,7 +87,7 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	 * which is a constant in the constants file.
 	 * @return
 	 */
-	protected abstract String getGameTypeIdentifier();
+	public abstract String getGameTypeIdentifier();
 	
 	/**
 	 * Returns whether or not this game is over, ie someone won the game.

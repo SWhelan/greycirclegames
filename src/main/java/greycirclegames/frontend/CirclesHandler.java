@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import greycirclegames.DBHandler;
+import greycirclegames.EmailHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
 import greycirclegames.frontend.views.CirclesView;
@@ -38,6 +39,7 @@ public class CirclesHandler extends TemplateHandler{
 		// Create the game
 		Circles game = new Circles(DBHandler.getNextGameID(), players);
 		DBHandler.createCirclesGame(game);
+		EmailHandler.sendNewGameIfWanted(players, game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + Integer.toString(game.get_id()), getUserFromCookies(rq));
 		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
 		rs.redirect(CIRCLES_ROUTE + "/" + Integer.toString(game.get_id()));
 		return getModelAndView(null, CIRCLES_TEMPLATE, rq, rs);
@@ -75,6 +77,11 @@ public class CirclesHandler extends TemplateHandler{
 				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
 			}
 			DBHandler.updateCirclesGame(game);
+			if(!game.gameIsOver()){
+				EmailHandler.sendTurnMailIfWanted(game.getPlayers(), game.getCurrentPlayerObject(), game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + game.get_id());
+			} else {
+				EmailHandler.sendGameOverMailIfWanted(game.getPlayers(), game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + game.get_id(), game.getWinner());
+			}
 		} else {
 			rs.cookie(GlobalConstants.DISPLAY_ERROR, "Move was invalid and not applied.");
 		}

@@ -67,7 +67,7 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 
 	//The string identifier for King's Corner
 	@Override
-	protected String getGameTypeIdentifier() {
+	public String getGameTypeIdentifier() {
 		return GlobalConstants.KINGS_CORNER;
 	}
 

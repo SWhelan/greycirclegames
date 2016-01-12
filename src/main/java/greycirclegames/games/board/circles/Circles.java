@@ -36,7 +36,7 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 	}
 
 	@Override
-	protected String getGameTypeIdentifier() {
+	public String getGameTypeIdentifier() {
 		return GlobalConstants.CIRCLES;
 	}
 
