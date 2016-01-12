@@ -3,6 +3,7 @@ package greycirclegames;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -23,54 +24,40 @@ public class DBHandler {
 
 	// CREATE
 	public static void createUser(User user) {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("users");
-		coll.save(user);
+		create(user, "users");
 	}
 
 	public static void createKCGame(KingsCorner game) {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("kcgames");
-		coll.save(game);
+		create(game, "kcgames");
 	}
 	
 	public static void createCirclesGame(Circles game) {
+		create(game, "circlesgames");
+	}
+	
+	public static void create(DBObject obj, String collectionName){
 		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("circlesgames");
-		coll.save(game);
+		DBCollection coll = db.getCollection(collectionName);
+		coll.save(obj);
 	}
 
 	// READ
-	public static User getUser(int userID) {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("users");
-		DBObject query = new BasicDBObject("_id", userID);
-		DBCursor cursor = coll.find(query);
-		try {
-			DBObject obj = cursor.next();
-			return new User(obj);
-		} catch (NoSuchElementException e) {
-			return null;
-		}
+	public static User getUser(int userId) {
+		return getUserByField("_id", userId);
 	}
 
 	public static User getUserByEmail(String email){
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("users");
-		DBObject query = new BasicDBObject("Email", email);
-		DBCursor cursor = coll.find(query);
-		try {
-			DBObject obj = cursor.next();
-			return new User(obj);
-		} catch (NoSuchElementException e){
-			return null;
-		}
+		return getUserByField("Email", email);
 	}
 
 	public static User getUserByUsername(String username) {
+		return getUserByField("Username", username);
+	}
+	
+	public static User getUserByField(String fieldName, Object value){
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("users");
-		DBObject query = new BasicDBObject("Username", username);
+		DBObject query = new BasicDBObject(fieldName, value);
 		DBCursor cursor = coll.find(query);
 		try {
 			DBObject obj = cursor.next();
@@ -80,74 +67,65 @@ public class DBHandler {
 		}
 	}
 
-	public static KingsCorner getKCGame(int gameID) {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("kcgames");
-		DBObject query = new BasicDBObject("_id", gameID);
-		DBCursor cursor = coll.find(query);
-		DBObject obj = cursor.next();
-		return new KingsCorner(obj);
+	public static KingsCorner getKCGame(int gameId) {
+		return new KingsCorner(getGame(gameId, "kcgames"));
 	}
 	
-	public static Circles getCirclesGame(int gameID) {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("circlesgames");
-		DBObject query = new BasicDBObject("_id", gameID);
-		DBCursor cursor = coll.find(query);
-		DBObject obj = cursor.next();
-		return new Circles(obj);
+	public static Circles getCirclesGame(int gameId) {
+		return new Circles(getGame(gameId, "circlesgames"));
 	}
 
+	public static DBObject getGame(int gameId, String collectionName){
+		DB db = DatabaseConnector.getMongoDB();
+		DBCollection coll = db.getCollection(collectionName);
+		DBObject query = new BasicDBObject("_id", gameId);
+		DBCursor cursor = coll.find(query);
+		DBObject obj = cursor.next();
+		return obj;
+	}
+	
 	public static List<KingsCorner> getKCGamesforUser(int userId) {
+		return getGames(userId, "kcgames").stream().map(e -> new KingsCorner(e)).collect(Collectors.toList());
+	}
+	
+	public static List<Circles> getCirclesGamesforUser(int userId) {
+		return getGames(userId, "circlesgames").stream().map(e -> new Circles(e)).collect(Collectors.toList());
+	}
+	
+	public static List<BasicDBObject> getGames(int userId, String collectionName){
 		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("kcgames");
+		DBCollection coll = db.getCollection(collectionName);
 		DBObject query = new BasicDBObject("Players._id", userId);
 
 		DBCursor cursor = coll.find(query);
 
-		LinkedList<KingsCorner> gamesList = new LinkedList<>();
+		LinkedList<BasicDBObject> gamesList = new LinkedList<>();
 		while(cursor.hasNext()) {
-			BasicDBObject obj = (BasicDBObject)cursor.next();
-			gamesList.add(new KingsCorner(obj));
+			gamesList.add((BasicDBObject)cursor.next());
 		}
 		return gamesList;
 	}
 	
-	// TODO generics or something/helper methods etc to remove duplicated code	
-	public static List<Circles> getCirclesGamesforUser(int userId) {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("circlesgames");
-		DBObject query = new BasicDBObject("Players._id", userId);
-
-		DBCursor cursor = coll.find(query);
-
-		LinkedList<Circles> gamesList = new LinkedList<>();
-		while(cursor.hasNext()) {
-			BasicDBObject obj = (BasicDBObject)cursor.next();
-			gamesList.add(new Circles(obj));
-		}
-		return gamesList;
-	}
 
 	// UPDATE
 	public static void updateUser(User user) {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("users");
-		coll.save(user);
+		update(user, "users");
 	}
 
 	public static void updateKCGame(KingsCorner game) {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("kcgames");
-		coll.save(game);
+		update(game, "kcgames");
 	}
 	
 	public static void updateCirclesGame(Circles game) {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("circlesgames");
-		coll.save(game);		
+		update(game, "circlesgames");
 	}
 
+	public static void update(DBObject obj, String collectionName){
+		DB db = DatabaseConnector.getMongoDB();
+		DBCollection coll = db.getCollection(collectionName);
+		coll.save(obj);	
+	}
+	
 	private static int getNextID(String idName) {
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection("ids");
