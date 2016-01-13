@@ -105,10 +105,12 @@ public class EmailHandler {
 			message.addRecipient(Message.RecipientType.TO, new InternetAddress(mail.getTo()));
 			message.setSubject(mail.getSubject());
 			message.setContent(mail.getBody() + "<br \\><br \\><a href=\"" + BASE_URL + mail.getUrl() + "\">Click here to view the update.</a>", "text/html");
-			Transport transport = session.getTransport("smtp");
-			transport.connect(USERNAME, PASSWORD);
-			transport.sendMessage(message, message.getAllRecipients());
-			transport.close();
+			if(!mail.getTo().equals("")){
+				Transport transport = session.getTransport("smtp");
+				transport.connect(USERNAME, PASSWORD);
+				transport.sendMessage(message, message.getAllRecipients());
+				transport.close();
+			}
 			return true;
 		} catch (MessagingException e) {
 			e.printStackTrace();

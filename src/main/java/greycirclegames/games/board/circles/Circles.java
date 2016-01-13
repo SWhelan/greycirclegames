@@ -1,6 +1,7 @@
 package greycirclegames.games.board.circles;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.mongodb.BasicDBObject;
@@ -11,7 +12,7 @@ import greycirclegames.Player;
 import greycirclegames.games.Game;
 
 public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtificialPlayer> {
-	public List<String> turnColors;
+	public static final List<String> turnColors = new ArrayList<String>(Arrays.asList(GlobalConstants.COLOR.WHITE, GlobalConstants.COLOR.BLACK));
 
 	public Circles(int id, List<Player> players){
 		super(id, players);
@@ -20,18 +21,12 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 	public Circles(DBObject obj){
 		super.gameFromDBObject(obj);
 		this.gameState = new CirclesGameState((BasicDBObject)obj.get("GameState"));
-		turnColors = new ArrayList<String>();
-		turnColors.add(GlobalConstants.COLOR.WHITE);
-		turnColors.add(GlobalConstants.COLOR.BLACK);
 	}
 	
 	@Override
 	protected CirclesGameState newGameState(List<Player> players) {
 		CirclesGameState game = new CirclesGameState();
 		game.initializeToNewGameState(players);
-		turnColors = new ArrayList<String>();
-		turnColors.add(GlobalConstants.COLOR.WHITE);
-		turnColors.add(GlobalConstants.COLOR.BLACK);
 		return game;
 	}
 
