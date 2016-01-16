@@ -28,16 +28,6 @@ public abstract class ArtificialPlayer extends ReflectionDBObject implements Pla
 	public abstract Move createMove(Game<? extends Move, ? extends  GameState, ? extends ArtificialPlayer> game);
 
 	@Override
-	public void updateWin(String game) {
-		// Do nothing as it is a computer player
-	}
-
-	@Override
-	public void updateLoss(String game) {
-		// Do nothing as it is a computer player
-	}
-
-	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();

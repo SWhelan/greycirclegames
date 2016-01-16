@@ -28,17 +28,4 @@ public interface Player {
 	 */
 	public String getUsername();
 	
-	/**
-	 * On the event of winning a game, call this function
-	 * to reflect that win in the database.
-	 * @param game	The string identifier of the game.
-	 */
-	public void updateWin(String game);
-	
-	/**
-	 * On the event of losing a game, call this function
-	 * to reflect that loss in the database.
-	 * @param game	The string identifier of the game.
-	 */
-	public void updateLoss(String game);
 }

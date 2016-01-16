@@ -60,87 +60,66 @@ public class User extends ReflectionDBObject implements Player {
 	public Integer get_id() {
 		return _id;
 	}
-
 	public void set_id(int _id) {
 		this._id = _id;
 	}
-
 	public String getUsername() {
 		return username;
 	}
-
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
 	public String getPassword() {
 		return password;
 	}
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 	public String getSalt() {
 		return salt;
 	}
-
 	public void setSalt(String salt) {
 		this.salt = salt;
 	}
-
 	public String getEmail() {
 		return email;
 	}
-
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
 	public BasicDBList getFriends() {
 		return friends;
 	}
-
 	public void setFriends(BasicDBList friends) {
 		this.friends = friends;
 	}
-
 	public void addFriend(int friendID) {
 		this.friends.add(friendID);
 	}
-
 	public void destroyFriendship(Integer friendID) {
 		this.friends.remove(friendID);
 	}
-
 	public boolean getEmailForNewFriend() {
 		return emailForNewFriend;
 	}
-
 	public void setEmailForNewFriend(boolean emailForNewFriend) {
 		this.emailForNewFriend = emailForNewFriend;
 	}
-
 	public boolean getEmailForNewGame() {
 		return emailForNewGame;
 	}
-
 	public void setEmailForNewGame(boolean emailForNewGame) {
 		this.emailForNewGame = emailForNewGame;
 	}
-
 	public boolean getEmailForTurn() {
 		return emailForTurn;
 	}
-
 	public void setEmailForTurn(boolean emailForTurn) {
 		this.emailForTurn = emailForTurn;
 	}
-
 	public boolean getEmailForGameOver() {
 		return emailForGameOver;
 	}
-
 	public void setEmailForGameOver(boolean emailForGameOver) {
 		this.emailForGameOver = emailForGameOver;
 	}
@@ -191,22 +170,6 @@ public class User extends ReflectionDBObject implements Player {
 		return true;
 	}
 
-	public boolean sendFriendRequest(User user) {
-		return false;
-	}
-
-	public boolean acceptFriendRequest(User user) {
-		return false;
-	}
-
-	public static User make(String username, String email, String password) {
-		return null;
-	}
-
-	public static User login(String username, String email, String password) {
-		return null;
-	}
-
 	public static String generateSalt() {
 		SecureRandom random = new SecureRandom();
 		return new BigInteger(NUM_BITS, random).toString(RADIX);
@@ -228,16 +191,6 @@ public class User extends ReflectionDBObject implements Player {
 		return this.password.equals(hashPassword(this.salt, password));
 	}
 
-	@Override
-	public void updateWin(String game) {
-
-	}
-
-	@Override
-	public void updateLoss(String game) {
-
-	}
-
 	public List<User> getFriendsList() {
 		List<User> toReturn = new LinkedList<User>();
 		for (Object o : friends) {
@@ -245,7 +198,6 @@ public class User extends ReflectionDBObject implements Player {
 			User f = DBHandler.getUser(friend_id);
 			toReturn.add(f);
 		}
-
 		return toReturn;
 	}
 }
