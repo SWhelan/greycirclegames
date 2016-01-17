@@ -55,4 +55,14 @@ public class CirclesBoard extends ReflectionDBObject {
     public void setBoard(String[][] board) {
         this.board = board;
     }
+
+    public CirclesBoard copy() {
+        CirclesBoard copy = new CirclesBoard(rows(), columns());
+        for(int i = 0; i < copy.rows(); i++) {
+            for(int j = 0; j < copy.columns(); j++) {
+                copy.setCell(i, j, cellAt(i, j));
+            }
+        }
+        return copy;
+    }
 }

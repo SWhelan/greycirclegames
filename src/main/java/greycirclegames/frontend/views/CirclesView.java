@@ -33,17 +33,9 @@ public class CirclesView {
 		isTurn = currentPlayerId == viewingPlayerId; 
 		isActive = game.getIsActive();
 		
-		int lightCount = 0;
-		int darkCount = 0;
-		for(int i = 0; i < board.rows(); i++){
-			for(int j = 0; j < board.columns(); j++){
-				if(board.cellAt(i, j) != null && board.cellAt(i, j).equals(GlobalConstants.COLOR.WHITE)){
-					lightCount++;
-				} else if(board.cellAt(i, j) != null) {
-					darkCount++;
-				}
-			}
-		}
+		int lightCount = gameState.numOnBoard(GlobalConstants.COLOR.WHITE);
+		int darkCount = gameState.numOnBoard(GlobalConstants.COLOR.BLACK);
+
 		if(game.getPlayers().get(0).get_id() == viewingPlayerId){
 			yourCount = lightCount;
 			theirCount = darkCount;

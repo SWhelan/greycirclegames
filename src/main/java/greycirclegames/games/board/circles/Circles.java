@@ -35,6 +35,11 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 	}
 
 	@Override
+	public boolean hasSingleMoveTurns() {
+		return true;
+	}
+
+	@Override
 	public boolean gameIsOver() {
 		CirclesBoard board = gameState.getBoard();
 		for(int i = 0; i < board.rows(); i++){
@@ -45,11 +50,6 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 			}
 		}
 		return true;
-	}
-	
-	public boolean applyAIMoves() {
-		// TODO Auto-generated method stub
-		return false;
 	}
 
 	public boolean endTurn() {

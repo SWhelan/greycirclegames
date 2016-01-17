@@ -35,7 +35,7 @@ public class CirclesMove extends Move {
 
 	@Override
 	public boolean isValid() {
-		if(!CirclesGameState.validPosition(column, row)){
+		if(!state.validPosition(column, row)){
 			return false;
 		}
 		CirclesBoard board = state.getBoard();

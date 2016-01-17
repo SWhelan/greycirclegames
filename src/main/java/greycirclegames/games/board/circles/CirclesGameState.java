@@ -16,7 +16,11 @@ public class CirclesGameState extends GameState {
 	public CirclesGameState(){
 		super();
 	}
-	
+
+    public CirclesGameState(CirclesBoard board) {
+        this.board = board;
+    }
+
 	public CirclesGameState(BasicDBObject obj) {
 		board = new CirclesBoard((BasicDBObject)obj.get("Board"), ROWS, COLUMNS);
 	}
@@ -25,12 +29,16 @@ public class CirclesGameState extends GameState {
 	public void initializeToNewGameState(List<Player> players) {
 		board = new CirclesBoard(ROWS, COLUMNS);
 		this.setTurnNumber(players.get(0).get_id());
-		for(int i = 0; i < board.rows()-1; i++){
-			for(int j = 0; j < board.columns()-1; j++){
-				// TODO what if we change board size?
-				if((i == 3 && j == 3) || (i == 4 && j == 4)){
+		int centerHorizontally = Math.round(COLUMNS/2);
+		int centerVertically = Math.round(ROWS/2);
+
+		for(int i = 0; i < board.rows(); i++){
+			for(int j = 0; j < board.columns(); j++){
+				if((i == centerVertically-1 && j == centerHorizontally-1)
+						|| (i == centerVertically && j == centerHorizontally)){
 					board.setCell(i, j, GlobalConstants.COLOR.WHITE);
-				} else if((i == 4 && j == 3) || (i == 3 && j == 4)){
+				} else if((i == centerVertically && j == centerHorizontally-1)
+						|| (i == centerVertically-1 && j == centerHorizontally)){
 					board.setCell(i, j, GlobalConstants.COLOR.BLACK);
 				} else {
 					board.setCell(i, j, null);
@@ -47,16 +55,24 @@ public class CirclesGameState extends GameState {
 		return board;
 	}
 	
-	public boolean setPiece(int column, int row, String color){
-		if(!validPosition(column, row)){
-			return false;
-		}
-		board.setCell(row, column, color);
-		return true;
-	}
-	
-	public static boolean validPosition(int column, int row){
+	public boolean validPosition(int column, int row){
+        if(board.cellAt(row, column) != null) return false;
 		return column <= COLUMNS && column >= 0 && row <= ROWS && row >= 0;
 	}
 
+    public int numOnBoard(String color) {
+        int count = 0;
+        for (int i = 0; i < board.rows(); i++) {
+            for (int j = 0; j < board.columns(); j++) {
+                if (board.cellAt(i, j) != null && board.cellAt(i, j).equals(color)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public CirclesGameState copy() {
+        return new CirclesGameState(board.copy());
+    }
 }
