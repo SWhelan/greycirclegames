@@ -1,6 +1,5 @@
 package greycirclegames.games.board.circles;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,7 +11,7 @@ import greycirclegames.Player;
 import greycirclegames.games.Game;
 
 public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtificialPlayer> {
-	public static final List<String> turnColors = new ArrayList<String>(Arrays.asList(GlobalConstants.COLOR.WHITE, GlobalConstants.COLOR.BLACK));
+	public static final List<String> turnColors = Arrays.asList(GlobalConstants.COLOR.WHITE, GlobalConstants.COLOR.BLACK);
 
 	public Circles(int id, List<Player> players){
 		super(id, players);
@@ -37,10 +36,10 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 
 	@Override
 	public boolean gameIsOver() {
-		String[][] board = ((CirclesGameState) gameState).getBoard();
-		for(int i = 0; i < board.length; i++){
-			for(int j = 0; j < board[i].length; j++){
-				if(board[i][j] == null){
+		CirclesBoard board = gameState.getBoard();
+		for(int i = 0; i < board.rows(); i++){
+			for(int j = 0; j < board.columns(); j++){
+				if(board.cellAt(i, j) == null){
 					return false;
 				}
 			}
@@ -66,10 +65,10 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 	protected int determineWinnerId() {
 		int light = 0;
 		int dark = 0;
-		String[][] board = ((CirclesGameState) gameState).getBoard();
-		for(int i = 0; i < board.length; i++){
-			for(int j = 0; j < board[i].length; j++){
-				if(board[i][j].equals(GlobalConstants.COLOR.WHITE)){
+		CirclesBoard board = gameState.getBoard();
+		for(int i = 0; i < board.rows(); i++){
+			for(int j = 0; j < board.columns(); j++){
+				if(board.cellAt(i, j).equals(GlobalConstants.COLOR.WHITE)){
 					light++;
 				} else {
 					dark++;

@@ -7,7 +7,6 @@ import greycirclegames.games.Game;
 import greycirclegames.games.GameState;
 import greycirclegames.games.Move;
 import greycirclegames.games.card.Card;
-import greycirclegames.games.card.CardBasedGameState;
 import greycirclegames.games.card.Pile;
 
 /**

@@ -38,7 +38,7 @@ public class CirclesMove extends Move {
 		if(!CirclesGameState.validPosition(column, row)){
 			return false;
 		}
-		String[][] board = state.getBoard();
+		CirclesBoard board = state.getBoard();
 		return 	shouldApplyNorth(board) || shouldApplyNorthEast(board) ||
 				shouldApplySouth(board) || shouldApplySouthEast(board) ||
 				shouldApplyWest(board) || shouldApplySouthWest(board) ||
@@ -48,7 +48,7 @@ public class CirclesMove extends Move {
 	@Override
 	public void apply() {
 		// I wrote this while watching star wars so probably not right.
-		String[][] board = state.getBoard();
+		CirclesBoard board = state.getBoard();
 		// North
 		if(shouldApplyNorth(board)){
 			applyNorth();
@@ -83,14 +83,14 @@ public class CirclesMove extends Move {
 		}
 		
 		// Set the one they clicked last because the validation depends on that being null
-		state.getBoard()[row][column] = color;
+		board.setCell(row, column, color);
 	}
 
 	private void applyNorthWest() {
 		applyDirection(true, false, true, false);		
 	}
 
-	private boolean shouldApplyNorthWest(String[][] board) {
+	private boolean shouldApplyNorthWest(CirclesBoard board) {
 		return shouldApplyDirection(board, true, false, true, false);
 	}
 
@@ -98,7 +98,7 @@ public class CirclesMove extends Move {
 		applyDirection(false, false, true, false);		
 	}
 
-	private boolean shouldApplyWest(String[][] board) {
+	private boolean shouldApplyWest(CirclesBoard board) {
 		return shouldApplyDirection(board, false, false, true, false);
 	}
 
@@ -106,7 +106,7 @@ public class CirclesMove extends Move {
 		applyDirection(false, true, true, false);
 	}
 
-	private boolean shouldApplySouthWest(String[][] board) {
+	private boolean shouldApplySouthWest(CirclesBoard board) {
 		return shouldApplyDirection(board, false, true, true, false);
 	}
 
@@ -114,7 +114,7 @@ public class CirclesMove extends Move {
 		applyDirection(false, true, false, false);	
 	}
 
-	private boolean shouldApplySouth(String[][] board) {
+	private boolean shouldApplySouth(CirclesBoard board) {
 		return shouldApplyDirection(board, false, true, false, false);
 	}
 
@@ -122,7 +122,7 @@ public class CirclesMove extends Move {
 		applyDirection(false, true, false, true);	
 	}
 
-	private boolean shouldApplySouthEast(String[][] board) {
+	private boolean shouldApplySouthEast(CirclesBoard board) {
 		return shouldApplyDirection(board, false, true, false, true);
 	}
 
@@ -130,7 +130,7 @@ public class CirclesMove extends Move {
 		applyDirection(false, false, false, true);
 	}
 
-	private boolean shouldApplyEast(String[][] board) {
+	private boolean shouldApplyEast(CirclesBoard board) {
 		return shouldApplyDirection(board, false, false, false, true);
 	}
 
@@ -138,7 +138,7 @@ public class CirclesMove extends Move {
 		applyDirection(true, false, false, true);
 	}
 
-	private boolean shouldApplyNorthEast(String[][] board) {
+	private boolean shouldApplyNorthEast(CirclesBoard board) {
 		return shouldApplyDirection(board, true, false, false, true);
 	}
 
@@ -146,20 +146,21 @@ public class CirclesMove extends Move {
 		applyDirection(true, false, false, false);
 	}
 
-	private boolean shouldApplyNorth(String[][] board) {
+	private boolean shouldApplyNorth(CirclesBoard board) {
 		return shouldApplyDirection(board, true, false, false, false);
 	}
 	
 	private void applyDirection(boolean south, boolean north, boolean west, boolean east) {
+		CirclesBoard board = state.getBoard();
 		boolean done = false;
 		int i = row;
 		int j = column;
-		while(!done && i > -1 && i < state.getBoard().length && j > -1 && j < state.getBoard()[i].length){
-			String cellColor = state.getBoard()[i][j];
+		while(!done && i > -1 && i < board.rows() && j > -1 && j < board.columns()){
+			String cellColor = board.cellAt(i, j);
 			if(cellColor != null && cellColor.equals(color)){
 				done = true;
 			} else if(i != row || j != column){
-				state.getBoard()[i][j] = color;
+				board.setCell(i, j, color);
 			}
 			if(south){
 				i = i - 1;
@@ -176,14 +177,14 @@ public class CirclesMove extends Move {
 		}
 	}
 	
-	private boolean shouldApplyDirection(String[][]board, boolean south, boolean north, boolean west, boolean east){
+	private boolean shouldApplyDirection(CirclesBoard board, boolean south, boolean north, boolean west, boolean east){
  		boolean result = false;
 		boolean done = false;
 		int i = row;
 		int j = column;
 		int count = 0;
-		while(!done && i > -1 && i < board.length && j > -1 && j < board[i].length){
-			String cellColor = board[i][j];
+		while(!done && i > -1 && i < board.rows() && j > -1 && j < board.columns()){
+			String cellColor = board.cellAt(i, j);
 			if((i != row || j != column) && cellColor == null){
 				done = true;
 				result = false;

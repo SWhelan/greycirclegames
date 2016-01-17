@@ -6,13 +6,13 @@ import java.util.List;
 import greycirclegames.GlobalConstants;
 import greycirclegames.User;
 import greycirclegames.games.board.circles.Circles;
+import greycirclegames.games.board.circles.CirclesBoard;
 import greycirclegames.games.board.circles.CirclesGameState;
 import greycirclegames.games.board.circles.CirclesMove;
 
 public class CirclesView {
-	public List<RowView> displayBoard = new ArrayList<RowView>();
-	public int gameId; 
-	public String name;
+	public List<RowView> displayBoard = new ArrayList<>();
+	public int gameId;
 	public String color;
 	public boolean isTurn;
 	public boolean isActive;
@@ -24,8 +24,8 @@ public class CirclesView {
 	public boolean isWinner = false;
 
 	public CirclesView(Circles game, User user) {
-	    CirclesGameState gameState = (CirclesGameState)game.getGameState();
-		String[][] board = gameState.getBoard();
+	    CirclesGameState gameState = game.getGameState();
+		CirclesBoard board = gameState.getBoard();
 		gameId = game.get_id();
 		color = game.turnColors.get(game.currentPlayerIndex);
 		int currentPlayerId = game.getCurrentPlayerObject().get_id();
@@ -35,16 +35,16 @@ public class CirclesView {
 		
 		int lightCount = 0;
 		int darkCount = 0;
-		for(int i = 0; i < board.length; i++){
-			for(int j = 0; j < board[i].length; j++){
-				if(board[i][j] != null && board[i][j].equals(GlobalConstants.COLOR.WHITE)){
+		for(int i = 0; i < board.rows(); i++){
+			for(int j = 0; j < board.columns(); j++){
+				if(board.cellAt(i, j) != null && board.cellAt(i, j).equals(GlobalConstants.COLOR.WHITE)){
 					lightCount++;
-				} else if(board[i][j] != null) {
+				} else if(board.cellAt(i, j) != null) {
 					darkCount++;
 				}
 			}
 		}
-		if((int) game.getPlayers().get(0).get_id() == viewingPlayerId){
+		if(game.getPlayers().get(0).get_id() == viewingPlayerId){
 			yourCount = lightCount;
 			theirCount = darkCount;
 			yourColor = GlobalConstants.COLOR.WHITE;
@@ -59,22 +59,22 @@ public class CirclesView {
 		}
 		if(!isActive){
 			int winnerId = game.getWinner_id();
-			if(winnerId == (int) viewingPlayerId){
+			if(winnerId == viewingPlayerId){
 				isWinner = true;
 			}
 		}
 		
-		for(int i = 0; i < board.length; i++){
-            ArrayList<CircleView> row = new ArrayList<CircleView>();
-            for(int j = 0; j < board[i].length; j++){
-                if(board[i][j] == null){
+		for(int i = 0; i < board.rows(); i++){
+            ArrayList<CircleView> row = new ArrayList<>();
+            for(int j = 0; j < board.columns(); j++){
+                if(board.cellAt(i, j) == null){
                     if(new CirclesMove(i, j, yourColor, gameState, user).isValid()) {
                         row.add(new CircleView(i, j, true));
                     } else {
                         row.add(new CircleView(i, j, false));
                     }
                 } else {
-                    row.add(new CircleView(i, j, board[i][j], true));
+                    row.add(new CircleView(i, j, board.cellAt(i, j), true));
                 }
             }
             displayBoard.add(new RowView(row));
