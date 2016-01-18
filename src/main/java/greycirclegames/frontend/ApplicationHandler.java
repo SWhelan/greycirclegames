@@ -205,4 +205,12 @@ public class ApplicationHandler extends TemplateHandler {
 		return getModelAndView(null, EDIT_USER_TEMPLATE, rq, rs);
 	}
 
+	public static ModelAndView removeNotification(Request rq, Response rs) {
+		int notificationIndex = Integer.parseInt(rq.params(":id"));
+		User user = getUserFromCookies(rq);
+		user.removeNotification(notificationIndex);
+		DBHandler.updateUser(user);
+		return getModelAndView(null, GAME_LIST_TEMPLATE, rq, rs);
+	}
+
 }

@@ -44,6 +44,7 @@ public class TemplateHandler {
     public static final String LOGOUT_ROUTE = "/logout";
     public static final String POST_MOVE_ROUTE = "/move";
     public static final String POST_TURN_ROUTE = "/turn";
+    public static final String REMOVE_NOTIFICATION_ROUTE = "/removeNotification";
 
     // Prepend Games
     public static final String CIRCLES_ROUTE = "/circles";
@@ -83,6 +84,7 @@ public class TemplateHandler {
         get(LOGOUT_ROUTE, (rq, rs) -> ApplicationHandler.logout(rq, rs));
         get(GAMES_ROUTE, (rq, rs) -> ApplicationHandler.renderGameList(rq, rs), new MustacheTemplateEngine());
         get(CREATE_GAME_ROUTE, (rq, rs) -> ApplicationHandler.renderCreateGame(rq, rs), new MustacheTemplateEngine());
+        get(REMOVE_NOTIFICATION_ROUTE + "/:id", (rq, rs) -> ApplicationHandler.removeNotification(rq, rs), new MustacheTemplateEngine());
         post(REGISTER_ROUTE, (rq, rs) -> ApplicationHandler.postRegister(rq, rs), new MustacheTemplateEngine());
         post(LOGIN_ROUTE, (rq, rs) -> ApplicationHandler.postLogin(rq, rs), new MustacheTemplateEngine());
         post(EDIT_USER_ROUTE, (rq, rs) -> ApplicationHandler.postEditUser(rq, rs), new MustacheTemplateEngine());
@@ -248,8 +250,10 @@ public class TemplateHandler {
             return new ModelAndView(new HashMap<String, Object>(), templateName);
         }
         if (isLoggedIn(rq)) {
+        	User user = getUserFromCookies(rq);
             info.put("loggedIn", true);
-            info.put("username", getUserFromCookies(rq).getUsername());
+            info.put("username", user.getUsername());
+            info.put("notifications", user.getNotifications());
         }
         if (rs.raw().containsHeader(GlobalConstants.DISPLAY_ERROR)) {
             info.put(GlobalConstants.DISPLAY_ERROR, rs.raw().getHeader(GlobalConstants.DISPLAY_ERROR));
@@ -282,6 +286,7 @@ public class TemplateHandler {
         info.put("POST_TURN_ROUTE", POST_TURN_ROUTE);
         info.put("CIRCLES_ROUTE", CIRCLES_ROUTE);
         info.put("KINGS_CORNER_ROUTE", KINGS_CORNER_ROUTE);
+        info.put("REMOVE_NOTIFICATION_ROUTE", REMOVE_NOTIFICATION_ROUTE);
 
         return new ModelAndView(info, templateName);
     }

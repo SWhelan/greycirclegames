@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import greycirclegames.DBHandler;
-import greycirclegames.EmailHandler;
 import greycirclegames.GlobalConstants;
+import greycirclegames.NotificationAndEmailHandler;
 import greycirclegames.Player;
 import greycirclegames.frontend.views.KingsCornerView;
 import greycirclegames.games.card.Card;
@@ -62,7 +62,7 @@ public class KingsCornerHandler extends TemplateHandler{
 		// Create the game
 		KingsCorner game = new KingsCorner(DBHandler.getNextGameID(), players);
 		DBHandler.createKCGame(game);
-		EmailHandler.sendNewGameIfWanted(players, game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + Integer.toString(game.get_id()), getUserFromCookies(rq));
+		NotificationAndEmailHandler.sendNewGameIfWanted(players, game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + Integer.toString(game.get_id()), getUserFromCookies(rq));
 		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
 		rs.redirect(KINGS_CORNER_ROUTE + "/" + Integer.toString(game.get_id()));
 		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
@@ -125,9 +125,9 @@ public class KingsCornerHandler extends TemplateHandler{
 		}
 		DBHandler.updateKCGame(game);
 		if(!game.gameIsOver()){
-			EmailHandler.sendTurnMailIfWanted(game.getPlayers(), game.getCurrentPlayerObject(), game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + game.get_id());
+			NotificationAndEmailHandler.sendTurnMailIfWanted(game.getPlayers(), game.getCurrentPlayerObject(), game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + game.get_id());
 		} else {
-			EmailHandler.sendGameOverMailIfWanted(game.getPlayers(), game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + game.get_id(), game.getWinner());
+			NotificationAndEmailHandler.sendGameOverMailIfWanted(game.getPlayers(), game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + game.get_id(), game.getWinner());
 		}
 		rs.redirect(KINGS_CORNER_ROUTE + "/" + gameIdString);
 		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);

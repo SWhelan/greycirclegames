@@ -4,10 +4,12 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.mongodb.BasicDBList;
+import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.ReflectionDBObject;
 
@@ -23,6 +25,8 @@ public class User extends ReflectionDBObject implements Player {
 	private String email;
 	// List of ids of friends
 	private BasicDBList friends;
+	private int nextNotificationId = 0;
+	private List<Notification> notifications = new ArrayList<Notification>();
 	private boolean emailForNewFriend;
 	private boolean emailForNewGame;
 	private boolean emailForTurn;
@@ -55,6 +59,11 @@ public class User extends ReflectionDBObject implements Player {
 				(String) obj.get("Salt"), (String) obj.get("Email"), (BasicDBList) obj.get("Friends"),
 				(boolean) obj.get("EmailForNewFriend"), (boolean) obj.get("EmailForNewGame"),
 				(boolean) obj.get("EmailForTurn"), (boolean) obj.get("EmailForGameOver"));
+		this.nextNotificationId = (Integer) obj.get("NextNotificationId");
+		BasicDBList dbNotifications = (BasicDBList) obj.get("Notifications");
+		for(Object dbNotification : dbNotifications){
+			this.notifications.add(new Notification((BasicDBObject) dbNotification));
+		}
 	}
 
 	public Integer get_id() {
@@ -122,6 +131,37 @@ public class User extends ReflectionDBObject implements Player {
 	}
 	public void setEmailForGameOver(boolean emailForGameOver) {
 		this.emailForGameOver = emailForGameOver;
+	}
+	public int getNextNotificationId() {
+		return nextNotificationId;
+	}
+	public void setNextNotificationId(int nextNotificationId) {
+		this.nextNotificationId = nextNotificationId;
+	}
+	public List<Notification> getNotifications() {
+		return notifications;
+	}
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
+	}
+	public void addNotification(String text, String url){
+		this.notifications.add(new Notification(this.nextNotificationId, text, url));
+		this.nextNotificationId = this.nextNotificationId++;
+	}
+	
+	public void removeNotification(int id){
+		int index = 0;
+		boolean found = false;
+		for(int i = 0; i < this.notifications.size(); i++){
+			if(this.notifications.get(i).getUid() == id){
+				found = true;
+				index = i;
+			}
+		}
+		if(found){
+			this.notifications.remove(index);
+			this.nextNotificationId = this.nextNotificationId--;
+		}
 	}
 
 	@Override

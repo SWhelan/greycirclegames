@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import greycirclegames.DBHandler;
-import greycirclegames.EmailHandler;
 import greycirclegames.GlobalConstants;
+import greycirclegames.NotificationAndEmailHandler;
 import greycirclegames.Player;
 import greycirclegames.frontend.views.CirclesView;
 import greycirclegames.games.board.circles.Circles;
@@ -39,7 +39,7 @@ public class CirclesHandler extends TemplateHandler{
 		// Create the game
 		Circles game = new Circles(DBHandler.getNextGameID(), players);
 		DBHandler.createCirclesGame(game);
-		EmailHandler.sendNewGameIfWanted(players, game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + Integer.toString(game.get_id()), getUserFromCookies(rq));
+		NotificationAndEmailHandler.newGame(players, game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + Integer.toString(game.get_id()), getUserFromCookies(rq));
 		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
 		rs.redirect(CIRCLES_ROUTE + "/" + Integer.toString(game.get_id()));
 		return getModelAndView(null, CIRCLES_TEMPLATE, rq, rs);
@@ -78,9 +78,9 @@ public class CirclesHandler extends TemplateHandler{
 			}
 			DBHandler.updateCirclesGame(game);
 			if(!game.gameIsOver()){
-				EmailHandler.sendTurnMailIfWanted(game.getPlayers(), game.getCurrentPlayerObject(), game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + game.get_id());
+				NotificationAndEmailHandler.turn(game.getPlayers(), game.getCurrentPlayerObject(), game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + game.get_id());
 			} else {
-				EmailHandler.sendGameOverMailIfWanted(game.getPlayers(), game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + game.get_id(), game.getWinner());
+				NotificationAndEmailHandler.gameOver(game.getPlayers(), game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + game.get_id(), game.getWinner(), game.getCurrentPlayerObject());
 			}
 		} else {
 			rs.cookie(GlobalConstants.DISPLAY_ERROR, "Move was invalid and not applied.");

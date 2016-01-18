@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import greycirclegames.DBHandler;
-import greycirclegames.EmailHandler;
 import greycirclegames.GlobalConstants;
+import greycirclegames.NotificationAndEmailHandler;
 import greycirclegames.Player;
 import spark.ModelAndView;
 import spark.Request;
@@ -57,7 +57,7 @@ public class FriendsHandler extends TemplateHandler {
 					rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
 				} else {
 					rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The requested friend has been added.");
-					EmailHandler.sendNewFriendIfWanted(getUserIdFromCookies(rq), user2.get_id());
+					NotificationAndEmailHandler.newFriend(getUserIdFromCookies(rq), user2.get_id());
 				}
 			}
 		}
