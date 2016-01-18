@@ -10,6 +10,7 @@ public class Main {
     	Spark.staticFileLocation("/static");
         port(getHerokuAssignedPort());
         TemplateHandler.registerTemplates();
+        DevHandler.addDefaultUsers();
     }
 
     static int getHerokuAssignedPort() {

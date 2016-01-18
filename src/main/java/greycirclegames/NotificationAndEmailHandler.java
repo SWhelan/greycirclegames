@@ -27,9 +27,11 @@ public class NotificationAndEmailHandler {
 	}
 	
 	public static void sendTurnMailIfWanted(List<Player> players, Player player, String gameTypeIdentifier, String url) {
-		User user = (User)player;
-		if(listHasMoreThanOneHuman(players) && user.getEmailForTurn()){
-			EmailService.sendTurnMail(user.getEmail(), gameTypeIdentifier, url);
+		if(player.get_id() > 0){
+			User user = (User)player;
+			if(listHasMoreThanOneHuman(players) && user.getEmailForTurn()){
+				EmailService.sendTurnMail(user.getEmail(), gameTypeIdentifier, url);
+			}
 		}
 	}
 	

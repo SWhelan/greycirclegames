@@ -67,6 +67,12 @@ public class DBHandler {
 		}
 	}
 
+	public static long numUsers(){
+		DB db = DatabaseConnector.getMongoDB();
+		DBCollection coll = db.getCollection("users");
+		return coll.count();
+	}
+	
 	public static KingsCorner getKCGame(int gameId) {
 		return new KingsCorner(getGame(gameId, "kcgames"));
 	}
