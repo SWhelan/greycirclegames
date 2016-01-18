@@ -4,4 +4,6 @@
 target/*
 *.DS_Store
 codecoverage/*
+.idea/*
+*.iml
 /target/

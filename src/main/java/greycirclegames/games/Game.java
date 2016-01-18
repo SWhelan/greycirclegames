@@ -148,6 +148,9 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
                 m = (M)ai.createMove(this);
                 if(m != null){
                     this.applyMove(m);
+                    if(this.hasSingleMoveTurns()) {
+                        hasMove = false;
+                    }
                 }else{
                     hasMove = false;
                 }               
@@ -285,6 +288,10 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 
 	public void setIsActive(boolean isActive) {
 		this.isActive = isActive;
+	}
+
+	public boolean hasSingleMoveTurns() {
+		return false;
 	}
 
 	public Integer getWinner_id() {

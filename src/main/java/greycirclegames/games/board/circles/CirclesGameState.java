@@ -2,7 +2,6 @@ package greycirclegames.games.board.circles;
 
 import java.util.List;
 
-import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 
 import greycirclegames.GlobalConstants;
@@ -12,64 +11,68 @@ import greycirclegames.games.GameState;
 public class CirclesGameState extends GameState {
 	private static final int ROWS = GlobalConstants.CIRCLES_ROWS;
 	private static final int COLUMNS = GlobalConstants.CIRCLES_COLUMNS;
-	private String[][] board = new String[ROWS][COLUMNS];
-	
+	private CirclesBoard board;
+
 	public CirclesGameState(){
 		super();
 	}
-	
+
+    public CirclesGameState(CirclesBoard board) {
+        this.board = board;
+    }
+
 	public CirclesGameState(BasicDBObject obj) {
-		BasicDBList board = (BasicDBList)obj.get("Board");
-		int i = 0;
-		for(Object row : board){
-			int j = 0;
-			for(Object cell : (BasicDBList) row){
-				if(cell == null){
-					this.board[i][j] = null;
-				} else {
-					this.board[i][j] = (String)cell;
-				}
-				j++;
-			}
-			i++;
-		}
+		board = new CirclesBoard((BasicDBObject)obj.get("Board"), ROWS, COLUMNS);
 	}
 
 	@Override
 	public void initializeToNewGameState(List<Player> players) {
+		board = new CirclesBoard(ROWS, COLUMNS);
 		this.setTurnNumber(players.get(0).get_id());
-		for(int i = 0; i < board.length; i++){
-			for(int j = 0; j < board[i].length; j++){
-				// TODO what if we change board size?
-				if((i == 3 && j == 3) || (i == 4 && j == 4)){
-					board[i][j] = GlobalConstants.COLOR.WHITE;
-				} else if((i == 4 && j == 3) || (i == 3 && j == 4)){
-					board[i][j] = GlobalConstants.COLOR.BLACK;
+		int centerHorizontally = Math.round(COLUMNS/2);
+		int centerVertically = Math.round(ROWS/2);
+
+		for(int i = 0; i < board.rows(); i++){
+			for(int j = 0; j < board.columns(); j++){
+				if((i == centerVertically-1 && j == centerHorizontally-1)
+						|| (i == centerVertically && j == centerHorizontally)){
+					board.setCell(i, j, GlobalConstants.COLOR.WHITE);
+				} else if((i == centerVertically && j == centerHorizontally-1)
+						|| (i == centerVertically-1 && j == centerHorizontally)){
+					board.setCell(i, j, GlobalConstants.COLOR.BLACK);
 				} else {
-					board[i][j] = null;
+					board.setCell(i, j, null);
 				}
 			}
 		}
 	}
 	
-	public void setBoard(String[][] board){
+	public void setBoard(CirclesBoard board){
 		this.board = board;
 	}
 
-	public String[][] getBoard() {
+	public CirclesBoard getBoard() {
 		return board;
 	}
 	
-	public boolean setPiece(int column, int row, String color){
-		if(!validPosition(column, row)){
-			return false;
-		}
-		board[row][column] = color;
-		return true;
-	}
-	
-	public static boolean validPosition(int column, int row){
+	public boolean validPosition(int column, int row){
+        if(board.cellAt(row, column) != null) return false;
 		return column <= COLUMNS && column >= 0 && row <= ROWS && row >= 0;
 	}
 
+    public int numOnBoard(String color) {
+        int count = 0;
+        for (int i = 0; i < board.rows(); i++) {
+            for (int j = 0; j < board.columns(); j++) {
+                if (board.cellAt(i, j) != null && board.cellAt(i, j).equals(color)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    public CirclesGameState copy() {
+        return new CirclesGameState(board.copy());
+    }
 }
