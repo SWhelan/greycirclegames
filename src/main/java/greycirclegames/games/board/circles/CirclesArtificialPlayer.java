@@ -63,7 +63,7 @@ public class CirclesArtificialPlayer extends ArtificialPlayer {
         move.apply();
         int originalNumOnBoard = originalState.numOnBoard(color);
         int newNumOnBoard = state.numOnBoard(color);
-        return originalNumOnBoard - newNumOnBoard;
+        return newNumOnBoard - originalNumOnBoard;
     }
 
 }
