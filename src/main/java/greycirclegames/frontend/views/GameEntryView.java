@@ -30,6 +30,8 @@ public class GameEntryView {
 			Player user = DBHandler.getUser(game.getWinner_id());
 			if(user != null){
 				this.winner = user.getUsername();
+			} else if (game.getTie()){
+				this.winner = "It was a tie.";
 			} else {
 				this.winner = "A Computer Player";
 			}

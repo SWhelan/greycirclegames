@@ -51,9 +51,13 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	 */
 	public List<Player> players;
 	/**
-	 * The INDEX of the players list NOT THE PLAYER'S ID  
+	 * The INDEX of the players list NOT THE PLAYER'S ID.  
 	 */
 	public int currentPlayerIndex;
+	/**
+	 * Ignore the winnerId if it is a tie.
+	 */
+	protected boolean tie;
 
 	public Game(){
 		// Default constructor for database
@@ -72,6 +76,7 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 		this.moves = new LinkedList<M>();
 		isActive = true;
 		winner_id = null;
+		this.tie = false;
 	}
 
 	/**
@@ -225,7 +230,7 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	public void gameFromDBObject(DBObject obj) {
 		this._id = (Integer)obj.get("_id");
 		this.currentPlayerIndex = (Integer)obj.get("CurrentPlayerIndex");
-
+		this.tie = (boolean)obj.get("Tie");
 		BasicDBList players = (BasicDBList)obj.get("Players");
 		this.players = new LinkedList<Player>();
 		//We have to consider if a player is an Artificial Player or user when
@@ -285,36 +290,34 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	public boolean getIsActive() {
 		return isActive;
 	}
-
 	public void setIsActive(boolean isActive) {
 		this.isActive = isActive;
 	}
-
 	public boolean hasSingleMoveTurns() {
 		return false;
 	}
-
 	public Integer getWinner_id() {
 		return winner_id;
 	}
-
 	public void setWinner_id(Integer winner_id) {
 		this.winner_id = winner_id;
 	}
-
 	public List<Player> getPlayers() {
 		return players;
 	}
-
 	public void setPlayers(List<Player> players) {
 		this.players = players;
 	}
-
 	public int getCurrentPlayerIndex() {
 		return currentPlayerIndex;
 	}
-
 	public void setCurrentPlayerIndex(int currentPlayerIndex) {
 		this.currentPlayerIndex = currentPlayerIndex;
+	}
+	public boolean getTie() {
+		return tie;
+	}
+	public void setTie(boolean tie) {
+		this.tie = tie;
 	}
 }

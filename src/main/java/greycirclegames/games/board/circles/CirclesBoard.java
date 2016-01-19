@@ -56,7 +56,7 @@ public class CirclesBoard extends ReflectionDBObject {
         this.board = board;
     }
 
-    public CirclesBoard copy() {
+	public CirclesBoard copy() {
         CirclesBoard copy = new CirclesBoard(rows(), columns());
         for(int i = 0; i < copy.rows(); i++) {
             for(int j = 0; j < copy.columns(); j++) {

@@ -15,6 +15,7 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 
 	public Circles(int id, List<Player> players){
 		super(id, players);
+		this.tie = false;
 	}
 	
 	public Circles(DBObject obj){
@@ -41,15 +42,12 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 
 	@Override
 	public boolean gameIsOver() {
-		CirclesBoard board = gameState.getBoard();
-		for(int i = 0; i < board.rows(); i++){
-			for(int j = 0; j < board.columns(); j++){
-				if(board.cellAt(i, j) == null){
-					return false;
-				}
-			}
-		}
-		return true;
+		int numBlack = gameState.numOnBoard(GlobalConstants.COLOR.BLACK);
+		int numWhite = gameState.numOnBoard(GlobalConstants.COLOR.WHITE);
+		return (numBlack + numWhite == gameState.getBoard().rows() * gameState.getBoard().columns() ||
+				numBlack == 0 ||
+				numWhite == 0
+				);
 	}
 
 	public boolean endTurn() {
@@ -63,22 +61,15 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 
 	@Override
 	protected int determineWinnerId() {
-		int light = 0;
-		int dark = 0;
-		CirclesBoard board = gameState.getBoard();
-		for(int i = 0; i < board.rows(); i++){
-			for(int j = 0; j < board.columns(); j++){
-				if(board.cellAt(i, j).equals(GlobalConstants.COLOR.WHITE)){
-					light++;
-				} else {
-					dark++;
-				}
-			}
-		}
-		if(light > dark){
+		int numBlack = gameState.numOnBoard(GlobalConstants.COLOR.BLACK);
+		int numWhite = gameState.numOnBoard(GlobalConstants.COLOR.WHITE);
+		if(numWhite > numBlack){
 			return players.get(0).get_id();
-		} else {
+		} else if(numWhite < numBlack){
 			return players.get(1).get_id();
+		} else {
+			this.tie = true;	
+			return 0;
 		}
 	}
 
@@ -96,5 +87,4 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 	protected CirclesGameState makeGameStateFromDB(BasicDBObject dbObject) {
 		return new CirclesGameState(dbObject);
 	}
-	
 }

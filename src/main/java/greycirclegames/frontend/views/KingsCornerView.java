@@ -32,6 +32,7 @@ public class KingsCornerView {
 	
 	List<String> moveHistory;
 	boolean isWinner;
+	boolean isTie;
 	
 	public KingsCornerView(KingsCorner game, Player viewingPlayer){
 		gameId = game.get_id();
@@ -77,6 +78,7 @@ public class KingsCornerView {
 				isWinner = true;
 			}
 		}
+		isTie = game.getTie();
 	}
 	
 	private List<CardView> removeMiddle(List<CardView> pile){

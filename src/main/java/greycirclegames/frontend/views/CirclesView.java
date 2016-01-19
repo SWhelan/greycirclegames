@@ -22,12 +22,13 @@ public class CirclesView {
 	public String theirColor;
 	public String opponentName;
 	public boolean isWinner = false;
+	public boolean isTie = false;
 
 	public CirclesView(Circles game, User user) {
 	    CirclesGameState gameState = game.getGameState();
 		CirclesBoard board = gameState.getBoard();
 		gameId = game.get_id();
-		color = game.turnColors.get(game.currentPlayerIndex);
+		color = Circles.turnColors.get(game.currentPlayerIndex);
 		int currentPlayerId = game.getCurrentPlayerObject().get_id();
 		int viewingPlayerId = user.get_id();
 		isTurn = currentPlayerId == viewingPlayerId; 
@@ -54,6 +55,7 @@ public class CirclesView {
 			if(winnerId == viewingPlayerId){
 				isWinner = true;
 			}
+			isTie = game.getTie();
 		}
 		
 		for(int i = 0; i < board.rows(); i++){

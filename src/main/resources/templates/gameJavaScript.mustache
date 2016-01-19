@@ -32,14 +32,20 @@
 	
 		if(!isActive){
 			var message = "The game is over.";
-			{{#isWinner}}
-				message = message + " You won!";
-				displaySuccess(message, false);
-			{{/isWinner}}
-			{{^isWinner}}
-				message = message + " You lost.";
+			{{#isTie}}
+				message = message + " It was a tie.";
 				displayError(message, false);
-			{{/isWinner}}
+			{{/isTie}}
+			{{^isTie}}
+				{{#isWinner}}
+					message = message + " You won!";
+					displaySuccess(message, false);
+				{{/isWinner}}
+				{{^isWinner}}
+					message = message + " You lost.";
+					displayError(message, false);
+				{{/isWinner}}
+			{{/isTie}}
 		}
 		return;
 	}
