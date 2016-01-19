@@ -202,24 +202,37 @@ public class TemplateHandler {
         return DBHandler.getUser(getUserIdFromCookies(rq));
     }
 
-    // Is the user with userId already friends with friendId?
+    /**
+     *  Is the user with userId already friends with friendId?
+     * @param userId
+     * @param friendId
+     * @return true if friends false if not friends
+     */
     protected static boolean alreadyFriends(int userId, int friendId) {
         List<Player> friends = getFriendsFromDB(userId);
         return friends.stream().anyMatch(e -> e.get_id() == friendId);
     }
 
-    // The database returns a list of ids get the list of Players
+    /**
+     *  The database returns a list of ids get the list of Players
+     * @param userId
+     * @return List<Player> from a user that is the friends of that user.
+     */
     protected static List<Player> getFriendsFromDB(int userId) {
         return DBHandler.getFriendsForUser(userId).stream().map(e -> DBHandler.getUser((Integer) e))
                 .collect(Collectors.toList());
     }
 
-    // Get the key for the pile HashMap from the string name of the pile
+    /**
+     * Get the key for the pile HashMap from the string name of the pile
+     * @param name
+     * @return string to use as the key in the hashmap of the piles in a kcgame
+     */
     protected static String getPileKeyFromString(String name) {
         return Integer.toString(Arrays.stream(KCPileIds.values()).filter(e -> e.name().equals(name))
                 .collect(Collectors.toList()).get(0).ordinal());
     }
-
+    
     /**
      * 
      * A way to display success and failure messages to the user without
@@ -254,6 +267,9 @@ public class TemplateHandler {
             info.put("loggedIn", true);
             info.put("username", user.getUsername());
             info.put("notifications", user.getNotifications());
+            int count = user.getNotifications().size();
+            info.put("showNotificationCount", count > 0);
+            info.put("notificationCount", Integer.toString(count));
         }
         if (rs.raw().containsHeader(GlobalConstants.DISPLAY_ERROR)) {
             info.put(GlobalConstants.DISPLAY_ERROR, rs.raw().getHeader(GlobalConstants.DISPLAY_ERROR));

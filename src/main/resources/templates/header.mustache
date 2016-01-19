@@ -36,13 +36,18 @@
           <ul class="nav navbar-nav navbar-right">
           	{{#loggedIn}}
 	          	<li id="userDropdown" class="dropdown">
-		          	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{username}} <span class="caret"></span></a>
+		          	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+		          	{{username}} 
+		          	{{#showNotificationCount}}
+		          	<span id="notificationCount" class="badge">{{notificationCount}}</span>
+		          	{{/showNotificationCount}}
+		          	<span class="caret"></span></a>
 		          	<ul class="dropdown-menu">
 		          		{{#notifications}}
 		          			<li id="notification_{{uid}}">
 		          			<a>
-		          			<div class="display-inline-block" onclick="redirect({{uid}}, '{{url}}')"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> {{text}}</div>
-		          			<span class="display-inline-block glyphicon glyphicon-remove" onclick="redirect({{uid}}, null)" aria-hidden="true"></span>
+		          			<div class="display-inline-block clickable" onclick="redirect({{uid}}, '{{url}}')"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> {{text}}</div>
+		          			<span class="display-inline-block glyphicon glyphicon-remove clickable" onclick="redirect({{uid}}, null)" aria-hidden="true"></span>
 		          			</a>
 		          			</li>
 		          		{{/notifications}}
@@ -63,6 +68,12 @@
     function redirect(notificationId, urlToGo){
     	$("#userDropdown").addClass("open");
     	$("#notification_" + notificationId).addClass("hidden");
+    	var initialCount = $("#notificationCount").html();
+ 		if(initialCount - 1 <= 0){
+ 			$("#notificationCount").addClass("hidden");
+ 		} else {
+ 			$("#notificationCount").html(initialCount - 1);
+ 		}
         $.ajax({url: "{{REMOVE_NOTIFICATION_ROUTE}}" + "/" + notificationId, success: function(result){
             if(urlToGo != null){
             	window.location.replace(urlToGo);

@@ -8,6 +8,7 @@ import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.NotificationAndEmailHandler;
 import greycirclegames.Player;
+import greycirclegames.User;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -16,6 +17,9 @@ public class FriendsHandler extends TemplateHandler {
 
 	protected static ModelAndView renderFriends(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
+		User user = getUserFromCookies(rq);
+		user.removeFriendNotifications();
+		DBHandler.updateUser(user);
 		info.put("friends", getFriendsFromDB(getUserIdFromCookies(rq)));
 		return getModelAndView(info, FRIENDS_TEMPLATE, rq, rs);
 	}

@@ -9,6 +9,7 @@ import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.NotificationAndEmailHandler;
 import greycirclegames.Player;
+import greycirclegames.User;
 import greycirclegames.frontend.views.CirclesView;
 import greycirclegames.games.board.circles.Circles;
 import greycirclegames.games.board.circles.CirclesArtificialPlayer;
@@ -39,7 +40,7 @@ public class CirclesHandler extends TemplateHandler{
 		// Create the game
 		Circles game = new Circles(DBHandler.getNextGameID(), players);
 		DBHandler.createCirclesGame(game);
-		NotificationAndEmailHandler.newGame(players, game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + Integer.toString(game.get_id()), getUserFromCookies(rq));
+		NotificationAndEmailHandler.newGame(game.get_id(), players, game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + Integer.toString(game.get_id()), getUserFromCookies(rq));
 		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
 		rs.redirect(CIRCLES_ROUTE + "/" + Integer.toString(game.get_id()));
 		return getModelAndView(null, CIRCLES_TEMPLATE, rq, rs);
@@ -48,6 +49,9 @@ public class CirclesHandler extends TemplateHandler{
 	protected static ModelAndView renderGame(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();		
 		int gameId = getGameId(rq);
+		User user = getUserFromCookies(rq);
+		user.removeGameNotifications(gameId);
+		DBHandler.updateUser(user);
 		if(gameId < 0){
 			info.put("game", null);
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Game not found.");
@@ -78,9 +82,9 @@ public class CirclesHandler extends TemplateHandler{
 			}
 			DBHandler.updateCirclesGame(game);
 			if(!game.gameIsOver()){
-				NotificationAndEmailHandler.turn(game.getPlayers(), game.getCurrentPlayerObject(), game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + game.get_id());
+				NotificationAndEmailHandler.turn(game.get_id(), game.getPlayers(), game.getCurrentPlayerObject(), game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + game.get_id());
 			} else {
-				NotificationAndEmailHandler.gameOver(game.getPlayers(), game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + game.get_id(), game.getWinner(), game.getCurrentPlayerObject());
+				NotificationAndEmailHandler.gameOver(game.get_id(), game.getPlayers(), game.getGameTypeIdentifier(), CIRCLES_ROUTE + "/" + game.get_id(), game.getWinner(), game.getCurrentPlayerObject());
 			}
 		} else {
 			rs.cookie(GlobalConstants.DISPLAY_ERROR, "Move was invalid and not applied.");

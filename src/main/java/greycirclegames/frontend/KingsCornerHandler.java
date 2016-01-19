@@ -10,6 +10,7 @@ import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.NotificationAndEmailHandler;
 import greycirclegames.Player;
+import greycirclegames.User;
 import greycirclegames.frontend.views.KingsCornerView;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Card.Suit;
@@ -25,6 +26,9 @@ public class KingsCornerHandler extends TemplateHandler{
 	protected static ModelAndView renderGame(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();		
 		int gameId = getGameId(rq);
+		User user = getUserFromCookies(rq);
+		user.removeGameNotifications(gameId);
+		DBHandler.updateUser(user);
 		if(gameId < 0){
 			info.put("game", null);
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Game not found.");
@@ -62,7 +66,7 @@ public class KingsCornerHandler extends TemplateHandler{
 		// Create the game
 		KingsCorner game = new KingsCorner(DBHandler.getNextGameID(), players);
 		DBHandler.createKCGame(game);
-		NotificationAndEmailHandler.sendNewGameIfWanted(players, game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + Integer.toString(game.get_id()), getUserFromCookies(rq));
+		NotificationAndEmailHandler.newGame(game.get_id(), players, game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + Integer.toString(game.get_id()), getUserFromCookies(rq));
 		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
 		rs.redirect(KINGS_CORNER_ROUTE + "/" + Integer.toString(game.get_id()));
 		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
@@ -125,9 +129,9 @@ public class KingsCornerHandler extends TemplateHandler{
 		}
 		DBHandler.updateKCGame(game);
 		if(!game.gameIsOver()){
-			NotificationAndEmailHandler.sendTurnMailIfWanted(game.getPlayers(), game.getCurrentPlayerObject(), game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + game.get_id());
+			NotificationAndEmailHandler.turn(game.get_id(), game.getPlayers(), game.getCurrentPlayerObject(), game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + game.get_id());
 		} else {
-			NotificationAndEmailHandler.sendGameOverMailIfWanted(game.getPlayers(), game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + game.get_id(), game.getWinner());
+			NotificationAndEmailHandler.gameOver(game.get_id(), game.getPlayers(), game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + game.get_id(), game.getWinner(), game.getCurrentPlayerObject());
 		}
 		rs.redirect(KINGS_CORNER_ROUTE + "/" + gameIdString);
 		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);

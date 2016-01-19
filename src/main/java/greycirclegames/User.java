@@ -25,7 +25,7 @@ public class User extends ReflectionDBObject implements Player {
 	private String email;
 	// List of ids of friends
 	private BasicDBList friends;
-	private int nextNotificationId = 0;
+	private Integer nextNotificationId;
 	private List<Notification> notifications = new ArrayList<Notification>();
 	private boolean emailForNewFriend;
 	private boolean emailForNewGame;
@@ -33,7 +33,7 @@ public class User extends ReflectionDBObject implements Player {
 	private boolean emailForGameOver;
 
 	public User(int _id, String username, String password, String salt, String email, BasicDBList friends,
-			boolean emailForNewFriend, boolean emailForNewGame, boolean emailForTurn, boolean emailForGameOver) {
+			boolean emailForNewFriend, boolean emailForNewGame, boolean emailForTurn, boolean emailForGameOver, int nextNotificationId) {
 		this._id = _id;
 		this.username = username;
 		this.password = password;
@@ -44,10 +44,11 @@ public class User extends ReflectionDBObject implements Player {
 		this.emailForNewGame = emailForNewGame;
 		this.emailForTurn = emailForTurn;
 		this.emailForGameOver = emailForGameOver;
+		this.nextNotificationId = nextNotificationId;
 	}
 
 	public User(int _id, String username, String password, String salt, String email, BasicDBList friends) {
-		this(_id, username, password, salt, email, friends, false, false, false, false);
+		this(_id, username, password, salt, email, friends, false, false, false, false, 0);
 	}
 
 	public User(int _id, String email) {
@@ -58,8 +59,7 @@ public class User extends ReflectionDBObject implements Player {
 		this((Integer) obj.get("_id"), (String) obj.get("Username"), (String) obj.get("Password"),
 				(String) obj.get("Salt"), (String) obj.get("Email"), (BasicDBList) obj.get("Friends"),
 				(boolean) obj.get("EmailForNewFriend"), (boolean) obj.get("EmailForNewGame"),
-				(boolean) obj.get("EmailForTurn"), (boolean) obj.get("EmailForGameOver"));
-		this.nextNotificationId = (Integer) obj.get("NextNotificationId");
+				(boolean) obj.get("EmailForTurn"), (boolean) obj.get("EmailForGameOver"), (Integer) obj.get("NextNotificationId"));
 		BasicDBList dbNotifications = (BasicDBList) obj.get("Notifications");
 		for(Object dbNotification : dbNotifications){
 			this.notifications.add(new Notification((BasicDBObject) dbNotification));
@@ -132,7 +132,7 @@ public class User extends ReflectionDBObject implements Player {
 	public void setEmailForGameOver(boolean emailForGameOver) {
 		this.emailForGameOver = emailForGameOver;
 	}
-	public int getNextNotificationId() {
+	public Integer getNextNotificationId() {
 		return nextNotificationId;
 	}
 	public void setNextNotificationId(int nextNotificationId) {
@@ -144,9 +144,9 @@ public class User extends ReflectionDBObject implements Player {
 	public void setNotifications(List<Notification> notifications) {
 		this.notifications = notifications;
 	}
-	public void addNotification(String text, String url){
-		this.notifications.add(new Notification(this.nextNotificationId, text, url));
-		this.nextNotificationId = this.nextNotificationId++;
+	public void addNotification(String text, String url, int gameId, boolean friends){
+		this.notifications.add(new Notification(this.nextNotificationId, text, url, gameId, friends));
+		this.nextNotificationId = this.nextNotificationId + 1;
 	}
 	
 	public void removeNotification(int id){
@@ -160,7 +160,31 @@ public class User extends ReflectionDBObject implements Player {
 		}
 		if(found){
 			this.notifications.remove(index);
-			this.nextNotificationId = this.nextNotificationId--;
+			this.nextNotificationId = this.nextNotificationId - 1;
+		}
+	}
+	
+	public void removeGameNotifications(int gameId){
+		int i = 0;
+		while(i < this.notifications.size()){
+			if(this.notifications.get(i).getGameId() == gameId){
+				this.notifications.remove(i);
+				this.nextNotificationId = this.nextNotificationId - 1;
+			} else {
+				i++;
+			}
+		}
+	}
+	
+	public void removeFriendNotifications(){
+		int i = 0;
+		while(i < this.notifications.size()){
+			if(this.notifications.get(i).getFriends()){
+				this.notifications.remove(i);
+				this.nextNotificationId = this.nextNotificationId - 1;
+			} else {
+				i++;
+			}
 		}
 	}
 

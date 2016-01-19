@@ -222,4 +222,13 @@ public class DBHandler {
 		return true;
 	}
 
+	public static void dropAllCollections(){
+		DB db = DatabaseConnector.getMongoDB();
+		db.getCollectionNames().stream().forEach(e -> {
+			if(!e.equals("system.indexes")){
+				db.getCollection(e).drop();
+			}
+		});
+	}
+	
 }
