@@ -24,7 +24,16 @@ public class ApplicationHandler extends TemplateHandler {
 	}
 	
 	protected static ModelAndView renderRegister(Request rq, Response rs) {
-		return getModelAndView(new HashMap<String, Object>(), REGISTER_TEMPLATE, rq, rs);
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		String username = rq.queryParams("username");
+		String email = rq.queryParams("email");
+		String password = rq.queryParams("password");
+		String passwordAgain = rq.queryParams("password-again");
+		info.put("username", username);
+		info.put("email", email);
+		info.put("password", password);
+		info.put("passwordAgain", passwordAgain);
+		return getModelAndView(info, REGISTER_TEMPLATE, rq, rs);
 	}
 	
 	protected static ModelAndView renderLogin(Request rq, Response rs) {
@@ -82,6 +91,11 @@ public class ApplicationHandler extends TemplateHandler {
 			return renderRegister(rq, rs);
 		}
 			
+		if(password.equals("") || passwordAgain.equals("")){
+			rs.header(GlobalConstants.DISPLAY_ERROR, "Password can not be empty.");
+			return renderRegister(rq, rs);
+		}
+		
 		if(!password.equals(passwordAgain)){
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Passwords do not match.");
 			return renderRegister(rq, rs);

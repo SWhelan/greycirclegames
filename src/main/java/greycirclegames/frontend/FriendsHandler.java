@@ -20,6 +20,9 @@ public class FriendsHandler extends TemplateHandler {
 		User user = getUserFromCookies(rq);
 		user.removeFriendNotifications();
 		DBHandler.updateUser(user);
+		String searchValue = rq.cookie(GlobalConstants.FRIEND_SEARCH_COOKIE_KEY);
+		rs.removeCookie(GlobalConstants.FRIEND_SEARCH_COOKIE_KEY);
+		info.put("searchValue", searchValue);
 		info.put("friends", getFriendsFromDB(getUserIdFromCookies(rq)));
 		return getModelAndView(info, FRIENDS_TEMPLATE, rq, rs);
 	}
@@ -65,6 +68,7 @@ public class FriendsHandler extends TemplateHandler {
 				}
 			}
 		}
+		rs.cookie(GlobalConstants.FRIEND_SEARCH_COOKIE_KEY, searchValue);
 		rs.redirect(FRIENDS_ROUTE);
 		return getModelAndView(null, FRIENDS_TEMPLATE, rq, rs);
 	}
