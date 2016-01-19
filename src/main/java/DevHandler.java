@@ -18,7 +18,7 @@ public class DevHandler {
 			System.out.println("Creating default users.");
 			String password = "password";
 			String salt = User.generateSalt();
-			User molly = new User(DBHandler.getNextUserID(), "Molly", User.hashPassword(salt, password), salt, "molly.henderson4@gmail.com", new BasicDBList(), false, false, false, false, 0);
+			User molly = new User(DBHandler.getNextUserID(), "Molly", User.hashPassword(salt, password), salt, "henderson.molly4@gmail.com", new BasicDBList(), false, false, false, false, 0);
 			DBHandler.createUser(molly);
 			salt = User.generateSalt();
 			User sarah = new User(DBHandler.getNextUserID(), "Sarah", User.hashPassword(salt, password), salt, "slw96@case.edu", new BasicDBList(), false, false, false, false, 0);
