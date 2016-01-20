@@ -1,21 +1,19 @@
 package greycirclegames.frontend;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.NotificationAndEmailHandler;
-import greycirclegames.Player;
 import greycirclegames.User;
 import greycirclegames.frontend.views.KingsCornerView;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Card.Suit;
 import greycirclegames.games.card.Pile;
-import greycirclegames.games.card.kingscorner.KCArtificialPlayer;
 import greycirclegames.games.card.kingscorner.KCMove;
 import greycirclegames.games.card.kingscorner.KingsCorner;
 import spark.ModelAndView;
@@ -40,16 +38,15 @@ public class KingsCornerHandler extends TemplateHandler{
 	
 	protected static ModelAndView postCreateGame(Request rq, Response rs) {
 		Integer numAiPlayers = Integer.parseInt(rq.queryParams("ai"));		
-		List<Player> players = new LinkedList<Player>();
+		List<Integer> players = new ArrayList<Integer>();
 		
 		// Add the user that created the game as the first player
-		players.add(getUserFromCookies(rq));
+		players.add(getUserIdFromCookies(rq));
 		
 		// Add the selected friends to the player list
 		if(rq.queryMap("friends").hasValue()){
 			Arrays.stream(rq.queryMap("friends").values())
-					.map(e -> DBHandler.getUser(Integer.parseInt(e)))
-					.forEach(e -> players.add(e));
+					.forEach(e -> players.add(Integer.parseInt(e)));
 		}
 		
 		if(players.size() + numAiPlayers > GlobalConstants.MAX_PLAYERS){
@@ -60,7 +57,7 @@ public class KingsCornerHandler extends TemplateHandler{
 		
 		// Add the specified number of AI players to the list
 		for(int i = 1; i < numAiPlayers + 1; i++){
-			players.add(new KCArtificialPlayer(i * -1));
+			players.add(i * -1);
 		}
 		
 		// Create the game
@@ -77,7 +74,7 @@ public class KingsCornerHandler extends TemplateHandler{
 		String gameIdString = rq.queryParams("gameId");
 		Integer gameId = Integer.parseInt(gameIdString);
 		KingsCorner game = DBHandler.getKCGame(gameId);
-		Player player = getUserFromCookies(rq);
+		Integer playerId = getUserIdFromCookies(rq);
 		Pile moving = new Pile("moving");
 		Pile destination;
 		Pile origin;
@@ -90,7 +87,7 @@ public class KingsCornerHandler extends TemplateHandler{
 											.collect(Collectors.toList())
 											.get(0)));
 			destination = game.getGameState().piles.get(getPileKeyFromString(pile));
-			origin = game.getGameState().userHands.get(Integer.toString(player.get_id()));
+			origin = game.getGameState().userHands.get(Integer.toString(playerId));
 		} else {
 			// We are moving a game pile to another game pile
 			Pile pile1 = game.getGameState().piles.get(getPileKeyFromString(pile));
@@ -99,7 +96,7 @@ public class KingsCornerHandler extends TemplateHandler{
 			origin = pile1;
 			moving.addAll(pile1);
 		}
-		KCMove move = new KCMove(player, origin, moving, destination);
+		KCMove move = new KCMove(playerId, origin, moving, destination);
 		if(game.applyMove(move)){
 			if(game.getIsActive()){
 				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied successfully.");
@@ -108,7 +105,7 @@ public class KingsCornerHandler extends TemplateHandler{
 			rs.cookie(GlobalConstants.DISPLAY_ERROR, "Move was invalid and not applied.");
 		}
 		
-		if(game.getIsActive() && KingsCorner.isAI(game.getCurrentPlayerObject())){
+		if(game.getIsActive() && game.players.get(game.currentPlayerIndex) < 0){
 			game.applyAIMoves();
 		}
 		DBHandler.updateKCGame(game);

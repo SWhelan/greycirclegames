@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import greycirclegames.DBHandler;
 import greycirclegames.Player;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Pile;
@@ -36,12 +37,18 @@ public class KingsCornerView {
 	
 	public KingsCornerView(KingsCorner game, Player viewingPlayer){
 		gameId = game.get_id();
-		int currentPlayerId = game.getCurrentPlayerObject().get_id();
+		int currentPlayerId = game.getPlayers().get(game.getCurrentPlayerIndex());
 		game.getPlayers().stream().forEach((e) -> { 
-			if(e.equals(viewingPlayer)){
+			Player player = null;
+			if(e < 0){
+				player = game.makeArtificialPlayerFromDB(e);
+			} else {
+				player = DBHandler.getUser(e);
+			}
+			if(player.equals(viewingPlayer)){
 				userHand = makeCardView(game.getGameState().userHands.get(Integer.toString(viewingPlayer.get_id())).getCards());
 			} else {
-				otherPlayers.add(new HandView(makeCardView(game.getGameState().userHands.get(Integer.toString(e.get_id())).getCards()), e.getUsername(), e.get_id() == currentPlayerId));
+				otherPlayers.add(new HandView(makeCardView(game.getGameState().userHands.get(Integer.toString(player.get_id())).getCards()), player.getUsername(), player.get_id() == currentPlayerId));
 			}
 		});	
 		Map<String, Pile> piles = game.getGameState().piles;
@@ -65,7 +72,7 @@ public class KingsCornerView {
 		southEastPile = removeMiddle(southEastPile);
 		southWestPile = removeMiddle(southWestPile);
 		northWestPile = removeMiddle(northWestPile);
-		int currentPlayerIdCheck = game.getCurrentPlayerObject().get_id();
+		int currentPlayerIdCheck = currentPlayerId;
 		int viewingPlayerIdCheck = viewingPlayer.get_id();
 		isTurn = currentPlayerIdCheck == viewingPlayerIdCheck; 
 		

@@ -1,6 +1,5 @@
 package greycirclegames.games.card;
 
-import greycirclegames.Player;
 import greycirclegames.games.Move;
 
 /**
@@ -26,8 +25,8 @@ public abstract class CardBasedMove extends Move {
 	 * @param moving the card or pile being moved
 	 * @param destination the pile to place the card or pile onto
 	 */
-	public CardBasedMove(Player player, Pile origin, Pile moving, Pile destination){
-		this.player = player;
+	public CardBasedMove(Integer playerId, Pile origin, Pile moving, Pile destination){
+		this.playerId = playerId;
 		this.origin = origin;
 		this.moving = moving;
 		this.destination = destination;
@@ -82,14 +81,6 @@ public abstract class CardBasedMove extends Move {
 	}
 
 	/**
-	 * Gets the name of the player proposing this move.
-	 * @return
-	 */
-	public String getPlayerName() {
-		return player.getUsername();
-	}
-
-	/**
 	 * Gets the name of the origin pile.
 	 * @return
 	 */
@@ -136,7 +127,8 @@ public abstract class CardBasedMove extends Move {
 				count++;
 			};
 		}
-		return this.player.getUsername() + " moved " + builder.toString() + "from " + this.origin.getName() + " onto " + this.destination.getName();
+		// TODO VVVVVVVVVVVVVVVVVVVVVVV
+		return Integer.toString(playerId) + " moved " + builder.toString() + "from " + this.origin.getName() + " onto " + this.destination.getName();
 	}
 	
 	/**
@@ -146,10 +138,9 @@ public abstract class CardBasedMove extends Move {
 	 */
 	public class Test{
 		public boolean namesEqual(String username, String originName, String movingName, String destinationName){
-			return username.equals(player.getUsername()) &&
-					origin.getName().equals(originName) &&
+			return	origin.getName().equals(originName) &&
 					moving.getName().equals(movingName) &&
 					destination.getName().equals(movingName);
 		}
-	}
+ 	}
 }

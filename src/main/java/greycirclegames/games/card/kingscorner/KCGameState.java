@@ -7,9 +7,13 @@ import java.util.Map.Entry;
 
 import com.mongodb.BasicDBObject;
 
+import greycirclegames.ArtificialPlayer;
 import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.Player;
+import greycirclegames.games.Game;
+import greycirclegames.games.GameState;
+import greycirclegames.games.Move;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.CardBasedGameState;
 import greycirclegames.games.card.Pile;
@@ -58,13 +62,19 @@ public class KCGameState extends CardBasedGameState {
 	}
 
 	@Override
-	public void initializeToNewGameState(List<Player> players) {
+	public void initializeToNewGameState(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game, List<Integer> players) {
 		//Initialize game piles
 		initializePiles();
 		//Initialize user hands
 		userHands = new HashMap<String, Pile>();
-		for(Player p : players){
-			userHands.put(Integer.toString(p.get_id()), new Pile(p.getUsername()+"'s Pile"));
+		for(Integer id : players){
+			Player player = null;
+			if(id < 0){
+				player = ((KingsCorner)game).makeArtificialPlayerFromDB(id);
+			} else {
+				player = DBHandler.getUser(id);
+			}
+			userHands.put(Integer.toString(player.get_id()), new Pile(player.getUsername()+"'s Pile"));
 		}
 		
 		Pile drawPile = piles.get(KCPileIds.DRAW_PILE.getKey());
@@ -127,9 +137,9 @@ public class KCGameState extends CardBasedGameState {
 		return tablePiles;
 	}
 	
-	public class Test{
-		public void testInitializeToNewGameState(List<Player> players){
-			initializeToNewGameState(players);
+	/*public class Test{
+		public void testInitializeToNewGameState(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game, List<Integer> players){
+			initializeToNewGameState(game, players);
 		}
-	}
+	}*/
 }

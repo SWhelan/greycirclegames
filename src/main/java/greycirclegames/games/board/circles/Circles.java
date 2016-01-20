@@ -7,13 +7,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 import greycirclegames.GlobalConstants;
-import greycirclegames.Player;
 import greycirclegames.games.Game;
 
 public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtificialPlayer> {
 	public static final List<String> turnColors = Arrays.asList(GlobalConstants.COLOR.WHITE, GlobalConstants.COLOR.BLACK);
 
-	public Circles(int id, List<Player> players){
+	public Circles(int id, List<Integer> players){
 		super(id, players);
 		this.tie = false;
 	}
@@ -24,10 +23,10 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 	}
 	
 	@Override
-	protected CirclesGameState newGameState(List<Player> players) {
-		CirclesGameState game = new CirclesGameState();
-		game.initializeToNewGameState(players);
-		return game;
+	protected CirclesGameState newGameState(List<Integer> players) {
+		CirclesGameState state = new CirclesGameState();
+		state.initializeToNewGameState(this, players);
+		return state;
 	}
 
 	@Override
@@ -64,9 +63,9 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 		int numBlack = gameState.numOnBoard(GlobalConstants.COLOR.BLACK);
 		int numWhite = gameState.numOnBoard(GlobalConstants.COLOR.WHITE);
 		if(numWhite > numBlack){
-			return players.get(0).get_id();
+			return players.get(0);
 		} else if(numWhite < numBlack){
-			return players.get(1).get_id();
+			return players.get(1);
 		} else {
 			this.tie = true;	
 			return 0;
@@ -74,17 +73,17 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 	}
 
 	@Override
-	protected CirclesArtificialPlayer makeArtificialPlayerFromDB(int playerId) {
+	public CirclesArtificialPlayer makeArtificialPlayerFromDB(int playerId) {
 		return new CirclesArtificialPlayer(playerId);
 	}
 
 	@Override
-	protected CirclesMove makeMoveFromDB(BasicDBObject move) {
+	public CirclesMove makeMoveFromDB(BasicDBObject move) {
 		return new CirclesMove(move);
 	}
 
 	@Override
-	protected CirclesGameState makeGameStateFromDB(BasicDBObject dbObject) {
+	public CirclesGameState makeGameStateFromDB(BasicDBObject dbObject) {
 		return new CirclesGameState(dbObject);
 	}
 }

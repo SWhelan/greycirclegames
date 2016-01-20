@@ -3,8 +3,6 @@ package greycirclegames.games.card.kingscorner;
 import com.mongodb.BasicDBObject;
 
 import greycirclegames.GlobalConstants;
-import greycirclegames.Player;
-import greycirclegames.User;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.CardBasedMove;
 import greycirclegames.games.card.Pile;
@@ -16,7 +14,7 @@ import greycirclegames.games.card.Pile;
  */
 public class KCMove extends CardBasedMove {
 
-	public KCMove(Player player, Pile origin, Pile moving, Pile destination){
+	public KCMove(Integer player, Pile origin, Pile moving, Pile destination){
 		super(player, origin, moving, destination);
 	}
 
@@ -24,13 +22,7 @@ public class KCMove extends CardBasedMove {
 		this.origin = new Pile((BasicDBObject)obj.get("Origin"));
 		this.moving = new Pile((BasicDBObject)obj.get("Moving"));
 		this.destination = new Pile((BasicDBObject)obj.get("Destination"));
-		BasicDBObject player = (BasicDBObject)obj.get("Player");
-		Integer playerId = (Integer)player.get("_id");
-		if(playerId < 0){
-			this.player = new KCArtificialPlayer(playerId);
-		} else {
-			this.player = new User(player);
-		}
+		this.playerId = (Integer)obj.get("PlayerId");
 	}
 
 	@Override

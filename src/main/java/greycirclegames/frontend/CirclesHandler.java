@@ -1,18 +1,16 @@
 package greycirclegames.frontend;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.NotificationAndEmailHandler;
-import greycirclegames.Player;
 import greycirclegames.User;
 import greycirclegames.frontend.views.CirclesView;
 import greycirclegames.games.board.circles.Circles;
-import greycirclegames.games.board.circles.CirclesArtificialPlayer;
 import greycirclegames.games.board.circles.CirclesMove;
 import spark.ModelAndView;
 import spark.Request;
@@ -21,20 +19,19 @@ import spark.Response;
 public class CirclesHandler extends TemplateHandler{
 
 	protected static ModelAndView postCreateGame(Request rq, Response rs) {
-		List<Player> players = new LinkedList<Player>();
+		List<Integer> players = new ArrayList<Integer>();
 		
 		// Add the user that created the game as the first player
-		players.add(getUserFromCookies(rq));
+		players.add(getUserIdFromCookies(rq));
 		
 		// Add the selected friends to the player list
 		if(rq.queryMap("friends").hasValue()){
 			Arrays.stream(rq.queryMap("friends").values())
-					.map(e -> DBHandler.getUser(Integer.parseInt(e)))
-					.forEach(e -> players.add(e));
+					.forEach(e -> players.add(Integer.parseInt(e)));
 		}
 		
 		if(rq.queryParams("ai").equals("true")){
-			players.add(new CirclesArtificialPlayer(-1));
+			players.add(-1);
 		}
 		
 		// Create the game
@@ -57,7 +54,7 @@ public class CirclesHandler extends TemplateHandler{
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Game not found.");
 			return getModelAndView(info, CIRCLES_TEMPLATE, rq, rs);
 		}
-		CirclesView view = new CirclesView(DBHandler.getCirclesGame(gameId), getUserFromCookies(rq));
+		CirclesView view = new CirclesView(DBHandler.getCirclesGame(gameId), getUserIdFromCookies(rq));
 		info.put("game", view);
 		return getModelAndView(info, CIRCLES_TEMPLATE, rq, rs);
 	}
@@ -69,7 +66,7 @@ public class CirclesHandler extends TemplateHandler{
 		int row = Integer.parseInt(rq.queryParams("row"));
 		int column = Integer.parseInt(rq.queryParams("column"));
 		String color = rq.queryParams("color");
-		CirclesMove move = new CirclesMove(row, column, color, game.getGameState(), getUserFromCookies(rq));
+		CirclesMove move = new CirclesMove(row, column, color, game.getGameState(), getUserIdFromCookies(rq));
 		if(move.isValid()){
 			move.apply();
 			game.addMove(move);

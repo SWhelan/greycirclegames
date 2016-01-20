@@ -2,8 +2,6 @@ package greycirclegames.games.board.circles;
 
 import com.mongodb.BasicDBObject;
 
-import greycirclegames.Player;
-import greycirclegames.User;
 import greycirclegames.games.Move;
 
 public class CirclesMove extends Move {
@@ -12,25 +10,19 @@ public class CirclesMove extends Move {
 	private String color;
 	private CirclesGameState state;
 	
-	public CirclesMove(int row, int column, String color, CirclesGameState state, Player player){
+	public CirclesMove(int row, int column, String color, CirclesGameState state, Integer playerId){
 		this.column = column;
 		this.row = row;
 		this.color = color;
 		this.state = state;
-		this.player = player;
+		this.playerId = playerId;
 	}
 
 	public CirclesMove(BasicDBObject obj) {
 		this.column = (Integer)obj.get("Column");
 		this.row = (Integer)obj.get("Row");
 		this.color = (String)obj.get("Color");
-		BasicDBObject player = (BasicDBObject)obj.get("Player");
-		Integer playerId = (Integer)player.get("_id");
-		if(playerId < 0){
-			this.player = new CirclesArtificialPlayer(playerId);
-		} else {
-			this.player = new User(player);
-		}
+		this.playerId = (Integer)obj.get("PlayerId");
 	}
 
 	@Override

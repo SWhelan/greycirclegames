@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.mongodb.ReflectionDBObject;
 
-import greycirclegames.Player;
+import greycirclegames.ArtificialPlayer;
 
 /**
  * GameState store the "state of the board" of a game.
@@ -44,5 +44,5 @@ public abstract class GameState extends ReflectionDBObject {
 	 * involving the given list of players.
 	 * @param players	A list of players involved in this game.
 	 */
-	public abstract void initializeToNewGameState(List<Player> players);
+	public abstract void initializeToNewGameState(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game, List<Integer> players);
 }

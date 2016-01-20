@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import com.mongodb.BasicDBList;
 
 import greycirclegames.DBHandler;
-import greycirclegames.Player;
 import greycirclegames.User;
 import greycirclegames.games.card.Pile;
 import greycirclegames.games.card.kingscorner.KCMove;
@@ -52,17 +51,11 @@ public class DBTest {
 	//test CRUD operations for a KCGame
 	public void testKCGame() {
 
-		ArrayList<Player> playerList = new ArrayList<Player>();
-		BasicDBList frands = new BasicDBList();
-		frands.add(6);
-		frands.add(7);
-		frands.add(8);
+		ArrayList<Integer> playerList = new ArrayList<Integer>();
 
-		Player p1 = new User(43,"username", "word", "salt", "email@gmail.com", new BasicDBList());    	
-
-		playerList.add(p1);
-		playerList.add(new User(44,"username", "word", "salt", "mail@gmail.com", frands));
-		playerList.add(new User(45,"username", "word", "salt", "ail@gmail.com", frands));
+		DBHandler.createUser(new User(43, "sldkfj"));
+		playerList.add(43);
+		playerList.add(-1);		
 
 		Pile pile1 = new Pile("pile one");
 		Pile pile2 = new Pile("pile two");
@@ -71,7 +64,7 @@ public class DBTest {
 
 		int gameID = DBHandler.getNextGameID();
 		KingsCorner game = new KingsCorner(gameID, playerList);
-		game.addMove(new KCMove(p1, pile1, pile2, pile3));
+		game.addMove(new KCMove(43, pile1, pile2, pile3));
 
 		DBHandler.createKCGame(game);
 
@@ -85,4 +78,8 @@ public class DBTest {
 
 		DBHandler.deleteKCGame(gameID);
 	}
+	
+    public void testThatTestsDidNotBreakThings(){
+    	DevHandler.dropDev();
+    }
 }

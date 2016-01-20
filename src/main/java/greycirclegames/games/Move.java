@@ -2,26 +2,16 @@ package greycirclegames.games;
 
 import com.mongodb.ReflectionDBObject;
 
-import greycirclegames.Player;
-
 public abstract class Move extends ReflectionDBObject {
 	//The player who is proposing this move.
-	protected Player player;
+	protected Integer playerId;
 	
-	/**
-	 * Gets the player.
-	 * @return The player.
-	 */
-	public Player getPlayer() {
-		return player;
+	public Integer getPlayerId() {
+		return this.playerId;
 	}
-	
-	/**
-	 * Sets the player.
-	 * @param player
-	 */
-	public void setPlayer(Player player) {
-		this.player = player;
+
+	public void setPlayerId(Integer playerId) {
+		this.playerId = playerId;
 	}
 	
 	/**

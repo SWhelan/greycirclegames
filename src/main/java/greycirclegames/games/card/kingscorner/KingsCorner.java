@@ -6,13 +6,12 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 import greycirclegames.GlobalConstants;
-import greycirclegames.Player;
 import greycirclegames.games.Game;
 import greycirclegames.games.card.Pile;
 
 public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 
-	public KingsCorner(int gameId, List<Player> players){
+	public KingsCorner(int gameId, List<Integer> players){
 		super(gameId, players);
 	}
 
@@ -33,12 +32,12 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 			return false;
 		}
 		KCGameState gs = getGameState();
-		Pile curUserHand = gs.userHands.get(Integer.toString(getCurrentPlayerObject().get_id()));
+		Pile curUserHand = gs.userHands.get(Integer.toString(players.get(currentPlayerIndex)));
 		Pile drawPile = gs.piles.get(KCPileIds.DRAW_PILE.getKey());
 		if(!drawPile.isEmpty()){
 			Pile topCard = new Pile("Top card");
 			topCard.add(drawPile.getTop());
-			KCMove endTurn = new KCMove(getCurrentPlayerObject(), drawPile, topCard, curUserHand);
+			KCMove endTurn = new KCMove(this.players.get(currentPlayerIndex), drawPile, topCard, curUserHand);
 			endTurn.apply();
 			moves.add(endTurn);
 		}
@@ -48,10 +47,10 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 	}
 	
 	@Override
-	protected final KCGameState newGameState(List<Player> players) {
-		KCGameState game = new KCGameState();
-		game.initializeToNewGameState(players);
-		return game;
+	protected final KCGameState newGameState(List<Integer> players) {
+		KCGameState state = new KCGameState();
+		state.initializeToNewGameState(this, players);
+		return state;
 	}
 	
 	//Checks if any of the player hands are empty.
@@ -73,21 +72,21 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 
 	@Override
 	protected int determineWinnerId() {
-		return players.get(currentPlayerIndex).get_id();
+		return players.get(currentPlayerIndex);
 	}
 
 	@Override
-	protected KCArtificialPlayer makeArtificialPlayerFromDB(int playerId) {
+	public KCArtificialPlayer makeArtificialPlayerFromDB(int playerId) {
 		return new KCArtificialPlayer(playerId);
 	}
 
 	@Override
-	protected KCMove makeMoveFromDB(BasicDBObject move) {
+	public KCMove makeMoveFromDB(BasicDBObject move) {
 		return new KCMove((BasicDBObject)move);
 	}
 
 	@Override
-	protected KCGameState makeGameStateFromDB(BasicDBObject dbObject) {
+	public KCGameState makeGameStateFromDB(BasicDBObject dbObject) {
 		return new KCGameState(dbObject);
 	}
 }

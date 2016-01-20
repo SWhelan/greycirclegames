@@ -19,10 +19,18 @@ public class GameEntryView {
 	public List<String> players = new LinkedList<String>();
 	public GameEntryView(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game){
 		gameId = game.get_id();
-		currentPlayerName = game.getCurrentPlayerObject().getUsername();
-		currentPlayerId = game.getCurrentPlayerObject().get_id();
-		for(Object p : game.players){
-			players.add(((Player)p).getUsername());
+		currentPlayerId = game.getPlayers().get(game.currentPlayerIndex);
+		if(currentPlayerId > 0){
+			currentPlayerName = game.getCurrentPlayerObject().getUsername();
+		} else {
+			currentPlayerName = game.makeArtificialPlayerFromDB(currentPlayerId).getUsername();
+		}
+		for( Integer id : game.players){
+			if(id < 0){
+				players.add(game.makeArtificialPlayerFromDB(id).getUsername());
+			} else {
+				players.add(DBHandler.getUser(id).getUsername());
+			}
 		}
 		this.isActive = game.getIsActive();
 		

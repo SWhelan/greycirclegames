@@ -66,7 +66,7 @@ public class KCArtificialPlayer extends ArtificialPlayer {
 		movingPile.add(moveCard);
 		//Find a table pile in the gamestate to place the card
 		for (Pile tPile: tablePiles.values()) {
-			KCMove possibleMove = new KCMove(this, AIHand, movingPile, tPile);
+			KCMove possibleMove = new KCMove(this.get_id(), AIHand, movingPile, tPile);
 			if (possibleMove.isValid()) {
 				returnMove = possibleMove;
 				break;
@@ -224,7 +224,7 @@ public class KCArtificialPlayer extends ArtificialPlayer {
     @Override
     public Move createMove(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game) {
         KCGameState state = (KCGameState) game.getGameState();
-        return createMove(state.getUserHands().get(Integer.toString(game.getCurrentPlayerObject().get_id())), state.getVisiblePiles());
+        return createMove(state.getUserHands().get(Integer.toString(this._id)), state.getVisiblePiles());
     }
 	
 }

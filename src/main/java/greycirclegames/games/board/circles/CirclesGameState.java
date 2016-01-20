@@ -4,9 +4,11 @@ import java.util.List;
 
 import com.mongodb.BasicDBObject;
 
+import greycirclegames.ArtificialPlayer;
 import greycirclegames.GlobalConstants;
-import greycirclegames.Player;
+import greycirclegames.games.Game;
 import greycirclegames.games.GameState;
+import greycirclegames.games.Move;
 
 public class CirclesGameState extends GameState {
 	private static final int ROWS = GlobalConstants.CIRCLES_ROWS;
@@ -26,9 +28,9 @@ public class CirclesGameState extends GameState {
 	}
 
 	@Override
-	public void initializeToNewGameState(List<Player> players) {
+	public void initializeToNewGameState(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game, List<Integer> players) {
 		board = new CirclesBoard(ROWS, COLUMNS);
-		this.setTurnNumber(players.get(0).get_id());
+		this.setTurnNumber(players.get(0));
 		int centerHorizontally = Math.round(COLUMNS/2);
 		int centerVertically = Math.round(ROWS/2);
 

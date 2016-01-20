@@ -1,5 +1,6 @@
 package greycirclegames.games;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,8 +10,8 @@ import com.mongodb.DBObject;
 import com.mongodb.ReflectionDBObject;
 
 import greycirclegames.ArtificialPlayer;
+import greycirclegames.DBHandler;
 import greycirclegames.Player;
-import greycirclegames.User;
 
 /**
  * The Game holds all the information about the game.
@@ -49,7 +50,7 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	/**
 	 * List of players in order of turn.
 	 */
-	public List<Player> players;
+	public List<Integer> players;
 	/**
 	 * The INDEX of the players list NOT THE PLAYER'S ID.  
 	 */
@@ -68,7 +69,7 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	 * @param _id	The id of the game - this should be a unique value and should be input from the database.
 	 * @param players The list of players of this game in turn order.
 	 */
-	public Game(int _id, List<Player> players){
+	public Game(int _id, List<Integer> players){
 		this._id = _id;
 		this.players = players;
 		currentPlayerIndex = 0;
@@ -84,7 +85,7 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	 * @param players the list of players in turn order
 	 * @return a game state for a new game
 	 */
-	protected abstract S newGameState(List<Player> players);
+	protected abstract S newGameState(List<Integer> players);
 
 	/**
 	 * Each type of game has a string identifier.
@@ -140,13 +141,12 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
      */
     public boolean applyAIMoves(){
         boolean result = false;
-        Player currentPlayer = getCurrentPlayerObject();
         M m = null;
-        //While the game is still active and the current player is an AI
-        while(this.isActive && isAI(currentPlayer)){
+        // While the game is still active and the current player is an AI
+        while(this.isActive && players.get(currentPlayerIndex) < 0){
             result = true;
 
-            A ai = (A)currentPlayer;
+            A ai = makeArtificialPlayerFromDB(players.get(currentPlayerIndex));
             boolean hasMove = true;
             //Get as many moves from the player as we can (until null)
             while(this.isActive && hasMove){
@@ -160,10 +160,8 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
                     hasMove = false;
                 }               
             }
-            //End the turn
+            //End the turn (also increments currentPlayerIndex)
             this.endTurn();
-            //Get next player
-            currentPlayer = getCurrentPlayerObject();
         }
         return result;
     }
@@ -210,17 +208,12 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	 * @return	The current Player
 	 */
 	public Player getCurrentPlayerObject(){
-		return players.get(currentPlayerIndex);
-	}
-
-	/**
-	 * Checks if the player is an AI for the King's Corner game.
-	 * @param p	A player
-	 * @return	True if the player is an AI.
-	 */
-	public static boolean isAI(Player p){
-		int id = p.get_id();
-		return id < 0;
+		int currentPlayerId = this.players.get(this.getCurrentPlayerIndex());
+		if(currentPlayerId < 0){
+			return makeArtificialPlayerFromDB(currentPlayerId);
+		} else {
+			return DBHandler.getUser(currentPlayerId);
+		}
 	}
 
 	/**
@@ -232,16 +225,9 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 		this.currentPlayerIndex = (Integer)obj.get("CurrentPlayerIndex");
 		this.tie = (boolean)obj.get("Tie");
 		BasicDBList players = (BasicDBList)obj.get("Players");
-		this.players = new LinkedList<Player>();
-		//We have to consider if a player is an Artificial Player or user when
-		//constructing from the database
-		for (Object player : players) {
-			int playerId = (Integer)((BasicDBObject) player).get("_id");
-			if(playerId < 0){
-				this.players.add(this.makeArtificialPlayerFromDB(playerId));
-			} else {
-				this.players.add(new User((BasicDBObject)player));
-			}
+		this.players = new ArrayList<Integer>();
+		for (Object id : players) {
+			this.players.add((Integer)id);
 		}
 		BasicDBList moves = (BasicDBList)obj.get("Moves");		
 		this.moves = new LinkedList<M>();
@@ -253,11 +239,11 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 		this.winner_id = (Integer)obj.get("Winner_id");
 	}
 
-	protected abstract S makeGameStateFromDB(BasicDBObject dbObject);
+	public abstract S makeGameStateFromDB(BasicDBObject dbObject);
 	
-	protected abstract M makeMoveFromDB(BasicDBObject move);
+	public abstract M makeMoveFromDB(BasicDBObject move);
 
-	protected abstract A makeArtificialPlayerFromDB(int playerId);
+	public abstract A makeArtificialPlayerFromDB(int playerId);
 
 	public Integer get_id() {
 		return _id;
@@ -302,10 +288,10 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	public void setWinner_id(Integer winner_id) {
 		this.winner_id = winner_id;
 	}
-	public List<Player> getPlayers() {
+	public List<Integer> getPlayers() {
 		return players;
 	}
-	public void setPlayers(List<Player> players) {
+	public void setPlayers(List<Integer> players) {
 		this.players = players;
 	}
 	public int getCurrentPlayerIndex() {

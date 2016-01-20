@@ -101,7 +101,7 @@ public class DBHandler {
 	public static List<BasicDBObject> getGames(int userId, String collectionName){
 		DB db = DatabaseConnector.getMongoDB();
 		DBCollection coll = db.getCollection(collectionName);
-		DBObject query = new BasicDBObject("Players._id", userId);
+		DBObject query = new BasicDBObject("Players", userId);
 
 		DBCursor cursor = coll.find(query);
 

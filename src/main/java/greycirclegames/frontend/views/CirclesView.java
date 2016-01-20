@@ -3,9 +3,10 @@ package greycirclegames.frontend.views;
 import java.util.ArrayList;
 import java.util.List;
 
+import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
-import greycirclegames.User;
 import greycirclegames.games.board.circles.Circles;
+import greycirclegames.games.board.circles.CirclesArtificialPlayer;
 import greycirclegames.games.board.circles.CirclesBoard;
 import greycirclegames.games.board.circles.CirclesGameState;
 import greycirclegames.games.board.circles.CirclesMove;
@@ -24,31 +25,41 @@ public class CirclesView {
 	public boolean isWinner = false;
 	public boolean isTie = false;
 
-	public CirclesView(Circles game, User user) {
+	public CirclesView(Circles game, Integer userId) {
 	    CirclesGameState gameState = game.getGameState();
 		CirclesBoard board = gameState.getBoard();
 		gameId = game.get_id();
 		color = Circles.turnColors.get(game.currentPlayerIndex);
-		int currentPlayerId = game.getCurrentPlayerObject().get_id();
-		int viewingPlayerId = user.get_id();
+		int currentPlayerId = game.getPlayers().get(game.currentPlayerIndex);
+		int viewingPlayerId = userId;
 		isTurn = currentPlayerId == viewingPlayerId; 
 		isActive = game.getIsActive();
 		
 		int lightCount = gameState.numOnBoard(GlobalConstants.COLOR.WHITE);
 		int darkCount = gameState.numOnBoard(GlobalConstants.COLOR.BLACK);
 
-		if(game.getPlayers().get(0).get_id() == viewingPlayerId){
+		if(game.getPlayers().get(0) == viewingPlayerId){
 			yourCount = lightCount;
 			theirCount = darkCount;
 			yourColor = GlobalConstants.COLOR.WHITE;
 			theirColor = GlobalConstants.COLOR.BLACK;
-			opponentName = game.getPlayers().get(1).getUsername();
+			int id = game.getPlayers().get(1); 
+			if(id < 0){
+				opponentName = new CirclesArtificialPlayer(id).getUsername();
+			} else {
+				opponentName = DBHandler.getUser(id).getUsername();
+			}
 		} else {
 			yourCount = darkCount; 
 			theirCount = lightCount;
 			yourColor = GlobalConstants.COLOR.BLACK;
 			theirColor = GlobalConstants.COLOR.WHITE;
-			opponentName = game.getPlayers().get(0).getUsername();
+			int id = game.getPlayers().get(0); 
+			if(id < 0){
+				opponentName = new CirclesArtificialPlayer(id).getUsername();
+			} else {
+				opponentName = DBHandler.getUser(id).getUsername();
+			}
 		}
 		if(!isActive){
 			int winnerId = game.getWinner_id();
@@ -62,7 +73,7 @@ public class CirclesView {
             ArrayList<CircleView> row = new ArrayList<>();
             for(int j = 0; j < board.columns(); j++){
                 if(board.cellAt(i, j) == null){
-                    if(new CirclesMove(i, j, yourColor, gameState, user).isValid()) {
+                    if(new CirclesMove(i, j, yourColor, gameState, userId).isValid()) {
                         row.add(new CircleView(i, j, true));
                     } else {
                         row.add(new CircleView(i, j, false));
