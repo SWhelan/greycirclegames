@@ -1,0 +1,41 @@
+<h3>Active Games:</h3>
+<h4>Games waiting on you:</h4>
+<div class="row">
+<div class="col-md-6">
+<div class="list-group">
+{{#currentTurn}}
+	{{> gameEntry}}
+{{/currentTurn}}
+</div>
+{{^currentTurn}}
+	<h5>No Games are waiting for you.</h5>
+{{/currentTurn}}
+</div>
+</div>
+
+<h4>Games waiting on others:</h4>
+<div class="row">
+<div class="col-md-6">
+<div class="list-group">
+{{#othersTurn}}
+	{{> gameEntry}}
+{{/othersTurn}}
+</div>
+{{^othersTurn}}
+	<h5>No Games are waiting on others.</h5>
+{{/othersTurn}}
+</div>
+</div>
+<h3>Past Games:</h3>
+<div class="row">
+<div class="col-md-6">
+<div class="list-group">
+{{#ended}}
+	{{> gameEntry}}
+{{/ended}}
+</div>
+{{^ended}}
+	<h5>You have no past games.</h5>
+{{/ended}}
+</div>
+</div>

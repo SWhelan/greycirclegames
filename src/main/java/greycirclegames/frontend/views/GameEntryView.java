@@ -1,8 +1,5 @@
 package greycirclegames.frontend.views;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import greycirclegames.ArtificialPlayer;
 import greycirclegames.DBHandler;
 import greycirclegames.Player;
@@ -16,8 +13,9 @@ public class GameEntryView {
 	public int gameId;
 	public String currentPlayerName;
 	public int currentPlayerId;
-	public List<String> players = new LinkedList<String>();
-	public GameEntryView(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game){
+	public String gameRoute;
+	public String players;
+	public GameEntryView(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game, String gameRoute){
 		gameId = game.get_id();
 		currentPlayerId = game.getPlayers().get(game.currentPlayerIndex);
 		if(currentPlayerId > 0){
@@ -25,13 +23,17 @@ public class GameEntryView {
 		} else {
 			currentPlayerName = game.makeArtificialPlayerFromDB(currentPlayerId).getUsername();
 		}
+		StringBuilder builder = new StringBuilder();
 		for( Integer id : game.players){
 			if(id < 0){
-				players.add(game.makeArtificialPlayerFromDB(id).getUsername());
+				builder.append(game.makeArtificialPlayerFromDB(id).getUsername());
 			} else {
-				players.add(DBHandler.getUser(id).getUsername());
+				builder.append(DBHandler.getUser(id).getUsername());
 			}
+			builder.append(", ");
 		}
+		builder.delete(builder.length()-2, builder.length());
+		this.players = builder.toString();
 		this.isActive = game.getIsActive();
 		
 		if(!game.getIsActive()){
@@ -44,5 +46,6 @@ public class GameEntryView {
 				this.winner = "A Computer Player";
 			}
 		}
+		this.gameRoute = gameRoute;
 	}
 }

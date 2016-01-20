@@ -9,110 +9,14 @@
  <div class="tab-content">
     <div id="circles" class="tab-pane fade in active">
       <h1>Circles</h1>
-      {{#circlesgames}}
-		<h3>Active Games:</h3>
-		
-		<h4>Games waiting on you:</h4>
-		{{#currentTurn}}
-			<div class="gameListItem">
-				<a href = "{{CIRCLES_ROUTE}}/{{gameId}}">
-					Game Id: {{gameId}}
-					<br/>
-					Players:<br/>
-					{{#players}}{{.}}<br/>{{/players}}
-				</a>
-			<hr/>
-			</div>
-		{{/currentTurn}}
-		{{^currentTurn}}
-			<h5>No Games are waiting for you.</h5>
-		{{/currentTurn}}
-		
-		<h4>Games waiting on others:</h4>
-		{{#othersTurn}}
-			<div class="gameListItem">
-				<a href = "{{CIRCLES_ROUTE}}/{{gameId}}">
-					Game Id: {{gameId}}
-					<br/>
-					Players:<br/>
-					{{#players}}{{.}}<br/>{{/players}}
-					Current Player: {{currentPlayerName}}
-				</a>
-			<hr/>
-			</div>
-		{{/othersTurn}}
-		{{^othersTurn}}
-			<h5>No Games are waiting on others.</h5>
-		{{/othersTurn}}
-		
-		<h3>Past Games:</h3>
-		{{#ended}}
-			<div class="gameListItem">
-			Game Id: {{gameId}}
-			<br/>
-			Players:<br/>
-			{{#players}}{{.}}<br/>{{/players}}
-			Winner: {{winner}}
-			<hr/>
-			</div>
-		{{/ended}}
-		{{^ended}}
-			<h5>You have no past games.</h5>
-		{{/ended}}
+      	{{#circlesgames}}
+			{{> gameTab}}
 		{{/circlesgames}}
     </div>
     <div id="kingscorner" class="tab-pane fade">
     	<h1>King's Corner</h1>
 		{{#kcgames}}
-		<h3>Active Games:</h3>
-		
-		<h4>Games waiting on you:</h4>
-		{{#currentTurn}}
-			<div class="gameListItem">
-				<a href = "{{KINGS_CORNER_ROUTE}}/{{gameId}}">
-					Game Id: {{gameId}}
-					<br/>
-					Players:<br/>
-					{{#players}}{{.}}<br/>{{/players}}
-				</a>
-			<hr/>
-			</div>
-		{{/currentTurn}}
-		{{^currentTurn}}
-			<h5>No Games are waiting for you.</h5>
-		{{/currentTurn}}
-		
-		<h4>Games waiting on others:</h4>
-		{{#othersTurn}}
-			<div class="gameListItem">
-				<a href = "{{KINGS_CORNER_ROUTE}}/{{gameId}}">
-					Game Id: {{gameId}}
-					<br/>
-					Players:<br/>
-					{{#players}}{{.}}<br/>{{/players}}
-					Current Player: {{currentPlayerName}}
-				</a>
-			<hr/>
-			</div>
-		{{/othersTurn}}
-		{{^othersTurn}}
-			<h5>No Games are waiting on others.</h5>
-		{{/othersTurn}}
-		
-		<h3>Past Games:</h3>
-		{{#ended}}
-			<div class="gameListItem">
-			Game Id: {{gameId}}
-			<br/>
-			Players:<br/>
-			{{#players}}{{.}}<br/>{{/players}}
-			Winner: {{winner}}
-			<hr/>
-			</div>
-		{{/ended}}
-		{{^ended}}
-			<h5>You have no past games.</h5>
-		{{/ended}}
+			{{> gameTab}}
 		{{/kcgames}}
 	</div>
 </div>

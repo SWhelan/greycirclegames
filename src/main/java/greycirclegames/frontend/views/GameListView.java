@@ -13,10 +13,10 @@ public class GameListView {
 	public List<GameEntryView> othersTurn = new LinkedList<GameEntryView>();
 	public List<GameEntryView> ended = new LinkedList<GameEntryView>();
 	
-	public GameListView(List<? extends Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer>> games, int userId) {
+	public GameListView(List<? extends Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer>> games, int userId, String gameRoute) {
 		games
 		.stream()
-		.map(e -> new GameEntryView(e))
+		.map(e -> new GameEntryView(e, gameRoute))
 		.forEach(e -> {
 			if(e.isActive){
 				if(e.currentPlayerId == userId){

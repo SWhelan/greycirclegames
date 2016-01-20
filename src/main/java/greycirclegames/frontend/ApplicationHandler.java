@@ -57,9 +57,9 @@ public class ApplicationHandler extends TemplateHandler {
 	
 	protected static ModelAndView renderGameList(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		int userId = getUserIdFromCookies(rq); 
-		info.put("kcgames", new GameListView(DBHandler.getKCGamesforUser(userId), userId));
-		info.put("circlesgames", new GameListView(DBHandler.getCirclesGamesforUser(userId), userId));
+		int userId = getUserIdFromCookies(rq);
+		info.put("kcgames", new GameListView(DBHandler.getKCGamesforUser(userId), userId, KINGS_CORNER_ROUTE));
+		info.put("circlesgames", new GameListView(DBHandler.getCirclesGamesforUser(userId), userId, CIRCLES_ROUTE));
 		return getModelAndView(info, GAME_LIST_TEMPLATE, rq, rs);
 	}
 	

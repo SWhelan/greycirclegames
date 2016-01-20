@@ -1,0 +1,12 @@
+<div class="gameListItem">
+	<a href = "{{gameRoute}}/{{gameId}}" class="list-group-item">
+		Players: {{players}}<br/>
+		{{#isActive}}
+		Current Player: {{currentPlayerName}}<br/>
+		{{/isActive}}
+		{{^isActive}}
+		Winner: {{winner}}
+		{{/isActive}}
+	</a>
+<br/>
+</div>
