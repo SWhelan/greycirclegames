@@ -1,16 +1,17 @@
 package greycirclegames;
 
-import java.util.LinkedList;
+import static com.mongodb.client.model.Filters.eq;
+
+import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
+import com.mongodb.client.MongoDatabase;
 
 import greycirclegames.games.board.circles.Circles;
 import greycirclegames.games.card.kingscorner.KingsCorner;
@@ -35,10 +36,13 @@ public class DBHandler {
 		create(game, "circlesgames");
 	}
 	
+	public static MongoCollection<DBObject> getCollection(String collectionName){
+		MongoDatabase db = DatabaseConnector.getMongoDB();
+		return db.getCollection(collectionName, DBObject.class);	
+	}
+	
 	public static void create(DBObject obj, String collectionName){
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection(collectionName);
-		coll.save(obj);
+		getCollection(collectionName).insertOne(obj);
 	}
 
 	// READ
@@ -55,22 +59,15 @@ public class DBHandler {
 	}
 	
 	public static User getUserByField(String fieldName, Object value){
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("users");
-		DBObject query = new BasicDBObject(fieldName, value);
-		DBCursor cursor = coll.find(query);
-		try {
-			DBObject obj = cursor.next();
-			return new User(obj);
-		} catch (NoSuchElementException e){
+		DBObject result = getCollection("users").find(eq(fieldName, value)).first();
+		if(result == null){
 			return null;
 		}
+		return new User(getCollection("users").find(eq(fieldName, value)).first());
 	}
 
 	public static long numUsers(){
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("users");
-		return coll.count();
+		return getCollection("users").count();
 	}
 	
 	public static KingsCorner getKCGame(int gameId) {
@@ -81,13 +78,8 @@ public class DBHandler {
 		return new Circles(getGame(gameId, "circlesgames"));
 	}
 
-	public static DBObject getGame(int gameId, String collectionName){
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection(collectionName);
-		DBObject query = new BasicDBObject("_id", gameId);
-		DBCursor cursor = coll.find(query);
-		DBObject obj = cursor.next();
-		return obj;
+	public static DBObject getGame(int gameId, String collectionName){	
+		return getCollection(collectionName).find(eq("_id", gameId)).first();
 	}
 	
 	public static List<KingsCorner> getKCGamesforUser(int userId) {
@@ -99,17 +91,9 @@ public class DBHandler {
 	}
 	
 	public static List<BasicDBObject> getGames(int userId, String collectionName){
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection(collectionName);
-		DBObject query = new BasicDBObject("Players", userId);
-
-		DBCursor cursor = coll.find(query);
-
-		LinkedList<BasicDBObject> gamesList = new LinkedList<>();
-		while(cursor.hasNext()) {
-			gamesList.add((BasicDBObject)cursor.next());
-		}
-		return gamesList;
+		List<DBObject> list = new ArrayList<DBObject>();
+		getCollection(collectionName).find(eq("Players", userId)).iterator().forEachRemaining(list::add);
+		return list.stream().map(e -> (BasicDBObject)e).collect(Collectors.toList());
 	}
 	
 
@@ -126,33 +110,27 @@ public class DBHandler {
 		update(game, "circlesgames");
 	}
 
-	public static void update(DBObject obj, String collectionName){
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection(collectionName);
-		coll.save(obj);	
+	public static void update(DBObject obj, String collectionName){		
+		getCollection(collectionName).findOneAndReplace(eq("_id", obj.get("_id")), obj);
 	}
 	
-	private static int getNextID(String idName) {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("ids");
-		DBObject query = new BasicDBObject("name", idName);
-		DBCursor cursor = coll.find(query);
-		DBObject obj;
-
-		try {
-			obj = cursor.next();
+	private static int getNextID(String idName) {		
+		MongoCursor<DBObject> iterator = getCollection("ids").find(eq("name", idName)).iterator();
+		int nextId;
+		if(iterator.hasNext()){
+			nextId = (int) iterator.next().get("nextID");
+		} else {
+			nextId = 1;
+			// We couldn't find it create the record and start at 1
+			BasicDBObject obj = new BasicDBObject("name",idName).append("nextID", nextId);
+			create(obj, "ids");
 		}
-		catch (NoSuchElementException e) {
-			///create the id if it does not exist (start at 1)
-			obj = new BasicDBObject("name",idName).append("nextID", 1);
-			coll.save(obj);
-		}
-
-		int nextID = (Integer)obj.get("nextID");
-		obj.put("nextID", nextID + 1);
-		coll.save(obj);
-
-		return nextID;
+		// Always update the id
+		BasicDBObject obj = new BasicDBObject("name",idName).append("nextID", nextId + 1);
+		getCollection("ids").findOneAndReplace(eq("name", idName), obj);
+		
+		// return the non incremented id
+		return nextId;
 	}
 
 	public static int getNextUserID() {
@@ -164,18 +142,12 @@ public class DBHandler {
 	}
 
 	// DELETE
-	public static void deleteUser(int userID) {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("users");
-		DBObject query = new BasicDBObject("_id", userID);
-		coll.remove(query);
+	public static void deleteUser(int userId) {
+		getCollection("users").findOneAndDelete(eq("_id", userId));
 	}
 
-	public static void deleteKCGame(int gameID) {
-		DB db = DatabaseConnector.getMongoDB();
-		DBCollection coll = db.getCollection("kcgames");
-		DBObject query = new BasicDBObject("_id", gameID);
-		coll.remove(query);
+	public static void deleteKCGame(int gameId) {
+		getCollection("kcgames").findOneAndDelete(eq("_id", gameId));
 	}
 
 	// OTHER
@@ -223,8 +195,8 @@ public class DBHandler {
 	}
 
 	public static void dropAllCollections(){
-		DB db = DatabaseConnector.getMongoDB();
-		db.getCollectionNames().stream().forEach(e -> {
+		MongoDatabase db = DatabaseConnector.getMongoDB();
+		db.listCollectionNames().iterator().forEachRemaining(e -> {
 			if(!e.equals("system.indexes")){
 				db.getCollection(e).drop();
 			}
