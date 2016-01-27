@@ -1,5 +1,7 @@
 package greycirclegames.games.card;
 
+import greycirclegames.ArtificialPlayer;
+import greycirclegames.DBHandler;
 import greycirclegames.games.Move;
 
 /**
@@ -127,8 +129,13 @@ public abstract class CardBasedMove extends Move {
 				count++;
 			};
 		}
-		// TODO VVVVVVVVVVVVVVVVVVVVVVV
-		return Integer.toString(playerId) + " moved " + builder.toString() + "from " + this.origin.getName() + " onto " + this.destination.getName();
+		String playerUsername = "";
+		if(playerId < 0){
+			playerUsername = ArtificialPlayer.getDefaultUsername(playerId);
+		} else {
+			playerUsername = DBHandler.getUser(playerId).getUsername();
+		}
+		return playerUsername + " moved " + builder.toString() + "from " + this.origin.getName() + " onto " + this.destination.getName();
 	}
 	
 	/**

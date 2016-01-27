@@ -12,7 +12,11 @@ public abstract class ArtificialPlayer extends ReflectionDBObject implements Pla
 	
 	public ArtificialPlayer(int id){
 		this._id = id;
-		this.username = "Computer Player " + Integer.toString(Math.abs(this._id));
+		this.username = getDefaultUsername(id);
+	}
+	
+	public static String getDefaultUsername(int id){
+		return "Computer Player " + Integer.toString(Math.abs(id));
 	}
 	
 	@Override
