@@ -21,7 +21,7 @@ public class DevHandler {
 			User molly = new User(DBHandler.getNextUserID(), "Molly", User.hashPassword(salt, password), salt, "henderson.molly4@gmail.com", new BasicDBList(), false, false, false, false, 0);
 			DBHandler.createUser(molly);
 			salt = User.generateSalt();
-			User sarah = new User(DBHandler.getNextUserID(), "Sarah", User.hashPassword(salt, password), salt, "slw96@case.edu", new BasicDBList(), false, false, false, false, 0);
+			User sarah = new User(DBHandler.getNextUserID(), "Sarah", User.hashPassword(salt, password), salt, "slw96@case.edu", new BasicDBList(), true, true, true, true, 0);
 			DBHandler.createUser(sarah);
 			DBHandler.addFriend(molly.get_id(), sarah.get_id());
 			DBHandler.addFriend(sarah.get_id(), molly.get_id());

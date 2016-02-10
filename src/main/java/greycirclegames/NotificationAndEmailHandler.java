@@ -93,13 +93,14 @@ public class NotificationAndEmailHandler {
 					String status = "lost";
 					if(winner != null && e.equals(winner)){
 						status = "won";
+					} else if(winner == null){
+						status = "tied";
 					}
 					user.addNotification("Game is over you " + status + "." , url, gameId, false);
 					DBHandler.updateUser(user);
 				}
 			}
 		});
-		
 	}
 
 	public static void newFriend(int adderId, Integer addedId) {
