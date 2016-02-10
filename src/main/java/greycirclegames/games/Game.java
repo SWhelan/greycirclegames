@@ -183,16 +183,6 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	}
 
 	/**
-	 * Sets the game to a non-winning end state.
-	 * For example, if a player quits the game, the whole game might end.
-	 * Currently, this is not implemented on the front-end.
-	 */
-	protected void changeToNonWinningEndState(){
-		isActive = false;
-		winner_id = null;
-	}
-
-	/**
 	 * Returns the winning player of the game, if there is one.
 	 * @return	The winning Player, or null if there is none.
 	 */

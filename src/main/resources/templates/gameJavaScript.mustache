@@ -5,11 +5,13 @@
 	{{/isTurn}}
 	{{^isTurn}}
 	isTurn = false;
+	{{#isActive}}
 	window.onload = function (){
 		setTimeout(function (){
 			window.location.replace(window.location.pathname);
 		}, 20000);
 	}
+	{{/isActive}}
 	{{/isTurn}}
 
 	var isActive;
@@ -27,9 +29,7 @@
 		return;
 	}
 	
-	function handleGameOver(){
-				console.log(isActive);
-	
+	function handleGameOver(){	
 		if(!isActive){
 			var message = "The game is over.";
 			{{#isTie}}
