@@ -1,3 +1,4 @@
+
 package greycirclegames;
 
 import java.util.List;
@@ -41,7 +42,7 @@ public class NotificationAndEmailHandler {
 				if(id > 0){
 					User user = DBHandler.getUser(id);
 					if(user.getEmailForGameOver() && !user.equals(ender)){
-						EmailService.sendNewGameMail(user.getEmail(), gameTypeIdentifier, url);
+						EmailService.sendGameOverMail(user.getEmail(), url);
 					}
 				}
 			}

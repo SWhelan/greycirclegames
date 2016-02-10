@@ -111,8 +111,14 @@ public abstract class CardBasedMove extends Move {
 	 */
 	@Override
 	public String toString(){
-		//Player # placed card on pile X or Moved PIle X onto Pile Y
+		//"Player name" placed card on pile X or Moved Pile X onto Pile Y
 		StringBuilder builder = new StringBuilder();
+		if(playerId < 0){
+			builder.append(ArtificialPlayer.getDefaultUsername(playerId));
+		} else {
+			builder.append(DBHandler.getUser(playerId).getUsername());
+		}
+		builder.append(" moved ");
 		if(origin.getName().equals("Draw Pile")){
 			builder.append("a card ");
 		}else{
@@ -129,13 +135,13 @@ public abstract class CardBasedMove extends Move {
 				count++;
 			};
 		}
-		String playerUsername = "";
-		if(playerId < 0){
-			playerUsername = ArtificialPlayer.getDefaultUsername(playerId);
-		} else {
-			playerUsername = DBHandler.getUser(playerId).getUsername();
-		}
-		return playerUsername + " moved " + builder.toString() + "from " + this.origin.getName() + " onto " + this.destination.getName();
+		
+		builder.append("from ");
+		builder.append(this.origin.getName());
+		builder.append(" onto ");
+		builder.append(this.destination.getName());
+
+		return builder.toString();
 	}
 	
 	/**
