@@ -15,7 +15,7 @@ import greycirclegames.GlobalConstants;
 import greycirclegames.NotFoundException;
 import greycirclegames.Player;
 import greycirclegames.User;
-import greycirclegames.games.card.kingscorner.KCPileIds;
+import greycirclegames.games.card.kingscorner.KCPile;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -229,7 +229,7 @@ public class TemplateHandler {
      * @return string to use as the key in the hashmap of the piles in a kcgame
      */
     protected static String getPileKeyFromString(String name) {
-        return Integer.toString(Arrays.stream(KCPileIds.values()).filter(e -> e.name().equals(name))
+        return Integer.toString(Arrays.stream(KCPile.values()).filter(e -> e.name().equals(name))
                 .collect(Collectors.toList()).get(0).ordinal());
     }
     

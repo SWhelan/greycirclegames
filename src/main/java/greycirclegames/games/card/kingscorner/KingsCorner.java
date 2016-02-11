@@ -33,7 +33,7 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 		}
 		KCGameState gs = getGameState();
 		Pile curUserHand = gs.userHands.get(Integer.toString(players.get(currentPlayerIndex)));
-		Pile drawPile = gs.piles.get(KCPileIds.DRAW_PILE.getKey());
+		Pile drawPile = gs.piles.get(KCPile.DRAW_PILE.getKey());
 		if(!drawPile.isEmpty()){
 			Pile topCard = new Pile("Top card");
 			topCard.add(drawPile.getTop());

@@ -3,6 +3,7 @@ package greycirclegames.games.card;
 import greycirclegames.ArtificialPlayer;
 import greycirclegames.DBHandler;
 import greycirclegames.games.Move;
+import greycirclegames.games.card.kingscorner.KCPile;
 
 /**
  * A Move encapsulates a move of a card game.
@@ -17,8 +18,9 @@ public abstract class CardBasedMove extends Move {
 	//The pile to which we are moving the moving cards to.
 	protected Pile destination;
 
-	//default constructor
-	public CardBasedMove(){}
+	public CardBasedMove(){
+	
+	}
 	
 	/**
 	 * Constructor.
@@ -119,7 +121,7 @@ public abstract class CardBasedMove extends Move {
 			builder.append(DBHandler.getUser(playerId).getUsername());
 		}
 		builder.append(" moved ");
-		if(origin.getName().equals("Draw Pile")){
+		if(origin.getName().equals(KCPile.DRAW_PILE.getPrettyName())){
 			builder.append("a card ");
 		}else{
 			int count = 0;
@@ -128,7 +130,10 @@ public abstract class CardBasedMove extends Move {
 				if(this.moving.size() <= 1 || count == this.moving.size() - 1){
 					builder.append(" ");
 				} else if(count == this.moving.size() - 2){
-					builder.append(", and ");
+					if(this.moving.size() != 2){
+						builder.append(",");
+					}
+					builder.append(" and ");
 				} else if(count != this.moving.size() - 1){
 					builder.append(", ");
 				}

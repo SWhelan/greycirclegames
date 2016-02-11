@@ -132,10 +132,10 @@ public class KCArtificialPlayer extends ArtificialPlayer {
 	 * @return Is the direction N, E, W , or S?
 	 */
 	public boolean isCardinalDirection(Integer pileOrdinal) {
-		if (pileOrdinal == KCPileIds.EAST_PILE.ordinal() ||
-				pileOrdinal == KCPileIds.NORTH_PILE.ordinal() ||
-						pileOrdinal == KCPileIds.SOUTH_PILE.ordinal() ||
-								pileOrdinal == KCPileIds.WEST_PILE.ordinal()) {
+		if (pileOrdinal == KCPile.EAST_PILE.ordinal() ||
+				pileOrdinal == KCPile.NORTH_PILE.ordinal() ||
+						pileOrdinal == KCPile.SOUTH_PILE.ordinal() ||
+								pileOrdinal == KCPile.WEST_PILE.ordinal()) {
 			return true;
 		}
 		else {

@@ -76,7 +76,7 @@ public class Pile extends ReflectionDBObject {
 		return cards.removeLast();
 	}
 
-	public void addOn(Card e) {
+	public void addOne(Card e) {
 		cards.addLast(e);
 	}
 

@@ -28,7 +28,7 @@ public class KCMove extends CardBasedMove {
 	@Override
 	public boolean isValid() {
 		//If this is a draw move
-		if(origin.getName().equals("Draw Pile")){
+		if(origin.getName().equals(KCPile.DRAW_PILE.getPrettyName())){
 			//The moving pile should be 1 card, and it should equal the top card of the draw pile
 			return moving.size() == 1 && origin.getTop().equals(moving.getTop());
 		}
@@ -48,10 +48,10 @@ public class KCMove extends CardBasedMove {
 	}
 	
 	private static boolean destIsCorner(Pile dest){
-		return 	dest.getName().equals("Northeast Pile") ||
-				dest.getName().equals("Northwest Pile") ||
-				dest.getName().equals("Southeast Pile") ||
-				dest.getName().equals("Southwest Pile");
+		return 	dest.getName().equals(KCPile.NORTH_EAST_PILE.getPrettyName()) ||
+				dest.getName().equals(KCPile.NORTH_WEST_PILE.getPrettyName()) ||
+				dest.getName().equals(KCPile.SOUTH_EAST_PILE.getPrettyName()) ||
+				dest.getName().equals(KCPile.SOUTH_WEST_PILE.getPrettyName());
 	}
 
 	private static boolean cardsAreCompatible(Card movingBottom, Card destTop, Boolean destIsCorner) {

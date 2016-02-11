@@ -31,7 +31,6 @@ public class KCGameState extends CardBasedGameState {
 		this.piles = piles;
 	}
 
-	//Initialize to new gamestate
 	public KCGameState() {
 		super();
 	}
@@ -57,10 +56,6 @@ public class KCGameState extends CardBasedGameState {
 		this.turnNumber = (Integer)obj.get("TurnNumber");
 	}
 	
-	public static KingsCorner getKCGame(int gameID) {
-		return DBHandler.getKCGame(gameID);
-	}
-
 	@Override
 	public void initializeToNewGameState(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game, List<Integer> players) {
 		//Initialize game piles
@@ -77,7 +72,7 @@ public class KCGameState extends CardBasedGameState {
 			userHands.put(Integer.toString(player.get_id()), new Pile(player.getUsername()+"'s Pile"));
 		}
 		
-		Pile drawPile = piles.get(KCPileIds.DRAW_PILE.getKey());
+		Pile drawPile = piles.get(KCPile.DRAW_PILE.getKey());
 		
 		//Deal cards to users
 		for(int i = 0; i < GlobalConstants.INITIAL_NUM_CARDS; i++){
@@ -87,10 +82,10 @@ public class KCGameState extends CardBasedGameState {
 		}
 		
 		//Add cards to initial piles
-		addCardTo(piles.get(KCPileIds.NORTH_PILE.getKey()), piles.get(KCPileIds.NORTH_WEST_PILE.getKey()), drawPile);
-		addCardTo(piles.get(KCPileIds.EAST_PILE.getKey()), piles.get(KCPileIds.NORTH_EAST_PILE.getKey()), drawPile);
-		addCardTo(piles.get(KCPileIds.SOUTH_PILE.getKey()), piles.get(KCPileIds.SOUTH_WEST_PILE.getKey()), drawPile);
-		addCardTo(piles.get(KCPileIds.WEST_PILE.getKey()), piles.get(KCPileIds.SOUTH_EAST_PILE.getKey()), drawPile);
+		addCardTo(piles.get(KCPile.NORTH_PILE.getKey()), piles.get(KCPile.NORTH_WEST_PILE.getKey()), drawPile);
+		addCardTo(piles.get(KCPile.EAST_PILE.getKey()), piles.get(KCPile.NORTH_EAST_PILE.getKey()), drawPile);
+		addCardTo(piles.get(KCPile.SOUTH_PILE.getKey()), piles.get(KCPile.SOUTH_WEST_PILE.getKey()), drawPile);
+		addCardTo(piles.get(KCPile.WEST_PILE.getKey()), piles.get(KCPile.SOUTH_EAST_PILE.getKey()), drawPile);
 	}
 
 	private void addCardTo(Pile notKing, Pile isKing, Pile drawPile) {
@@ -106,17 +101,17 @@ public class KCGameState extends CardBasedGameState {
 	//Put empty piles for each game pile, except the draw pile which contains a full, shuffled deck.
 	private void initializePiles() {
 		piles = new HashMap<String, Pile>();
-		Pile drawPile = Pile.makeDeck("Draw Pile");
+		Pile drawPile = Pile.makeDeck(KCPile.DRAW_PILE.getPrettyName());
 		Pile.shuffle(drawPile);
-		piles.put(KCPileIds.DRAW_PILE.getKey(), drawPile);
-		piles.put(KCPileIds.EAST_PILE.getKey(), new Pile("East Pile"));
-		piles.put(KCPileIds.NORTH_PILE.getKey(), new Pile("North Pile"));
-		piles.put(KCPileIds.SOUTH_PILE.getKey(), new Pile("South Pile"));
-		piles.put(KCPileIds.WEST_PILE.getKey(), new Pile("West Pile"));
-		piles.put(KCPileIds.NORTH_EAST_PILE.getKey(), new Pile("Northeast Pile"));
-		piles.put(KCPileIds.NORTH_WEST_PILE.getKey(), new Pile("Northwest Pile"));
-		piles.put(KCPileIds.SOUTH_EAST_PILE.getKey(), new Pile("Southeast Pile"));
-		piles.put(KCPileIds.SOUTH_WEST_PILE.getKey(), new Pile("Southwest Pile"));
+		piles.put(KCPile.DRAW_PILE.getKey(), drawPile);
+		piles.put(KCPile.EAST_PILE.getKey(), new Pile(KCPile.EAST_PILE.getPrettyName()));
+		piles.put(KCPile.NORTH_PILE.getKey(), new Pile(KCPile.NORTH_PILE.getPrettyName()));
+		piles.put(KCPile.SOUTH_PILE.getKey(), new Pile(KCPile.SOUTH_PILE.getPrettyName()));
+		piles.put(KCPile.WEST_PILE.getKey(), new Pile(KCPile.WEST_PILE.getPrettyName()));
+		piles.put(KCPile.NORTH_EAST_PILE.getKey(), new Pile(KCPile.NORTH_EAST_PILE.getPrettyName()));
+		piles.put(KCPile.NORTH_WEST_PILE.getKey(), new Pile(KCPile.NORTH_WEST_PILE.getPrettyName()));
+		piles.put(KCPile.SOUTH_EAST_PILE.getKey(), new Pile(KCPile.SOUTH_EAST_PILE.getPrettyName()));
+		piles.put(KCPile.SOUTH_WEST_PILE.getKey(), new Pile(KCPile.SOUTH_WEST_PILE.getPrettyName()));
 	}
 	
 	/**
@@ -126,20 +121,15 @@ public class KCGameState extends CardBasedGameState {
 	 */
 	public Map<Integer, Pile> getVisiblePiles() {
 		Map<Integer, Pile> tablePiles = new HashMap<Integer, Pile>();
-		tablePiles.put(KCPileIds.EAST_PILE.ordinal(), piles.get(KCPileIds.EAST_PILE.getKey()));
-		tablePiles.put(KCPileIds.NORTH_PILE.ordinal(), piles.get(KCPileIds.NORTH_PILE.getKey()));
-		tablePiles.put(KCPileIds.WEST_PILE.ordinal(), piles.get(KCPileIds.WEST_PILE.getKey()));
-		tablePiles.put(KCPileIds.SOUTH_PILE.ordinal(), piles.get(KCPileIds.SOUTH_PILE.getKey()));
-		tablePiles.put(KCPileIds.NORTH_EAST_PILE.ordinal(), piles.get(KCPileIds.NORTH_EAST_PILE.getKey()));
-		tablePiles.put(KCPileIds.NORTH_WEST_PILE.ordinal(), piles.get(KCPileIds.NORTH_WEST_PILE.getKey()));
-		tablePiles.put(KCPileIds.SOUTH_EAST_PILE.ordinal(), piles.get(KCPileIds.SOUTH_EAST_PILE.getKey()));
-		tablePiles.put(KCPileIds.SOUTH_WEST_PILE.ordinal(), piles.get(KCPileIds.SOUTH_WEST_PILE.getKey()));
+		tablePiles.put(KCPile.EAST_PILE.ordinal(), piles.get(KCPile.EAST_PILE.getKey()));
+		tablePiles.put(KCPile.NORTH_PILE.ordinal(), piles.get(KCPile.NORTH_PILE.getKey()));
+		tablePiles.put(KCPile.WEST_PILE.ordinal(), piles.get(KCPile.WEST_PILE.getKey()));
+		tablePiles.put(KCPile.SOUTH_PILE.ordinal(), piles.get(KCPile.SOUTH_PILE.getKey()));
+		tablePiles.put(KCPile.NORTH_EAST_PILE.ordinal(), piles.get(KCPile.NORTH_EAST_PILE.getKey()));
+		tablePiles.put(KCPile.NORTH_WEST_PILE.ordinal(), piles.get(KCPile.NORTH_WEST_PILE.getKey()));
+		tablePiles.put(KCPile.SOUTH_EAST_PILE.ordinal(), piles.get(KCPile.SOUTH_EAST_PILE.getKey()));
+		tablePiles.put(KCPile.SOUTH_WEST_PILE.ordinal(), piles.get(KCPile.SOUTH_WEST_PILE.getKey()));
 		return tablePiles;
 	}
-	
-	/*public class Test{
-		public void testInitializeToNewGameState(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game, List<Integer> players){
-			initializeToNewGameState(game, players);
-		}
-	}*/
+
 }

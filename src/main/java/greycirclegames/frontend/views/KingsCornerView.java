@@ -10,7 +10,7 @@ import greycirclegames.DBHandler;
 import greycirclegames.Player;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Pile;
-import greycirclegames.games.card.kingscorner.KCPileIds;
+import greycirclegames.games.card.kingscorner.KCPile;
 import greycirclegames.games.card.kingscorner.KingsCorner;
 
 public class KingsCornerView {
@@ -52,17 +52,17 @@ public class KingsCornerView {
 			}
 		});	
 		Map<String, Pile> piles = game.getGameState().piles;
-		drawPile = makeCardView(piles.get(KCPileIds.DRAW_PILE.getKey()).getCards());
+		drawPile = makeCardView(piles.get(KCPile.DRAW_PILE.getKey()).getCards());
 		
-		northPile = makeCardView(piles.get(KCPileIds.NORTH_PILE.getKey()).getCards());
-		eastPile = makeCardView(piles.get(KCPileIds.EAST_PILE.getKey()).getCards());
-		southPile = makeCardView(piles.get(KCPileIds.SOUTH_PILE.getKey()).getCards());
-		westPile = makeCardView(piles.get(KCPileIds.WEST_PILE.getKey()).getCards());
+		northPile = makeCardView(piles.get(KCPile.NORTH_PILE.getKey()).getCards());
+		eastPile = makeCardView(piles.get(KCPile.EAST_PILE.getKey()).getCards());
+		southPile = makeCardView(piles.get(KCPile.SOUTH_PILE.getKey()).getCards());
+		westPile = makeCardView(piles.get(KCPile.WEST_PILE.getKey()).getCards());
 		
-		northEastPile = makeCardView(piles.get(KCPileIds.NORTH_EAST_PILE.getKey()).getCards());
-		southEastPile = makeCardView(piles.get(KCPileIds.SOUTH_EAST_PILE.getKey()).getCards());
-		southWestPile = makeCardView(piles.get(KCPileIds.SOUTH_WEST_PILE.getKey()).getCards());
-		northWestPile = makeCardView(piles.get(KCPileIds.NORTH_WEST_PILE.getKey()).getCards());
+		northEastPile = makeCardView(piles.get(KCPile.NORTH_EAST_PILE.getKey()).getCards());
+		southEastPile = makeCardView(piles.get(KCPile.SOUTH_EAST_PILE.getKey()).getCards());
+		southWestPile = makeCardView(piles.get(KCPile.SOUTH_WEST_PILE.getKey()).getCards());
+		northWestPile = makeCardView(piles.get(KCPile.NORTH_WEST_PILE.getKey()).getCards());
 		
 		northPile = removeMiddle(northPile);
 		eastPile = removeMiddle(eastPile);

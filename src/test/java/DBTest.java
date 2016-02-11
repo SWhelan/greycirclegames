@@ -4,6 +4,8 @@ import com.mongodb.BasicDBList;
 
 import greycirclegames.DBHandler;
 import greycirclegames.User;
+import greycirclegames.games.card.Card;
+import greycirclegames.games.card.Card.Suit;
 import greycirclegames.games.card.Pile;
 import greycirclegames.games.card.kingscorner.KCMove;
 import greycirclegames.games.card.kingscorner.KingsCorner;
@@ -11,6 +13,11 @@ import spark.utils.Assert;
 
 
 public class DBTest {
+	
+    public void testInit(){
+    	DevHandler.dropDev();
+    	DevHandler.addDefaultUsers();
+    }
 
 	//test CRUD operations for a USER
 	public void testUser() {
@@ -58,8 +65,11 @@ public class DBTest {
 		playerList.add(-1);		
 
 		Pile pile1 = new Pile("pile one");
+		pile1.add(new Card(2, Suit.CLUB));
 		Pile pile2 = new Pile("pile two");
+		pile2.add(new Card(2, Suit.HEART));
 		Pile pile3 = new Pile("pile three");
+		pile3.add(new Card(2, Suit.DIAMOND));
 
 
 		int gameID = DBHandler.getNextGameID();
