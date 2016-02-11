@@ -131,8 +131,24 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 		return false;
 	}
 	
-	public abstract boolean endTurn();
-
+	public abstract boolean applyEndTurn();
+	
+	public boolean endTurn(){
+		if(gameIsOver()){
+			changeToWinState();
+			updateGameHistory();
+			return false;
+		} else {
+			boolean result = applyEndTurn();
+			currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+			return result;
+		}
+	};
+	
+	public void updateGameHistory(){
+		
+	}
+	
     /**
      * If the current move is an AI, we can call this method to play the AI's moves.
      * Also, if the next player(s) is also an AI, this method will play all those
@@ -180,6 +196,9 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	protected void changeToWinState(){
 		isActive = false;
 		this.winner_id = determineWinnerId();
+		if(this.winner_id == 0){
+			this.tie = true;
+		}
 	}
 
 	/**

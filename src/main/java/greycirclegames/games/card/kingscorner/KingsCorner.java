@@ -27,10 +27,8 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 	 * A card does not need to be drawn in addition to calling endTurn.
 	 * @return	True if the turn was successfully ended.
 	 */
-	public boolean endTurn(){
-		if(gameIsOver()){
-			return false;
-		}
+	@Override
+	public boolean applyEndTurn(){
 		KCGameState gs = getGameState();
 		Pile curUserHand = gs.userHands.get(Integer.toString(players.get(currentPlayerIndex)));
 		Pile drawPile = gs.piles.get(KCPile.DRAW_PILE.getKey());
@@ -40,9 +38,7 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 			KCMove endTurn = new KCMove(this.players.get(currentPlayerIndex), drawPile, topCard, curUserHand);
 			endTurn.apply();
 			moves.add(endTurn);
-		}
-		currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-		
+		}		
 		return true;
 	}
 	

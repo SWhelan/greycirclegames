@@ -49,12 +49,8 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 				);
 	}
 
-	public boolean endTurn() {
-		if(gameIsOver()){
-			super.changeToWinState();
-		} else {
-			currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-		}
+	@Override
+	public boolean applyEndTurn() {
 		return true;
 	}
 
