@@ -81,6 +81,10 @@ public class Card extends ReflectionDBObject {
 		return decodeSuit() == Suit.DIAMOND || decodeSuit() == Suit.HEART;
 	}
 	
+	
+	/**
+	 * This is a necessary override. KCArtificialPlayer depends on it.
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -97,6 +101,9 @@ public class Card extends ReflectionDBObject {
 		return true;
 	}
 	
+	/**
+	 * This is a necessary override. KCArtificialPlayer depends on it.
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
