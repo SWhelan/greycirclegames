@@ -1,5 +1,6 @@
 package greycirclegames;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 
 import java.util.ArrayList;
@@ -34,6 +35,11 @@ public class DBHandler {
 	
 	public static void createCirclesGame(Circles game) {
 		create(game, "circlesgames");
+	}
+	
+	public static void createGameHistory(GameHistory history) {
+		history.set_id(getNextGameHistoryID());
+		create(history, "gamehistories");
 	}
 	
 	public static MongoCollection<DBObject> getCollection(String collectionName){
@@ -77,7 +83,15 @@ public class DBHandler {
 	public static Circles getCirclesGame(int gameId) {
 		return new Circles(getGame(gameId, "circlesgames"));
 	}
-
+	
+	public static GameHistory getGameHistory(Integer firstPlayerId, Integer secondPlayerId) {
+		BasicDBObject thing = (BasicDBObject)getCollection("gamehistories").find(and(eq("UserId1", firstPlayerId), eq("UserId2", secondPlayerId))).first();
+		if(thing == null){
+			return null;
+		}
+		return new GameHistory();
+	}
+	
 	public static DBObject getGame(int gameId, String collectionName){	
 		return getCollection(collectionName).find(eq("_id", gameId)).first();
 	}
@@ -110,6 +124,10 @@ public class DBHandler {
 		update(game, "circlesgames");
 	}
 
+	public static void updateGameHistory(GameHistory history) {
+		update(history, "gamehistories");
+	}
+	
 	public static void update(DBObject obj, String collectionName){		
 		getCollection(collectionName).findOneAndReplace(eq("_id", obj.get("_id")), obj);
 	}
@@ -140,8 +158,11 @@ public class DBHandler {
 	public static int getNextGameID() {
 		return getNextID("nextGameID");
 	}
+	
+	public static int getNextGameHistoryID(){
+		return getNextID("nextGameHistoryID");
+	}
 
-	// DELETE
 	public static void deleteUser(int userId) {
 		getCollection("users").findOneAndDelete(eq("_id", userId));
 	}
@@ -150,7 +171,7 @@ public class DBHandler {
 		getCollection("kcgames").findOneAndDelete(eq("_id", gameId));
 	}
 
-	// OTHER
+
 	/**
 	 * @param userId the id of the user to get friends from
 	 * @return a list of userID's indicating who the user is friends with

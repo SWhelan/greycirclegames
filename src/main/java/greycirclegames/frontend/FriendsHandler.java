@@ -9,6 +9,7 @@ import greycirclegames.GlobalConstants;
 import greycirclegames.NotificationAndEmailHandler;
 import greycirclegames.Player;
 import greycirclegames.User;
+import greycirclegames.frontend.views.FriendView;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -37,7 +38,7 @@ public class FriendsHandler extends TemplateHandler {
 			return renderFriends(rq, rs);
 		}
 		HashMap<String, Object> info = new HashMap<String, Object>();
-		info.put("friend", friends.get(0));
+		info.put("friend", new FriendView(getUserIdFromCookies(rq), friends.get(0)));
 		return getModelAndView(info, FRIEND_INFO_TEMPLATE, rq, rs);
 	}
 	

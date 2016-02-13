@@ -11,6 +11,8 @@ import com.mongodb.ReflectionDBObject;
 
 import greycirclegames.ArtificialPlayer;
 import greycirclegames.DBHandler;
+import greycirclegames.GameHistory;
+import greycirclegames.GameHistoryEntry;
 import greycirclegames.Player;
 
 /**
@@ -146,8 +148,37 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	};
 	
 	public void updateGameHistory(){
-		
+		for(Integer firstPlayerId : this.players){
+			if(firstPlayerId > 0){
+				for(Integer secondPlayerId : this.players){
+					if(secondPlayerId != firstPlayerId){
+						if(secondPlayerId < 0){
+							secondPlayerId = -1;
+						}
+						GameHistory history = DBHandler.getGameHistory(firstPlayerId, secondPlayerId);
+						if(history == null){
+							history = new GameHistory(firstPlayerId, secondPlayerId);
+							DBHandler.createGameHistory(history);
+						}
+						GameHistoryEntry historyEntry = history.getEntryForGameType(this.getGameTypeIdentifier());
+						historyEntry.increaseGameCount();
+						if(this.tie){
+							historyEntry.increaseNumTie();
+						} else {
+							if(this.winner_id == firstPlayerId){
+								historyEntry.increaseNumWins();
+							} else {
+								historyEntry.increaseNumLost();
+							}
+						}
+						DBHandler.updateGameHistory(history);
+					}
+				}
+			}
+		}
 	}
+	
+	
 	
     /**
      * If the current move is an AI, we can call this method to play the AI's moves.
