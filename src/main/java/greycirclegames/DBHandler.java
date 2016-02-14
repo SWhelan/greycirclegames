@@ -89,7 +89,7 @@ public class DBHandler {
 		if(thing == null){
 			return null;
 		}
-		return new GameHistory();
+		return new GameHistory(thing);
 	}
 	
 	public static DBObject getGame(int gameId, String collectionName){	

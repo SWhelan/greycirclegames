@@ -1,6 +1,6 @@
 package greycirclegames;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,6 +9,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.ReflectionDBObject;
 
 public class GameHistory extends ReflectionDBObject {
+	private Integer _id; // Mongo :/
 	private int userId1;
 	private int userId2;
 	private List<GameHistoryEntry> entries;
@@ -20,20 +21,28 @@ public class GameHistory extends ReflectionDBObject {
 	public GameHistory(int userId1, int userId2){
 		this.userId1 = userId1;
 		this.userId2 = userId2;
-		this.entries = new LinkedList<GameHistoryEntry>();
+		this.entries = new ArrayList<GameHistoryEntry>();
 		entries.add(new GameHistoryEntry(GlobalConstants.KINGS_CORNER, 0, 0, 0, 0));
 		entries.add(new GameHistoryEntry(GlobalConstants.CIRCLES, 0, 0, 0, 0));
 	}
 	
 	public GameHistory(BasicDBObject obj){
+		this._id = (Integer) obj.get("_id");
 		this.userId1 = (Integer) obj.get("UserId1");
 		this.userId2 = (Integer) obj.get("UserId2");
 		BasicDBList entries = (BasicDBList) obj.get("Entries");
+		this.entries = new ArrayList<GameHistoryEntry>();
 		for(Object entry : entries){
 			this.entries.add(new GameHistoryEntry((BasicDBObject) entry));
 		}
 	}
-	
+		
+	public Integer get_id() {
+		return _id;
+	}
+	public void set_id(Integer _id) {
+		this._id = _id;
+	}
 	public int getUserId1() {
 		return userId1;
 	}

@@ -2,11 +2,25 @@
 
 {{#friend}}
 <h2>{{username}}</h2>
-<h3>{{email}}</h3>
-<p>Wins: {{numCirclesWin}}</p>
-<p>Losses: {{numCirclesLost}}</p>
-<p>Ties: {{numCirclesTie}}</p>
-<p>Total Circles: {{numCirclesGames}}</p>
+ <ul class="nav nav-tabs">
+    <li class="active"><a data-toggle="tab" href="#circles">Circles</a></li>
+    <li><a data-toggle="tab" href="#kingscorner">King's Corner</a></li>
+ </ul>
+<br/>
+  <div class="tab-content">
+    <div id="circles" class="tab-pane fade in active">
+        <p>You have won <b> {{numCirclesWin}} </b> games against {{username}}.</p>
+        <p>You have lost <b> {{numCirclesLost}} </b> games to {{username}}.</p>
+        <p>You have tied <b> {{numCirclesTie}} </b> games with {{username}}.</p>
+        <p>You have played <b> {{numCirclesGames}} </b> games total with {{username}}.</p>
+    </div>
+    <div id="kingscorner" class="tab-pane fade">
+        <p>You have won <b> {{numKCWin}} </b> games against {{username}}.</p>
+        <p>You have lost <b> {{numKCLost}} </b> games to {{username}}.</p>
+        <p>You have tied <b> {{numKCTie}} </b> games with {{username}}.</p>
+        <p>You have played <b> {{numKCGames}} </b> games total with {{username}}.</p>
+    </div>
+  </div>
 {{/friend}}
 
 {{> footer}}
