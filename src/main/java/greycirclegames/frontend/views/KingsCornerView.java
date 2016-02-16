@@ -14,26 +14,27 @@ import greycirclegames.games.card.kingscorner.KCPile;
 import greycirclegames.games.card.kingscorner.KingsCorner;
 
 public class KingsCornerView {
-	Integer gameId;
-	boolean isTurn;
-	boolean isActive;
-	List<CardView> userHand;
-	List<HandView> otherPlayers = new LinkedList<HandView>();
-	List<CardView> drawPile;
+	public Integer gameId;
+	public String gameRoute;
+	public boolean isTurn;
+	public boolean isActive;
+	public List<CardView> userHand;
+	public List<HandView> otherPlayers = new LinkedList<HandView>();
+	public List<CardView> drawPile;
 	
-	List<CardView> northPile;
-	List<CardView> eastPile;
-	List<CardView> southPile;
-	List<CardView> westPile;
+	public List<CardView> northPile;
+	public List<CardView> eastPile;
+	public List<CardView> southPile;
+	public List<CardView> westPile;
 	
-	List<CardView> northEastPile;
-	List<CardView> southEastPile;
-	List<CardView> southWestPile;
-	List<CardView> northWestPile;
+	public List<CardView> northEastPile;
+	public List<CardView> southEastPile;
+	public List<CardView> southWestPile;
+	public List<CardView> northWestPile;
 	
-	List<String> moveHistory;
-	boolean isWinner;
-	boolean isTie;
+	public List<String> moveHistory;
+	public boolean isWinner;
+	public boolean isTie;
 	
 	public KingsCornerView(KingsCorner game, Player viewingPlayer){
 		gameId = game.get_id();
@@ -86,6 +87,7 @@ public class KingsCornerView {
 			}
 		}
 		isTie = game.getTie();
+		this.gameRoute = game.getRootUrlRoute();
 	}
 	
 	private List<CardView> removeMiddle(List<CardView> pile){

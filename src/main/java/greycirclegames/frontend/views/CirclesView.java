@@ -14,6 +14,7 @@ import greycirclegames.games.board.circles.CirclesMove;
 public class CirclesView {
 	public List<RowView> displayBoard = new ArrayList<>();
 	public int gameId;
+	public String gameRoute;
 	public String color;
 	public boolean isTurn;
 	public boolean isActive;
@@ -84,6 +85,7 @@ public class CirclesView {
             }
             displayBoard.add(new RowView(row));
         }
+		this.gameRoute = game.getRootUrlRoute();
 	}
 
 }

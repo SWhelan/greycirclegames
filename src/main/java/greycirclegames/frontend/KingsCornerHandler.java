@@ -59,12 +59,7 @@ public class KingsCornerHandler extends TemplateHandler{
 			players.add(i * -1);
 		}
 		
-		// Create the game
-		KingsCorner game = new KingsCorner(DBHandler.getNextGameID(), players);
-		DBHandler.createKCGame(game);
-		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
-		rs.redirect(KINGS_CORNER_ROUTE + "/" + Integer.toString(game.get_id()));
-		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
+		return createKCGame(players, rq, rs);
 	}
 	
 	protected static ModelAndView postMove(Request rq, Response rs) {
@@ -124,6 +119,14 @@ public class KingsCornerHandler extends TemplateHandler{
 		}
 		DBHandler.updateKCGame(game);
 		rs.redirect(KINGS_CORNER_ROUTE + "/" + gameIdString);
+		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
+	}
+
+	public static ModelAndView createKCGame(List<Integer> players, Request rq, Response rs) {
+		KingsCorner game = new KingsCorner(DBHandler.getNextGameID(), players);
+		DBHandler.createKCGame(game);
+		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
+		rs.redirect(KINGS_CORNER_ROUTE + "/" + Integer.toString(game.get_id()));
 		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
 }

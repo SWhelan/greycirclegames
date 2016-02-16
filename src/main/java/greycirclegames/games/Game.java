@@ -63,6 +63,9 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 		NotificationAndEmailHandler.newGame(this.get_id(), this.players, this.getGameTypeIdentifier(), this.getRootUrlRoute() + "/" + Integer.toString(this.get_id()), DBHandler.getUser(this.players.get(0)));
 	}
 
+	/**
+	 * @return The url route prepended in to access this type of game
+	 */
 	public abstract String getRootUrlRoute();	
 	
 	/**

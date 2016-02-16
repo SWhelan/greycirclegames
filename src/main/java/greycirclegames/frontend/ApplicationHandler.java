@@ -3,6 +3,7 @@ package greycirclegames.frontend;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
@@ -10,6 +11,8 @@ import greycirclegames.Player;
 import greycirclegames.User;
 import greycirclegames.frontend.views.GameListView;
 import greycirclegames.frontend.views.UserView;
+import greycirclegames.games.board.circles.Circles;
+import greycirclegames.games.card.kingscorner.KingsCorner;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
@@ -225,6 +228,30 @@ public class ApplicationHandler extends TemplateHandler {
 		user.removeNotification(notificationIndex);
 		DBHandler.updateUser(user);
 		return getModelAndView(null, GAME_LIST_TEMPLATE, rq, rs);
+	}
+
+	public static ModelAndView renderRematch(Request rq, Response rs) {
+		int gameId = Integer.parseInt(rq.params(":id"));
+		int creatorId = getUserIdFromCookies(rq);
+		String gameType = rq.params(":gameType");
+		List<Integer> players;
+		if(("/" + gameType).equals(TemplateHandler.CIRCLES_ROUTE)){
+			Circles game = DBHandler.getCirclesGame(gameId);
+			players = makeNewPlayersList(game.getPlayers(), creatorId);
+			return CirclesHandler.createCirclesGame(players, rq, rs);
+		} else if(("/" + gameType).equals(TemplateHandler.KINGS_CORNER_ROUTE)){
+			KingsCorner game = DBHandler.getKCGame(gameId);
+			players = makeNewPlayersList(game.getPlayers(), creatorId);
+			return KingsCornerHandler.createKCGame(players, rq, rs);
+		}
+		return null; // Compiler can't know we can never get here.
+	}
+
+	private static List<Integer> makeNewPlayersList(List<Integer> players, int creatorId) {
+		List<Integer> newPlayerList = new ArrayList<Integer>();
+		newPlayerList.add(creatorId);
+		newPlayerList.addAll(players.stream().filter(e -> ((int) e) != creatorId).collect(Collectors.toList()));
+		return newPlayerList;
 	}
 
 }

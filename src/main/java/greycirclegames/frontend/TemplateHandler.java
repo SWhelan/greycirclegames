@@ -45,7 +45,8 @@ public class TemplateHandler {
     public static final String POST_MOVE_ROUTE = "/move";
     public static final String POST_TURN_ROUTE = "/turn";
     public static final String REMOVE_NOTIFICATION_ROUTE = "/removeNotification";
-
+    public static final String REMATCH_ROUTE= "/rematch";
+    
     // Prepend Games
     public static final String CIRCLES_ROUTE = "/circles";
     public static final String KINGS_CORNER_ROUTE = "/kingscorner";
@@ -112,6 +113,7 @@ public class TemplateHandler {
         post(CIRCLES_ROUTE + POST_TURN_ROUTE, (rq, rs) -> CirclesHandler.postTurn(rq, rs),
                 new MustacheTemplateEngine());
 
+        get(REMATCH_ROUTE + "/:gameType" + "/:id", (rq, rs) -> ApplicationHandler.renderRematch(rq, rs), new MustacheTemplateEngine());
         // Throw an error on 404s
         get("/*", (rq, rs) -> {
             if (!rq.pathInfo().startsWith(PUBLIC_ROUTE)) {
@@ -303,6 +305,7 @@ public class TemplateHandler {
         info.put("CIRCLES_ROUTE", CIRCLES_ROUTE);
         info.put("KINGS_CORNER_ROUTE", KINGS_CORNER_ROUTE);
         info.put("REMOVE_NOTIFICATION_ROUTE", REMOVE_NOTIFICATION_ROUTE);
+        info.put("REMATCH_ROUTE", REMATCH_ROUTE);
 
         return new ModelAndView(info, templateName);
     }

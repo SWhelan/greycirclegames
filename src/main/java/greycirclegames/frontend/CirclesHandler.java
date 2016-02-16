@@ -33,7 +33,10 @@ public class CirclesHandler extends TemplateHandler{
 			players.add(-1);
 		}
 		
-		// Create the game
+		return createCirclesGame(players, rq, rs);
+	}
+
+	protected static ModelAndView createCirclesGame(List<Integer> players, Request rq, Response rs) {
 		Circles game = new Circles(DBHandler.getNextGameID(), players);
 		DBHandler.createCirclesGame(game);
 		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
