@@ -13,6 +13,7 @@ import greycirclegames.ArtificialPlayer;
 import greycirclegames.DBHandler;
 import greycirclegames.GameHistory;
 import greycirclegames.GameHistoryEntry;
+import greycirclegames.NotificationAndEmailHandler;
 import greycirclegames.Player;
 
 /**
@@ -59,8 +60,11 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 		isActive = true;
 		winner_id = null;
 		this.tie = false;
+		NotificationAndEmailHandler.newGame(this.get_id(), this.players, this.getGameTypeIdentifier(), this.getRootUrlRoute() + "/" + Integer.toString(this.get_id()), DBHandler.getUser(this.players.get(0)));
 	}
 
+	public abstract String getRootUrlRoute();	
+	
 	/**
 	 * Abstract method for creating a game state for a completely new game
 	 * @param players the list of players in turn order
@@ -118,10 +122,12 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 		if(gameIsOver()){
 			changeToWinState();
 			updateGameHistory();
+			NotificationAndEmailHandler.gameOver(this.get_id(), this.getPlayers(), this.getGameTypeIdentifier(), this.getRootUrlRoute() + "/" + this.get_id(), this.getWinner(), this.getCurrentPlayerObject());
 			return false;
 		} else {
 			boolean result = applyEndTurn();
 			currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+			NotificationAndEmailHandler.turn(this.get_id(), this.getPlayers(), this.getCurrentPlayerObject(), this.getGameTypeIdentifier(), this.getRootUrlRoute() + "/" + Integer.toString(this.get_id()));
 			return result;
 		}
 	};

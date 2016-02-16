@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 
 import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
-import greycirclegames.NotificationAndEmailHandler;
 import greycirclegames.User;
 import greycirclegames.frontend.views.KingsCornerView;
 import greycirclegames.games.card.Card;
@@ -63,7 +62,6 @@ public class KingsCornerHandler extends TemplateHandler{
 		// Create the game
 		KingsCorner game = new KingsCorner(DBHandler.getNextGameID(), players);
 		DBHandler.createKCGame(game);
-		NotificationAndEmailHandler.newGame(game.get_id(), players, game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + Integer.toString(game.get_id()), getUserFromCookies(rq));
 		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
 		rs.redirect(KINGS_CORNER_ROUTE + "/" + Integer.toString(game.get_id()));
 		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
@@ -125,11 +123,6 @@ public class KingsCornerHandler extends TemplateHandler{
 			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
 		}
 		DBHandler.updateKCGame(game);
-		if(!game.gameIsOver()){
-			NotificationAndEmailHandler.turn(game.get_id(), game.getPlayers(), game.getCurrentPlayerObject(), game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + game.get_id());
-		} else {
-			NotificationAndEmailHandler.gameOver(game.get_id(), game.getPlayers(), game.getGameTypeIdentifier(), KINGS_CORNER_ROUTE + "/" + game.get_id(), game.getWinner(), game.getCurrentPlayerObject());
-		}
 		rs.redirect(KINGS_CORNER_ROUTE + "/" + gameIdString);
 		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
