@@ -62,19 +62,19 @@ public class GameHistoryEntry extends ReflectionDBObject {
 	}
 	
 	public void increaseGameCount(){
-		this.numGames = this.numGames++;
+		this.numGames++;
 	}
 	
 	public void increaseNumWins(){
-		this.numWon = this.numWon++;
+		this.numWon++;
 	}
 	
 	public void increaseNumLost(){
-		this.numLost = this.numLost++;
+		this.numLost++;
 	}
 	
 	public void increaseNumTie(){
-		this.numTie = this.numTie++;
+		this.numTie++;
 	}
 
 }

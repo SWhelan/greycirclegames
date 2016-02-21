@@ -7,6 +7,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 import greycirclegames.GlobalConstants;
+import greycirclegames.frontend.TemplateHandler;
 import greycirclegames.games.Game;
 
 public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtificialPlayer> {
@@ -14,12 +15,10 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 
 	public Circles(int id, List<Integer> players){
 		super(id, players);
-		this.tie = false;
 	}
 	
 	public Circles(DBObject obj){
 		super.gameFromDBObject(obj);
-		this.gameState = new CirclesGameState((BasicDBObject)obj.get("GameState"));
 	}
 	
 	@Override
@@ -81,5 +80,10 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 	@Override
 	public CirclesGameState makeGameStateFromDB(BasicDBObject dbObject) {
 		return new CirclesGameState(dbObject);
+	}
+
+	@Override
+	public String getRootUrlRoute() {
+		return TemplateHandler.CIRCLES_ROUTE;
 	}
 }

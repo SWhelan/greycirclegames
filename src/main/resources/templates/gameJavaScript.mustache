@@ -34,15 +34,18 @@
 			var message = "The game is over.";
 			{{#isTie}}
 				message = message + " It was a tie.";
+                message = message + " <a href='{{REMATCH_ROUTE}}{{gameRoute}}/{{gameId}}'>Rematch</a>";
 				displayError(message, false);
 			{{/isTie}}
 			{{^isTie}}
 				{{#isWinner}}
 					message = message + " You won!";
+                    message = message + " <a href='{{REMATCH_ROUTE}}{{gameRoute}}/{{gameId}}'>Rematch</a>";
 					displaySuccess(message, false);
 				{{/isWinner}}
 				{{^isWinner}}
 					message = message + " You lost.";
+                    message = message + " <a href='{{REMATCH_ROUTE}}{{gameRoute}}/{{gameId}}'>Rematch</a>";                    
 					displayError(message, false);
 				{{/isWinner}}
 			{{/isTie}}

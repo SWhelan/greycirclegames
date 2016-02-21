@@ -4,6 +4,7 @@ package greycirclegames;
 import java.util.List;
 
 import greycirclegames.frontend.TemplateHandler;
+import greycirclegames.games.Game;
 
 public class NotificationAndEmailHandler {
 	public static void sendNewFriendIfWanted(int adderId, int addedId) {
@@ -30,14 +31,14 @@ public class NotificationAndEmailHandler {
 	public static void sendTurnMailIfWanted(List<Integer> players, Player player, String gameTypeIdentifier, String url) {
 		if(player.get_id() > 0){
 			User user = (User)player;
-			if(listHasMoreThanOneHuman(players) && user.getEmailForTurn()){
+			if(Game.listHasMoreThanOneHuman(players) && user.getEmailForTurn()){
 				EmailService.sendTurnMail(user.getEmail(), gameTypeIdentifier, url);
 			}
 		}
 	}
 	
 	public static void sendGameOverMailIfWanted(List<Integer> players, String gameTypeIdentifier, String url, Player ender) {
-		if(listHasMoreThanOneHuman(players)){
+		if(Game.listHasMoreThanOneHuman(players)){
 			for(Integer id : players){
 				if(id > 0){
 					User user = DBHandler.getUser(id);
@@ -47,16 +48,6 @@ public class NotificationAndEmailHandler {
 				}
 			}
 		}
-	}
-	
-	public static boolean listHasMoreThanOneHuman(List<Integer> players){
-		int count = 0;
-		for(Integer id : players){
-			if(id > 0){
-				count = count + 1;
-			}
-		}
-		return count > 1;
 	}
 
 	public static void newGame(int gameId, List<Integer> players, String gameTypeIdentifier, String url, User creator) {

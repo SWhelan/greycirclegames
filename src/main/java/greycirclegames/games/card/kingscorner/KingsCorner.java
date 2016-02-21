@@ -6,6 +6,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 
 import greycirclegames.GlobalConstants;
+import greycirclegames.frontend.TemplateHandler;
 import greycirclegames.games.Game;
 import greycirclegames.games.card.Pile;
 
@@ -15,7 +16,6 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 		super(gameId, players);
 	}
 
-	//for creating a new kcgame from the mongo object
 	public KingsCorner(DBObject obj) {
 		super.gameFromDBObject(obj);
 	}
@@ -49,7 +49,6 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 		return state;
 	}
 	
-	//Checks if any of the player hands are empty.
 	@Override
 	public boolean gameIsOver(){
 		for(Pile p : getGameState().userHands.values()){
@@ -60,7 +59,6 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 		return false;
 	}
 
-	//The string identifier for King's Corner
 	@Override
 	public String getGameTypeIdentifier() {
 		return GlobalConstants.KINGS_CORNER;
@@ -84,5 +82,10 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 	@Override
 	public KCGameState makeGameStateFromDB(BasicDBObject dbObject) {
 		return new KCGameState(dbObject);
+	}
+
+	@Override
+	public String getRootUrlRoute() {
+		return TemplateHandler.KINGS_CORNER_ROUTE;
 	}
 }

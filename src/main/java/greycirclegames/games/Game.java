@@ -13,6 +13,7 @@ import greycirclegames.ArtificialPlayer;
 import greycirclegames.DBHandler;
 import greycirclegames.GameHistory;
 import greycirclegames.GameHistoryEntry;
+import greycirclegames.NotificationAndEmailHandler;
 import greycirclegames.Player;
 
 /**
@@ -26,32 +27,11 @@ import greycirclegames.Player;
  *
  */
 public abstract class Game<M extends Move, S extends GameState, A extends ArtificialPlayer> extends ReflectionDBObject{
-
-	/**
-	 * The id of a game
-	 * This starts with an underscore because of database.
-	 */
-	protected int _id;
-	/**
-	 * Game State saves information about board or card piles etc
-	 */
+	protected int _id; // Mongo :/	
 	protected S gameState;
-	/**
-	 * List of moves that have been played to save game history
-	 */
 	protected List<M> moves;
-	/**
-	 * True if the game is still being played
-	 * False if the game has been won or cancelled 
-	 */
 	protected boolean isActive;
-	/**
-	 * The id of the winner of the game (null if no winner)
-	 */
 	protected Integer winner_id;
-	/**
-	 * List of players in order of turn.
-	 */
 	public List<Integer> players;
 	/**
 	 * The INDEX of the players list NOT THE PLAYER'S ID.  
@@ -80,8 +60,14 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 		isActive = true;
 		winner_id = null;
 		this.tie = false;
+		NotificationAndEmailHandler.newGame(this.get_id(), this.players, this.getGameTypeIdentifier(), this.getRootUrlRoute() + "/" + Integer.toString(this.get_id()), DBHandler.getUser(this.players.get(0)));
 	}
 
+	/**
+	 * @return The url route prepended in to access this type of game
+	 */
+	public abstract String getRootUrlRoute();	
+	
 	/**
 	 * Abstract method for creating a game state for a completely new game
 	 * @param players the list of players in turn order
@@ -139,39 +125,59 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 		if(gameIsOver()){
 			changeToWinState();
 			updateGameHistory();
+			NotificationAndEmailHandler.gameOver(this.get_id(), this.getPlayers(), this.getGameTypeIdentifier(), this.getRootUrlRoute() + "/" + this.get_id(), this.getWinner(), this.getCurrentPlayerObject());
 			return false;
 		} else {
 			boolean result = applyEndTurn();
 			currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
+			NotificationAndEmailHandler.turn(this.get_id(), this.getPlayers(), this.getCurrentPlayerObject(), this.getGameTypeIdentifier(), this.getRootUrlRoute() + "/" + Integer.toString(this.get_id()));
 			return result;
 		}
 	};
 	
+	public static boolean listHasMoreThanOneHuman(List<Integer> players){
+		int count = 0;
+		for(Integer id : players){
+			if(id > 0){
+				count = count + 1;
+			}
+		}
+		return count > 1;
+	}
+	
 	public void updateGameHistory(){
+		boolean alreadySetAI = false;
 		for(Integer firstPlayerId : this.players){
 			if(firstPlayerId > 0){
 				for(Integer secondPlayerId : this.players){
 					if(secondPlayerId != firstPlayerId){
+						boolean addThisEntry = true;
 						if(secondPlayerId < 0){
 							secondPlayerId = -1;
-						}
-						GameHistory history = DBHandler.getGameHistory(firstPlayerId, secondPlayerId);
-						if(history == null){
-							history = new GameHistory(firstPlayerId, secondPlayerId);
-							DBHandler.createGameHistory(history);
-						}
-						GameHistoryEntry historyEntry = history.getEntryForGameType(this.getGameTypeIdentifier());
-						historyEntry.increaseGameCount();
-						if(this.tie){
-							historyEntry.increaseNumTie();
-						} else {
-							if(this.winner_id == firstPlayerId){
-								historyEntry.increaseNumWins();
-							} else {
-								historyEntry.increaseNumLost();
+							if(alreadySetAI){
+								addThisEntry = false;
 							}
+							alreadySetAI = true;					
 						}
-						DBHandler.updateGameHistory(history);
+						if(addThisEntry){
+							GameHistory history = DBHandler.getGameHistory(firstPlayerId, secondPlayerId);
+							if(history == null){
+								history = new GameHistory(firstPlayerId, secondPlayerId);
+								DBHandler.createGameHistory(history);
+							}
+							GameHistoryEntry historyEntry = history.getEntryForGameType(this.getGameTypeIdentifier());
+							historyEntry.increaseGameCount();
+							if(this.tie){
+								historyEntry.increaseNumTie();
+							} else {
+								if(this.winner_id == firstPlayerId){
+									historyEntry.increaseNumWins();
+								} else {
+									historyEntry.increaseNumLost();
+								}
+							}
+							DBHandler.updateGameHistory(history);
+						}
 					}
 				}
 			}
