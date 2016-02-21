@@ -8,6 +8,7 @@ import greycirclegames.Player;
 
 public class FriendView {
 	public String username;
+	public boolean computerPlayer = false;
 	public int numCirclesWin = 0;
 	public int numCirclesLost = 0;
 	public int numCirclesTie = 0;
@@ -19,7 +20,17 @@ public class FriendView {
 	
 	public FriendView(int userId, Player friend){
 		this.username = friend.getUsername();
-		GameHistory history = DBHandler.getGameHistory(userId, friend.get_id());
+		init(userId, friend.get_id());
+	}
+	
+	public FriendView(int userId, String username){
+		this.username = username;
+		init(userId, -1);
+		computerPlayer = true;
+	}
+
+	private void init(int userId, int friendId) {
+		GameHistory history = DBHandler.getGameHistory(userId, friendId);
 		if(history != null){
 			GameHistoryEntry circles = history.getEntryForGameType(GlobalConstants.CIRCLES);
 			this.numCirclesLost = circles.getNumLost();

@@ -47,6 +47,7 @@ public class TemplateHandler {
     public static final String REMOVE_NOTIFICATION_ROUTE = "/removeNotification";
     public static final String REMATCH_ROUTE= "/rematch";
     public static final String POKE_ROUTE = "/poke";
+    public static final String USER_HISTORY_ROUTE = "/statistics";
     
     // Prepend Games
     public static final String CIRCLES_ROUTE = "/circles";
@@ -82,6 +83,7 @@ public class TemplateHandler {
         get(REGISTER_ROUTE, (rq, rs) -> ApplicationHandler.renderRegister(rq, rs), new MustacheTemplateEngine());
         get(LOGIN_ROUTE, (rq, rs) -> ApplicationHandler.renderLogin(rq, rs), new MustacheTemplateEngine());
         get(EDIT_USER_ROUTE, (rq, rs) -> ApplicationHandler.renderEditUser(rq, rs), new MustacheTemplateEngine());
+        get(USER_HISTORY_ROUTE, (rq, rs) -> ApplicationHandler.renderUserHistory(rq, rs), new MustacheTemplateEngine());
         get(TUTORIAL_ROUTE, (rq, rs) -> ApplicationHandler.renderTutorial(rq, rs), new MustacheTemplateEngine());
         get(LOGOUT_ROUTE, (rq, rs) -> ApplicationHandler.logout(rq, rs));
         get(GAMES_ROUTE, (rq, rs) -> ApplicationHandler.renderGameList(rq, rs), new MustacheTemplateEngine());
@@ -308,6 +310,7 @@ public class TemplateHandler {
         info.put("KINGS_CORNER_ROUTE", KINGS_CORNER_ROUTE);
         info.put("REMOVE_NOTIFICATION_ROUTE", REMOVE_NOTIFICATION_ROUTE);
         info.put("REMATCH_ROUTE", REMATCH_ROUTE);
+        info.put("USER_HISTORY_ROUTE", USER_HISTORY_ROUTE);
 
         return new ModelAndView(info, templateName);
     }

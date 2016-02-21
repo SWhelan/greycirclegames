@@ -10,6 +10,7 @@ import greycirclegames.GlobalConstants;
 import greycirclegames.NotificationAndEmailHandler;
 import greycirclegames.Player;
 import greycirclegames.User;
+import greycirclegames.frontend.views.FriendView;
 import greycirclegames.frontend.views.GameListView;
 import greycirclegames.frontend.views.UserView;
 import greycirclegames.games.board.circles.Circles;
@@ -283,6 +284,12 @@ public class ApplicationHandler extends TemplateHandler {
 		newPlayerList.add(creatorId);
 		newPlayerList.addAll(players.stream().filter(e -> ((int) e) != creatorId).collect(Collectors.toList()));
 		return newPlayerList;
+	}
+
+	public static ModelAndView renderUserHistory(Request rq, Response rs) {
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		info.put("friend", new FriendView(getUserIdFromCookies(rq), "All Artificial Players"));
+		return getModelAndView(info, FRIEND_INFO_TEMPLATE, rq, rs);
 	}
 
 }
