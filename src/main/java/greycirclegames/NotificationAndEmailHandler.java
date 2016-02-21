@@ -28,11 +28,15 @@ public class NotificationAndEmailHandler {
 		}
 	}
 	
-	public static void sendTurnMailIfWanted(List<Integer> players, Player player, String gameTypeIdentifier, String url) {
+	public static void sendTurnMailIfWanted(List<Integer> players, Player player, String gameTypeIdentifier, String url, boolean skipTurn) {
 		if(player.get_id() > 0){
 			User user = (User)player;
 			if(Game.listHasMoreThanOneHuman(players) && user.getEmailForTurn()){
-				EmailService.sendTurnMail(user.getEmail(), gameTypeIdentifier, url);
+                if(skipTurn) {
+                    EmailService.sendSkippedTurnMail(user.getEmail(), gameTypeIdentifier, url);
+                } else {
+                    EmailService.sendTurnMail(user.getEmail(), gameTypeIdentifier, url);
+                }
 			}
 		}
 	}
@@ -64,14 +68,18 @@ public class NotificationAndEmailHandler {
 	}
 
 	public static void turn(int gameId, List<Integer> players, Player currentPlayerObject, String gameTypeIdentifier,
-			String url) {
-		sendTurnMailIfWanted(players, currentPlayerObject, gameTypeIdentifier, url);
+			String url, boolean skipTurn) {
+		sendTurnMailIfWanted(players, currentPlayerObject, gameTypeIdentifier, url, skipTurn);
 		
 		if(currentPlayerObject.get_id() < 0){
 			return;
 		}
 		User user = (User)currentPlayerObject;
-		user.addNotification("It is your turn!", url, gameId, false);
+        if(skipTurn) {
+            user.addNotification("Your turn was skipped!", url, gameId, false);
+        } else {
+            user.addNotification("It is your turn!", url, gameId, false);
+        }
 		DBHandler.updateUser(user);
 	}
 

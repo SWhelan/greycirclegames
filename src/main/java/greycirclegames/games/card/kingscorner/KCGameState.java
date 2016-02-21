@@ -65,7 +65,7 @@ public class KCGameState extends CardBasedGameState {
 		for(Integer id : players){
 			Player player = null;
 			if(id < 0){
-				player = ((KingsCorner)game).makeArtificialPlayerFromDB(id);
+				player = ((KingsCorner)game).makeArtificialPlayer(id);
 			} else {
 				player = DBHandler.getUser(id);
 			}

@@ -9,12 +9,7 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.ReflectionDBObject;
 
-import greycirclegames.ArtificialPlayer;
-import greycirclegames.DBHandler;
-import greycirclegames.GameHistory;
-import greycirclegames.GameHistoryEntry;
-import greycirclegames.NotificationAndEmailHandler;
-import greycirclegames.Player;
+import greycirclegames.*;
 
 /**
  * The Game holds all the information about the game.
@@ -33,6 +28,8 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	protected boolean isActive;
 	protected Integer winner_id;
 	public List<Integer> players;
+    private int calledEndTurnCount = 0;
+
 	/**
 	 * The INDEX of the players list NOT THE PLAYER'S ID.  
 	 */
@@ -119,21 +116,32 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 		return false;
 	}
 	
-	public abstract boolean applyEndTurn();
+	public void applyEndTurn() {}
+
+    public boolean shouldSkipThisTurn() {
+        return false;
+    }
 	
-	public boolean endTurn(){
-		if(gameIsOver()){
+	public void endTurn(){
+		if(gameIsOver() || calledEndTurnCount > 1){
 			changeToWinState();
-			updateGameHistory();
+            updateGameHistory();
 			NotificationAndEmailHandler.gameOver(this.get_id(), this.getPlayers(), this.getGameTypeIdentifier(), this.getRootUrlRoute() + "/" + this.get_id(), this.getWinner(), this.getCurrentPlayerObject());
-			return false;
 		} else {
-			boolean result = applyEndTurn();
+			applyEndTurn();
 			currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
-			NotificationAndEmailHandler.turn(this.get_id(), this.getPlayers(), this.getCurrentPlayerObject(), this.getGameTypeIdentifier(), this.getRootUrlRoute() + "/" + Integer.toString(this.get_id()));
-			return result;
-		}
-	};
+
+            if(shouldSkipThisTurn()) {
+                // take care of the next person's turn
+                calledEndTurnCount++;
+                NotificationAndEmailHandler.turn(this.get_id(), this.getPlayers(), this.getCurrentPlayerObject(), this.getGameTypeIdentifier(), this.getRootUrlRoute() + "/" + Integer.toString(this.get_id()), calledEndTurnCount > 0);
+                endTurn();
+            } else {
+                calledEndTurnCount = 0;
+                NotificationAndEmailHandler.turn(this.get_id(), this.getPlayers(), this.getCurrentPlayerObject(), this.getGameTypeIdentifier(), this.getRootUrlRoute() + "/" + Integer.toString(this.get_id()), calledEndTurnCount > 0);
+            }
+        }
+	}
 	
 	public static boolean listHasMoreThanOneHuman(List<Integer> players){
 		int count = 0;
@@ -183,8 +191,7 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 			}
 		}
 	}
-	
-	
+
 	
     /**
      * If the current move is an AI, we can call this method to play the AI's moves.
@@ -199,7 +206,7 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
         while(this.isActive && players.get(currentPlayerIndex) < 0){
             result = true;
 
-            A ai = makeArtificialPlayerFromDB(players.get(currentPlayerIndex));
+            A ai = makeArtificialPlayer(players.get(currentPlayerIndex));
             boolean hasMove = true;
             //Get as many moves from the player as we can (until null)
             while(this.isActive && hasMove){
@@ -256,7 +263,7 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	public Player getCurrentPlayerObject(){
 		int currentPlayerId = this.players.get(this.getCurrentPlayerIndex());
 		if(currentPlayerId < 0){
-			return makeArtificialPlayerFromDB(currentPlayerId);
+			return makeArtificialPlayer(currentPlayerId);
 		} else {
 			return DBHandler.getUser(currentPlayerId);
 		}
@@ -289,7 +296,7 @@ public abstract class Game<M extends Move, S extends GameState, A extends Artifi
 	
 	public abstract M makeMoveFromDB(BasicDBObject move);
 
-	public abstract A makeArtificialPlayerFromDB(int playerId);
+	public abstract A makeArtificialPlayer(int playerId);
 
 	public Integer get_id() {
 		return _id;

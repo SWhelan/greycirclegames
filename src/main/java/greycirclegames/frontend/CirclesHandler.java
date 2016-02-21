@@ -76,7 +76,11 @@ public class CirclesHandler extends TemplateHandler{
 				// It was an AI Player's turn
 				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn ended. AI Player(s) played.");
 			} else {
-				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
+                if(game.players.get(game.currentPlayerIndex) == getUserIdFromCookies(rq)) {
+                    rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The other player had no valid moves. It's your turn again!");
+                } else {
+                    rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
+                }
 			}
 			DBHandler.updateCirclesGame(game);
 		} else {

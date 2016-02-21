@@ -41,4 +41,27 @@ public class CirclesTest {
 		game.endTurn();
 		Assert.isTrue(game.getTie(), "Should be a tie.");
 	}
+
+    public void testCirclesSkipTurn(String[] args) {
+        Circles game = new Circles(4, players);
+        CirclesGameState gameState = game.getGameState();
+        CirclesBoard board = gameState.getBoard();
+        String w = GlobalConstants.COLOR.WHITE;
+        String b = GlobalConstants.COLOR.BLACK;
+        String[][] spoofBoard =
+                {
+                        {null, b, w, w, w, w, w, w},
+                        {b, b, b, b, b, b, b, b},
+                        {b, b, b, b, b, b, b, b},
+                        {b, b, b, b, b, b, b, b},
+                        {b, b, b, b, b, b, b, b},
+                        {b, b, b, b, b, b, b, b},
+                        {b, b, b, b, b, b, b, b},
+                        {b, b, b, b, b, b, b, b}
+                };
+        board.setBoard(spoofBoard);
+        int currentPlayer = game.currentPlayerIndex;
+        game.endTurn();
+        Assert.isTrue(game.currentPlayerIndex == currentPlayer, "We skipped the second person's turn, so it should be the first person's turn again.");
+    }
 }

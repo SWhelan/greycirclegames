@@ -33,14 +33,14 @@ public class CirclesArtificialPlayer extends ArtificialPlayer {
         CirclesMove possibleMove;
         for(int i = 0; i < board.rows(); i++) {
             for(int j = 0; j < board.columns(); j++) {
-                // TODO: if colors ever change we're screwed
-                possibleMove = new CirclesMove(i, j, GlobalConstants.COLOR.BLACK, state, this.get_id());
+                possibleMove = new CirclesMove(i, j, Circles.turnColors.get(game.currentPlayerIndex), state, this.get_id());
                 int moveReward = getMoveReward(possibleMove, state);
                 moveRewards.put(moveReward, possibleMove);
             }
         }
         Collection<CirclesMove> sortedMoves = moveRewards.values();
-        return sortedMoves.stream().findFirst().get();
+        CirclesMove chosenMove = sortedMoves.stream().findFirst().get();
+        return chosenMove.isValid() ? chosenMove : null;
     }
 
     private int getMoveReward(CirclesMove move, CirclesGameState state) {

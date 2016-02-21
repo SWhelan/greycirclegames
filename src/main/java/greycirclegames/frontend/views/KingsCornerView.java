@@ -42,7 +42,7 @@ public class KingsCornerView {
 		game.getPlayers().stream().forEach((e) -> { 
 			Player player = null;
 			if(e < 0){
-				player = game.makeArtificialPlayerFromDB(e);
+				player = game.makeArtificialPlayer(e);
 			} else {
 				player = DBHandler.getUser(e);
 			}

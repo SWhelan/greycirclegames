@@ -9,6 +9,7 @@ import com.mongodb.DBObject;
 import greycirclegames.GlobalConstants;
 import greycirclegames.frontend.TemplateHandler;
 import greycirclegames.games.Game;
+import greycirclegames.games.Move;
 
 public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtificialPlayer> {
 	public static final List<String> turnColors = Arrays.asList(GlobalConstants.COLOR.WHITE, GlobalConstants.COLOR.BLACK);
@@ -38,6 +39,13 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 		return true;
 	}
 
+    @Override
+    public boolean shouldSkipThisTurn() {
+        CirclesArtificialPlayer ai = new CirclesArtificialPlayer(-2);
+        Move recommendedMove = ai.createMove(this);
+        return recommendedMove == null;
+    }
+
 	@Override
 	public boolean gameIsOver() {
 		int numBlack = gameState.getNumOnBoard(GlobalConstants.COLOR.BLACK);
@@ -46,11 +54,6 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 				numBlack == 0 ||
 				numWhite == 0
 				);
-	}
-
-	@Override
-	public boolean applyEndTurn() {
-		return true;
 	}
 
 	@Override
@@ -68,7 +71,7 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 	}
 
 	@Override
-	public CirclesArtificialPlayer makeArtificialPlayerFromDB(int playerId) {
+	public CirclesArtificialPlayer makeArtificialPlayer(int playerId) {
 		return new CirclesArtificialPlayer(playerId);
 	}
 

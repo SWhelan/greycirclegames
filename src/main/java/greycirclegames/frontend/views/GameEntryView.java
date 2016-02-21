@@ -21,12 +21,12 @@ public class GameEntryView {
 		if(currentPlayerId > 0){
 			currentPlayerName = game.getCurrentPlayerObject().getUsername();
 		} else {
-			currentPlayerName = game.makeArtificialPlayerFromDB(currentPlayerId).getUsername();
+			currentPlayerName = game.makeArtificialPlayer(currentPlayerId).getUsername();
 		}
 		StringBuilder builder = new StringBuilder();
 		for( Integer id : game.players){
 			if(id < 0){
-				builder.append(game.makeArtificialPlayerFromDB(id).getUsername());
+				builder.append(game.makeArtificialPlayer(id).getUsername());
 			} else {
 				builder.append(DBHandler.getUser(id).getUsername());
 			}

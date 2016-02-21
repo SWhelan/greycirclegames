@@ -70,7 +70,11 @@ public class CirclesBoard extends ReflectionDBObject {
     }
 
     public void setBoard(String[][] board) {
-        this.board = board;
+        for(int i = 0; i < rows(); i++) {
+            for(int j = 0; j < columns(); j++) {
+                setCell(i, j, board[i][j]);
+            }
+        }
     }
 
 	public CirclesBoard copy() {
@@ -81,5 +85,17 @@ public class CirclesBoard extends ReflectionDBObject {
             }
         }
         return copy;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for(int i = 0; i < rows(); i++) {
+            for(int j = 0; j < columns(); j++) {
+                builder.append(cellAt(i, j) + ", ");
+            }
+            builder.append("\n");
+        }
+        return builder.toString();
     }
 }
