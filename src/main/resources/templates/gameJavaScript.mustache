@@ -25,7 +25,7 @@
 	{{/isActive}}
 	
 	function notTurnAlert(){
-		displayError("It is not your turn.", true);
+		displayError("It is not your turn. <a href='/poke/{{gameId}}'>Click here</a> to remind the current player about this game. (Only sends email if you have opted to receive these types of email yourself.)", true);
 		return;
 	}
 	

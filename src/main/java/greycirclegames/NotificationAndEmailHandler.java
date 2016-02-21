@@ -5,6 +5,8 @@ import java.util.List;
 
 import greycirclegames.frontend.TemplateHandler;
 import greycirclegames.games.Game;
+import greycirclegames.games.GameState;
+import greycirclegames.games.Move;
 
 public class NotificationAndEmailHandler {
 	public static void sendNewFriendIfWanted(int adderId, int addedId) {
@@ -66,6 +68,12 @@ public class NotificationAndEmailHandler {
 			}
 		});
 	}
+	
+	public static void sendPokeMailIfWanted(User sender, User receiver, String url) {
+		if(sender.getEmailForPoke() && receiver.getEmailForPoke()){
+			EmailService.sendPokeMail(receiver.getEmail(), url);
+		}
+	}
 
 	public static void turn(int gameId, List<Integer> players, Player currentPlayerObject, String gameTypeIdentifier,
 			String url, boolean skipTurn) {
@@ -109,4 +117,19 @@ public class NotificationAndEmailHandler {
 		added.addNotification(adder.getUsername() + " added you as a friend.", TemplateHandler.FRIENDS_ROUTE, -1, true);
 		DBHandler.updateUser(added);
 	}
+
+	public static void poke(int senderId, int gameId) {
+		User sender = DBHandler.getUser(senderId);
+		Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game = DBHandler.getCirclesGame(gameId);
+		String url = TemplateHandler.CIRCLES_ROUTE;
+		if(game == null){
+			game = DBHandler.getKCGame(gameId);
+			url = TemplateHandler.KINGS_CORNER_ROUTE;
+		}
+		url = url + "/" + Integer.toString(gameId);
+		User receiver = DBHandler.getUser(game.getPlayers().get(game.getCurrentPlayerIndex()));
+		sendPokeMailIfWanted(sender, receiver, url);
+		receiver.addNotification("Reminder - It is your turn!", url, gameId, false);
+	}
+
 }

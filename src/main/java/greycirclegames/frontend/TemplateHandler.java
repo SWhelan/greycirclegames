@@ -46,6 +46,7 @@ public class TemplateHandler {
     public static final String POST_TURN_ROUTE = "/turn";
     public static final String REMOVE_NOTIFICATION_ROUTE = "/removeNotification";
     public static final String REMATCH_ROUTE= "/rematch";
+    public static final String POKE_ROUTE = "/poke";
     
     // Prepend Games
     public static final String CIRCLES_ROUTE = "/circles";
@@ -89,6 +90,7 @@ public class TemplateHandler {
         post(REGISTER_ROUTE, (rq, rs) -> ApplicationHandler.postRegister(rq, rs), new MustacheTemplateEngine());
         post(LOGIN_ROUTE, (rq, rs) -> ApplicationHandler.postLogin(rq, rs), new MustacheTemplateEngine());
         post(EDIT_USER_ROUTE, (rq, rs) -> ApplicationHandler.postEditUser(rq, rs), new MustacheTemplateEngine());
+        get(POKE_ROUTE + "/:id", (rq, rs) -> ApplicationHandler.postPoke(rq, rs), new MustacheTemplateEngine());
 
         // Routes involving adding, removing, or viewing friends
         get(FRIENDS_ROUTE, (rq, rs) -> FriendsHandler.renderFriends(rq, rs), new MustacheTemplateEngine());

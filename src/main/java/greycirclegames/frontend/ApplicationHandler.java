@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
+import greycirclegames.NotificationAndEmailHandler;
 import greycirclegames.Player;
 import greycirclegames.User;
 import greycirclegames.frontend.views.GameListView;
@@ -269,6 +270,14 @@ public class ApplicationHandler extends TemplateHandler {
 		return null; // Compiler can't know we can never get here.
 	}
 
+	public static ModelAndView postPoke(Request rq, Response rs){
+		String originalUrl = rq.headers("referer");
+		int gameId = Integer.parseInt(rq.params(":id"));
+		NotificationAndEmailHandler.poke(getUserIdFromCookies(rq), gameId);
+		rs.redirect(originalUrl);
+		return getModelAndView(new HashMap<String, Object>(), GAME_LIST_TEMPLATE, rq, rs);
+	}
+	
 	private static List<Integer> makeNewPlayersList(List<Integer> players, int creatorId) {
 		List<Integer> newPlayerList = new ArrayList<Integer>();
 		newPlayerList.add(creatorId);

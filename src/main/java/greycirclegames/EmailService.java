@@ -30,12 +30,17 @@ public class EmailService {
 	public static boolean sendTurnMail(String to, String gameType, String url){
 		return sendMail(new Options(to, "It is your turn.", "Everyone is waiting very patiently for you to make your cunning move.", url));
 	}
+	
     public static boolean sendSkippedTurnMail(String to, String gameType, String url){
         return sendMail(new Options(to, "Your turn has been skipped.", "We tried our darndest, but we couldn't find you any valid moves! Your turn was skipped.", url));
     }
 	
 	public static boolean sendGameOverMail(String to, String url){
 		return sendMail(new Options(to, "A game has ended.", "Rematch?", url));
+	}
+	
+	public static boolean sendPokeMail(String to, String url){
+		return sendMail(new Options(to, "Reminder - It is your turn!", "Someone else in the game has requested to remind you that it is your turn.", url));
 	}
 	
 	public static boolean sendMail(Options mail){
