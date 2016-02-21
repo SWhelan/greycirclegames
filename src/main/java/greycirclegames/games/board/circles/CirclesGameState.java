@@ -57,21 +57,13 @@ public class CirclesGameState extends GameState {
 		return board;
 	}
 	
-	public boolean validPosition(int column, int row){
+	public boolean validPosition(int column, int row) {
         if(board.cellAt(row, column) != null) return false;
 		return column <= COLUMNS && column >= 0 && row <= ROWS && row >= 0;
 	}
 
-    public int numOnBoard(String color) {
-        int count = 0;
-        for (int i = 0; i < board.rows(); i++) {
-            for (int j = 0; j < board.columns(); j++) {
-                if (board.cellAt(i, j) != null && board.cellAt(i, j).equals(color)) {
-                    count++;
-                }
-            }
-        }
-        return count;
+    public int getNumOnBoard(String color) {
+        return board.getNumOnBoard(color);
     }
 
     public CirclesGameState copy() {
