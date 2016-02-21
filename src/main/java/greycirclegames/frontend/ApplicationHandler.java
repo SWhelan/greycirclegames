@@ -75,43 +75,65 @@ public class ApplicationHandler extends TemplateHandler {
 	}
 	
 	protected static ModelAndView postRegister(Request rq, Response rs) {
-		String username = rq.queryParams("username");
-		String email = rq.queryParams("email").toLowerCase();
-		String password = rq.queryParams("password");
-		String passwordAgain = rq.queryParams("password-again");
-		if(username.equals("")) {
-			rs.header(GlobalConstants.DISPLAY_ERROR, "Username is required.");
-			return renderRegister(rq, rs);
-		}
-		User user = DBHandler.getUserByUsername(username);
-		if(user != null){
-			rs.header(GlobalConstants.DISPLAY_ERROR, "Username already in use.");
-			return renderRegister(rq, rs);
-		}
-		user = DBHandler.getUserByEmail(email);
-		if(user != null && !email.equals("")){
-			rs.header(GlobalConstants.DISPLAY_ERROR, "Email already in use.");
-			return renderRegister(rq, rs);
-		}
-			
-		if(password.equals("") || passwordAgain.equals("")){
-			rs.header(GlobalConstants.DISPLAY_ERROR, "Password can not be empty.");
-			return renderRegister(rq, rs);
-		}
+		boolean guest = Boolean.parseBoolean(rq.queryParams("guest"));
+		String username;
+		String email;
+		String password;
+		String passwordAgain;
+		if(guest){
+			username = "guest";
+			email = "";
+			password = User.generateSalt();
+			passwordAgain = password;
+		} else {
+			username = rq.queryParams("username");
+			email = rq.queryParams("email").toLowerCase();
+			password = rq.queryParams("password");
+			passwordAgain = rq.queryParams("password-again");
 		
-		if(!password.equals(passwordAgain)){
-			rs.header(GlobalConstants.DISPLAY_ERROR, "Passwords do not match.");
-			return renderRegister(rq, rs);
+			if(username.equals("")) {
+				rs.header(GlobalConstants.DISPLAY_ERROR, "Username is required.");
+				return renderRegister(rq, rs);
+			}
+			User user = DBHandler.getUserByUsername(username);
+			if(user != null){
+				rs.header(GlobalConstants.DISPLAY_ERROR, "Username already in use.");
+				return renderRegister(rq, rs);
+			}
+			user = DBHandler.getUserByEmail(email);
+			if(user != null && !email.equals("")){
+				rs.header(GlobalConstants.DISPLAY_ERROR, "Email already in use.");
+				return renderRegister(rq, rs);
+			}
+				
+			if(password.equals("") || passwordAgain.equals("")){
+				rs.header(GlobalConstants.DISPLAY_ERROR, "Password can not be empty.");
+				return renderRegister(rq, rs);
+			}
+			
+			if(!password.equals(passwordAgain)){
+				rs.header(GlobalConstants.DISPLAY_ERROR, "Passwords do not match.");
+				return renderRegister(rq, rs);
+			}
 		}
 		
 		User newUser = new User(DBHandler.getNextUserID(), email);
+		if(guest){
+			username = "Guest " + Integer.toString(newUser.get_id());
+			password = username;
+		}
 		String salt = User.generateSalt();
 		newUser.setSalt(salt);
 		newUser.setPassword(User.hashPassword(salt, password));
 		newUser.setUsername(username);
+		
 		DBHandler.createUser(newUser);
 		rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(newUser.get_id()));
-		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "New user successfully created. You have been logged in. You should create a game or add friends to get started.");
+		if(guest){
+			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "A guest account has been created for you. Your username/password is \"" + newUser.getUsername() + "\" (no quotes). You have been logged in. You should create a game or add friends to get started. If you change your mind about forms in the top right there is a drop down to edit settings and you can change your username and other settings.");
+		} else {
+			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "New user successfully created. You have been logged in. You should create a game or add friends to get started.");
+		}
 		rs.redirect(CREATE_GAME_ROUTE);
 		return getModelAndView(null, REGISTER_TEMPLATE, rq, rs);
 	}
