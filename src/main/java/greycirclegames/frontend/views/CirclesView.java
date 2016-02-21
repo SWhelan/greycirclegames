@@ -35,8 +35,8 @@ public class CirclesView {
 		isTurn = currentPlayerId == viewingPlayerId; 
 		isActive = game.getIsActive();
 		
-		int lightCount = gameState.numOnBoard(GlobalConstants.COLOR.WHITE);
-		int darkCount = gameState.numOnBoard(GlobalConstants.COLOR.BLACK);
+		int lightCount = gameState.getNumOnBoard(GlobalConstants.COLOR.WHITE);
+		int darkCount = gameState.getNumOnBoard(GlobalConstants.COLOR.BLACK);
 
 		if(game.getPlayers().get(0) == viewingPlayerId){
 			yourCount = lightCount;

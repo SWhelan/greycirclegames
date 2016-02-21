@@ -41,8 +41,8 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 
 	@Override
 	public boolean gameIsOver() {
-		int numBlack = gameState.numOnBoard(GlobalConstants.COLOR.BLACK);
-		int numWhite = gameState.numOnBoard(GlobalConstants.COLOR.WHITE);
+		int numBlack = gameState.getNumOnBoard(GlobalConstants.COLOR.BLACK);
+		int numWhite = gameState.getNumOnBoard(GlobalConstants.COLOR.WHITE);
 		return (numBlack + numWhite == gameState.getBoard().rows() * gameState.getBoard().columns() ||
 				numBlack == 0 ||
 				numWhite == 0
@@ -56,14 +56,14 @@ public class Circles extends Game<CirclesMove, CirclesGameState, CirclesArtifici
 
 	@Override
 	protected int determineWinnerId() {
-		int numBlack = gameState.numOnBoard(GlobalConstants.COLOR.BLACK);
-		int numWhite = gameState.numOnBoard(GlobalConstants.COLOR.WHITE);
+		int numBlack = gameState.getNumOnBoard(GlobalConstants.COLOR.BLACK);
+		int numWhite = gameState.getNumOnBoard(GlobalConstants.COLOR.WHITE);
 		if(numWhite > numBlack){
 			return players.get(0);
 		} else if(numWhite < numBlack){
 			return players.get(1);
 		} else {
-			this.tie = true;	
+			this.tie = true;
 			return 0;
 		}
 	}
