@@ -37,24 +37,28 @@
 
 var selected;
 
-$(".space").click(function (){
+$(".space").on("click", function (){
 	if(isTurn){
-		selected = $(this);
-		submitMove();
+		if(!selected){
+			  selected = $(this);
+			  submitMove();
+		}
 	} else {
 		notTurnAlert();
 	}
 });
 
-$(".circle").click(function (){
+$(".circle").on("click", function (){
 	if(isTurn){
-		displayError("You must play on an empty space.", true);
+		if(!selected){
+			  displayError("You must play on an empty space.", true);
+		}
 	} else {
 		notTurnAlert();
 	}
 });
 
-function submitMove(){
+function submitMove(){	
 	moveForm=document.createElement('FORM');
 	moveForm.name='makeMove';
 	moveForm.method='POST';

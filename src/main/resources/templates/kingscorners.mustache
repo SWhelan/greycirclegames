@@ -160,12 +160,19 @@
 	var selectedCard;
 	var selectedPile;
 	var secondPile;
+	var moveHasBeenSubmitted = false;
+	var turnHasBeenSubmitted = false;
 	
 	$("#drawPile").click(function (){
-		handleTurn();
+		if(!turnHasBeenSubmitted){
+		   	handleTurn();
+		}
 	});
 
 	$(".userCard").click(function (){
+	    if(moveHasBeenSubmitted){
+	    	return;
+	    }
 		if(!isActive){
 			return;
 		}
@@ -203,6 +210,9 @@
 	});
 	
 	$(".gamePile").click(function (){
+		if(moveHasBeenSubmitted){
+			return;
+		}
 		if(!isActive){
 			return;
 		}
@@ -244,6 +254,7 @@
 			notTurnAlert();
 			return;
 		}
+		turnHasBeenSubmitted = true;
 		turnForm=document.createElement('FORM');
 		turnForm.name='turn';
 		turnForm.method='POST';
@@ -259,6 +270,7 @@
 	}
 	
 	function move(){
+		moveHasBeenSubmitted = true;
 		moveForm=document.createElement('FORM');
 		moveForm.name='makeMove';
 		moveForm.method='POST';
