@@ -5,6 +5,7 @@ import static com.mongodb.client.model.Filters.eq;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.mongodb.BasicDBList;
@@ -61,7 +62,8 @@ public class DBHandler {
 	}
 
 	public static User getUserByUsername(String username) {
-		return getUserByField("Username", username);
+        Pattern pattern = Pattern.compile("^" + username + "$", Pattern.CASE_INSENSITIVE);
+		return getUserByField("Username", pattern);
 	}
 	
 	public static User getUserByField(String fieldName, Object value){

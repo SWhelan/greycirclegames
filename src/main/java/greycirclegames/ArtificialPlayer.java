@@ -9,6 +9,8 @@ import greycirclegames.games.Move;
 public abstract class ArtificialPlayer extends ReflectionDBObject implements Player {
 	protected int _id;
 	protected String username;
+
+    public static final String USERNAME_PREFIX = "Computer Player";
 	
 	public ArtificialPlayer(int id){
 		this._id = id;
@@ -16,7 +18,7 @@ public abstract class ArtificialPlayer extends ReflectionDBObject implements Pla
 	}
 	
 	public static String getDefaultUsername(int id){
-		return "Computer Player " + Integer.toString(Math.abs(id));
+		return USERNAME_PREFIX + " " + Integer.toString(Math.abs(id));
 	}
 	
 	@Override

@@ -5,11 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import greycirclegames.DBHandler;
-import greycirclegames.GlobalConstants;
-import greycirclegames.NotificationAndEmailHandler;
-import greycirclegames.Player;
-import greycirclegames.User;
+import greycirclegames.*;
 import greycirclegames.frontend.views.FriendView;
 import greycirclegames.frontend.views.GameListView;
 import greycirclegames.frontend.views.UserView;
@@ -101,7 +97,7 @@ public class ApplicationHandler extends TemplateHandler {
 				return renderRegister(rq, rs);
 			}
 			User user = DBHandler.getUserByUsername(username);
-			if(user != null){
+			if(user != null || username.toLowerCase().startsWith(ArtificialPlayer.USERNAME_PREFIX.toLowerCase())){
 				rs.header(GlobalConstants.DISPLAY_ERROR, "Username already in use.");
 				return renderRegister(rq, rs);
 			}
@@ -164,7 +160,7 @@ public class ApplicationHandler extends TemplateHandler {
 		return getModelAndView(info, EDIT_USER_TEMPLATE, rq, rs);
 	}
 	
-	protected static ModelAndView postEditUser(Request rq, Response rs) {		
+	protected static ModelAndView postEditUser(Request rq, Response rs) {
 		User user = getUserFromCookies(rq);
 		List<String> errorMessage = new ArrayList<String>();
 		String username = rq.queryParams("username");
@@ -192,8 +188,13 @@ public class ApplicationHandler extends TemplateHandler {
 		
 		boolean noError = true;
 		boolean change = false;
-		if(!username.equals(user.getUsername())){
-			if(DBHandler.getUserByUsername(username) == null){
+        String currentUsername = user.getUsername();
+		if(!username.equals(currentUsername)){
+            if(username.toLowerCase().startsWith(ArtificialPlayer.USERNAME_PREFIX.toLowerCase())) {
+                noError = false;
+                errorMessage.add("Don't steal our artificial players' names!");
+            } else if(username.toLowerCase().equals(currentUsername.toLowerCase()) ||
+                    DBHandler.getUserByUsername(username) == null){
 				user.setUsername(username);
 				change = true;
 			} else if(username.equals("")){
