@@ -6,6 +6,7 @@ public class GlobalConstants {
 	public static final String DISPLAY_ERROR = "failure";
 	public static final String DISPLAY_SUCCESS = "success";
 	public static final String USER_COOKIE_KEY = "id";
+	public static final String VERIFY_COOKIE_KEY = "verify";
 	public static final String FRIEND_SEARCH_COOKIE_KEY = "friendSearchValue";
 	
 	

@@ -58,6 +58,7 @@ public class ApplicationHandler extends TemplateHandler {
 	
 	protected static ModelAndView logout(Request rq, Response rs) {
 		rs.removeCookie(GlobalConstants.USER_COOKIE_KEY);
+		rs.removeCookie(GlobalConstants.VERIFY_COOKIE_KEY);
 		rs.redirect(HOME_ROUTE);
 		return getModelAndView(null, HOME_TEMPLATE, rq, rs);
 	}
@@ -130,9 +131,10 @@ public class ApplicationHandler extends TemplateHandler {
 		newUser.setSalt(salt);
 		newUser.setPassword(User.hashPassword(salt, password));
 		newUser.setUsername(username);
-		
+		newUser.setCookieValue(User.generateCookieValue());
 		DBHandler.createUser(newUser);
 		rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(newUser.get_id()), MAX_AGE);
+		rs.cookie(GlobalConstants.VERIFY_COOKIE_KEY, newUser.getCookieValue());
 		if(guest){
 			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "A guest account has been created for you. Your username/password is \"" + newUser.getUsername() + "\" (no quotes). You have been logged in. You should create a game or add friends to get started. If you change your mind about forms in the top right there is a drop down to edit settings and you can change your username and other settings.");
 		} else {
@@ -148,6 +150,7 @@ public class ApplicationHandler extends TemplateHandler {
 		User user = DBHandler.getUserByUsername(username);
 		if(checkLogin(user, password)){
 			rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(user.get_id()), MAX_AGE);
+			rs.cookie(GlobalConstants.VERIFY_COOKIE_KEY, user.getCookieValue(), MAX_AGE);
 			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Logged in successfully.");
 			rs.redirect(GAMES_ROUTE);
 		}

@@ -175,7 +175,14 @@ public class TemplateHandler {
 
     // Is the user logged in?
     protected static boolean isLoggedIn(Request rq) {
-        return rq.cookie(GlobalConstants.USER_COOKIE_KEY) != null;
+        if(rq.cookie(GlobalConstants.USER_COOKIE_KEY) == null || rq.cookie(GlobalConstants.VERIFY_COOKIE_KEY) == null){
+        	return false;
+        } else {
+        	User user = getUserFromCookies(rq);
+        	String correctCookieValue = user.getCookieValue();
+        	String actualCookieValue = rq.cookie(GlobalConstants.VERIFY_COOKIE_KEY);
+        	return correctCookieValue.equals(actualCookieValue);
+        }
     }
 
     // Is the login/password valid for the found user?

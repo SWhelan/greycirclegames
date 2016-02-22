@@ -32,9 +32,10 @@ public class User extends ReflectionDBObject implements Player {
 	private boolean emailForTurn;
 	private boolean emailForGameOver;
 	private boolean emailForPoke;
+	private String cookieValue;
 
 	public User(int _id, String username, String password, String salt, String email, BasicDBList friends,
-			boolean emailForNewFriend, boolean emailForNewGame, boolean emailForTurn, boolean emailForGameOver, boolean emailForPoke, int nextNotificationId) {
+			boolean emailForNewFriend, boolean emailForNewGame, boolean emailForTurn, boolean emailForGameOver, boolean emailForPoke, int nextNotificationId, String cookieValue) {
 		this._id = _id;
 		this.username = username;
 		this.password = password;
@@ -47,10 +48,11 @@ public class User extends ReflectionDBObject implements Player {
 		this.emailForGameOver = emailForGameOver;
 		this.emailForPoke = emailForPoke;
 		this.nextNotificationId = nextNotificationId;
+		this.setCookieValue(cookieValue);
 	}
 
 	public User(int _id, String username, String password, String salt, String email, BasicDBList friends) {
-		this(_id, username, password, salt, email, friends, false, false, false, false, false, 0);
+		this(_id, username, password, salt, email, friends, false, false, false, false, false, 0, "");
 	}
 
 	public User(int _id, String email) {
@@ -61,7 +63,7 @@ public class User extends ReflectionDBObject implements Player {
 		this((Integer) obj.get("_id"), (String) obj.get("Username"), (String) obj.get("Password"),
 				(String) obj.get("Salt"), (String) obj.get("Email"), (BasicDBList) obj.get("Friends"),
 				(boolean) obj.get("EmailForNewFriend"), (boolean) obj.get("EmailForNewGame"),
-				(boolean) obj.get("EmailForTurn"), (boolean) obj.get("EmailForGameOver"), (boolean) obj.get("EmailForPoke"), (Integer) obj.get("NextNotificationId"));
+				(boolean) obj.get("EmailForTurn"), (boolean) obj.get("EmailForGameOver"), (boolean) obj.get("EmailForPoke"), (Integer) obj.get("NextNotificationId"), (String) obj.get("CookieValue"));
 		BasicDBList dbNotifications = (BasicDBList) obj.get("Notifications");
 		for(Object dbNotification : dbNotifications){
 			this.notifications.add(new Notification((BasicDBObject) dbNotification));
@@ -271,6 +273,16 @@ public class User extends ReflectionDBObject implements Player {
 		} else if (!username.equals(other.username))		
 			return false;		
 		return true;		
+	}
+
+	public String getCookieValue() {
+		return cookieValue;
+	}
+	public void setCookieValue(String cookieValue) {
+		this.cookieValue = cookieValue;
+	}
+	public static String generateCookieValue(){
+		return User.generateSalt() + User.generateSalt();
 	}
 
 }
