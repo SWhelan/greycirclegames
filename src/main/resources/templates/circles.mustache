@@ -31,6 +31,10 @@
 		<div class="circle {{theirColor}}"></div>
 	</div>
 	</div>
+    
+    <div id='form' class='hidden'>
+        <!-- Needed for IE -->
+    </div>
 <script type="text/javascript">	
 
 {{> gameJavaScript}}
@@ -58,7 +62,7 @@ $(".circle").on("click", function (){
 	}
 });
 
-function submitMove(){	
+function submitMove(){
 	moveForm=document.createElement('FORM');
 	moveForm.name='makeMove';
 	moveForm.method='POST';
@@ -89,6 +93,7 @@ function submitMove(){
 	hiddenElement.name='gameId';
 	hiddenElement.value={{gameId}};
 	moveForm.appendChild(hiddenElement);
+	$('#form').html(moveForm); // Needed for IE
 	moveForm.submit();
 	return;
 }

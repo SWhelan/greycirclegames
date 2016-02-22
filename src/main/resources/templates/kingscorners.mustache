@@ -150,6 +150,9 @@
 	{{^moveHistory}}
 	<p>There have not been any moves yet.</p>
 	{{/moveHistory}}
+    <div id='form' class='hidden'>
+        <!-- Needed for IE -->
+    </div>
 </div>
 
 
@@ -265,6 +268,7 @@
 		hiddenElement.name='gameId';
 		hiddenElement.value={{gameId}};
 		turnForm.appendChild(hiddenElement);
+		$('#form').html(turnForm); // Needed for IE
 		turnForm.submit();
 		return;
 	}
@@ -304,6 +308,7 @@
 		hiddenElement.name='gameId';
 		hiddenElement.value={{gameId}};
 		moveForm.appendChild(hiddenElement);
+		$('#form').html(moveForm); // Needed for IE
 		moveForm.submit();
 		return;
 	}
