@@ -31,7 +31,8 @@ import spark.template.mustache.MustacheTemplateEngine;
  *
  */
 public class TemplateHandler {
-    public static final String HOME_ROUTE = "/";
+	public static final String FAVICON_ROUTE = "/favicon.ico";
+	public static final String HOME_ROUTE = "/";
     public static final String LOGIN_ROUTE = "/login";
     public static final String REGISTER_ROUTE = "/register";
     public static final String EDIT_USER_ROUTE = "/editUser";
@@ -168,11 +169,8 @@ public class TemplateHandler {
 
     // Does the attempted url require the user to be logged in?
     protected static boolean requiresAuthentication(String path) {
-        if (path == null || path.equals(HOME_ROUTE) || path.equals(LOGIN_ROUTE) || path.equals(REGISTER_ROUTE)
-                || path.equals(TUTORIAL_ROUTE) || path.startsWith(PUBLIC_ROUTE)) {
-            return false;
-        }
-        return true;
+        return!(path == null || path.equals(HOME_ROUTE) || path.equals(LOGIN_ROUTE) || path.equals(REGISTER_ROUTE)
+                || path.equals(TUTORIAL_ROUTE) || path.startsWith(PUBLIC_ROUTE) || path.equals(FAVICON_ROUTE));
     }
 
     // Is the user logged in?
