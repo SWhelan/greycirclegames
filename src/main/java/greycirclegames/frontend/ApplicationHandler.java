@@ -21,6 +21,8 @@ import spark.Response;
 
 public class ApplicationHandler extends TemplateHandler {
 	
+	private static final int MAX_AGE = 3600 * 24 * 365 * 10;
+
 	protected static ModelAndView renderHome(Request rq, Response rs) {
 		if(rq.cookie(GlobalConstants.USER_COOKIE_KEY) != null){
 			return renderGameList(rq, rs);
@@ -130,7 +132,7 @@ public class ApplicationHandler extends TemplateHandler {
 		newUser.setUsername(username);
 		
 		DBHandler.createUser(newUser);
-		rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(newUser.get_id()));
+		rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(newUser.get_id()), MAX_AGE);
 		if(guest){
 			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "A guest account has been created for you. Your username/password is \"" + newUser.getUsername() + "\" (no quotes). You have been logged in. You should create a game or add friends to get started. If you change your mind about forms in the top right there is a drop down to edit settings and you can change your username and other settings.");
 		} else {
@@ -145,7 +147,7 @@ public class ApplicationHandler extends TemplateHandler {
 		String password = rq.queryParams("password");
 		User user = DBHandler.getUserByUsername(username);
 		if(checkLogin(user, password)){
-			rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(user.get_id()));
+			rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(user.get_id()), MAX_AGE);
 			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Logged in successfully.");
 			rs.redirect(GAMES_ROUTE);
 		}
