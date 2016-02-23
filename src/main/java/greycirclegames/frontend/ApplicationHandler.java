@@ -5,7 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import greycirclegames.*;
+import greycirclegames.ArtificialPlayer;
+import greycirclegames.DBHandler;
+import greycirclegames.GlobalConstants;
+import greycirclegames.NotificationAndEmailHandler;
+import greycirclegames.Player;
+import greycirclegames.User;
 import greycirclegames.frontend.views.FriendView;
 import greycirclegames.frontend.views.GameListView;
 import greycirclegames.frontend.views.UserView;
@@ -20,7 +25,7 @@ public class ApplicationHandler extends TemplateHandler {
 	private static final int MAX_AGE = 3600 * 24 * 365 * 10;
 
 	protected static ModelAndView renderHome(Request rq, Response rs) {
-		if(rq.cookie(GlobalConstants.USER_COOKIE_KEY) != null){
+		if(TemplateHandler.isLoggedIn(rq)){
 			return renderGameList(rq, rs);
 		}
 		return getModelAndView(new HashMap<String, Object>(), HOME_TEMPLATE, rq, rs);

@@ -6,11 +6,9 @@
 	<table id="gameTable">
 		<tr>
 			<td>
-				<div class="gamePile pile" pile="NORTH_WEST_PILE">
+				<div pile="NORTH_WEST_PILE" {{> gamePileAttributes}}>
 					{{#northWestPile}}
-						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
-						{{displayNumber}} {{{suit.html}}}
-						</div>
+						{{> card}}
 					{{/northWestPile}}
 					{{^northWestPile}}
 						<div class="emptyPile"></div>
@@ -18,11 +16,9 @@
 				</div>
 			</td>
 			<td>
-				<div class="gamePile pile" pile="NORTH_PILE">
+				<div pile="NORTH_PILE" {{> gamePileAttributes}}>
 					{{#northPile}}
-						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
-						{{displayNumber}} {{{suit.html}}}
-						</div>
+						{{> card}}
 					{{/northPile}}
 					{{^northPile}}
 						<div class="emptyPile"></div>
@@ -30,11 +26,9 @@
 				</div>
 			</td>
 			<td>
-				<div class="gamePile pile" pile="NORTH_EAST_PILE">
+				<div pile="NORTH_EAST_PILE" {{> gamePileAttributes}}>
 					{{#northEastPile}}
-						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
-						{{displayNumber}} {{{suit.html}}}
-						</div>
+						{{> card}}
 					{{/northEastPile}}
 					{{^northEastPile}}
 						<div class="emptyPile"></div>
@@ -45,11 +39,9 @@
 		<tr>
 		<!-- The West, Draw, and East Piles -->
 			<td>
-				<div class="gamePile pile" pile="WEST_PILE">
+				<div pile="WEST_PILE" {{> gamePileAttributes}}>
 					{{#westPile}}
-						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
-						{{displayNumber}} {{{suit.html}}}
-						</div>
+						{{> card}}
 					{{/westPile}}
 					{{^westPile}}
 						<div class="emptyPile"></div>
@@ -62,11 +54,9 @@
 				</div>
 			</td>
 			<td>
-				<div class="gamePile pile" pile="EAST_PILE">
+				<div pile="EAST_PILE" {{> gamePileAttributes}}>
 					{{#eastPile}}
-						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
-						{{displayNumber}} {{{suit.html}}}
-						</div>
+						{{> card}}
 					{{/eastPile}}
 					{{^eastPile}}
 						<div class="emptyPile"></div>
@@ -77,11 +67,9 @@
 		<tr>
 		<!-- The SouthWest, South, and SouthEast Pile -->
 			<td>
-				<div class="gamePile pile" pile="SOUTH_WEST_PILE">
+				<div pile="SOUTH_WEST_PILE" {{> gamePileAttributes}}>
 					{{#southWestPile}}
-						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
-						{{displayNumber}} {{{suit.html}}}
-						</div>
+						{{> card}}
 					{{/southWestPile}}
 					{{^southWestPile}}
 						<div class="emptyPile"></div>
@@ -89,11 +77,9 @@
 				</div>
 			</td>
 			<td>
-				<div class="gamePile pile" pile="SOUTH_PILE">
+				<div pile="SOUTH_PILE" {{> gamePileAttributes}}>
 					{{#southPile}}
-						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
-						{{displayNumber}} {{{suit.html}}}
-						</div>
+						{{> card}}
 					{{/southPile}}
 					{{^southPile}}
 						<div class="emptyPile"></div>
@@ -101,11 +87,9 @@
 				</div>
 			</td>
 			<td>
-				<div class="gamePile pile" pile="SOUTH_EAST_PILE">
+				<div pile="SOUTH_EAST_PILE" {{> gamePileAttributes}}>
 					{{#southEastPile}}
-						<div class="card noSelectText {{#isFirst}}bottom{{/isFirst}} {{#isRed}}red{{/isRed}}" number="{{number}}" suit="{{suit.displayName}}">
-						{{displayNumber}} {{{suit.html}}}
-						</div>
+						{{> card}}
 					{{/southEastPile}}
 					{{^southEastPile}}
 						<div class="emptyPile"></div>
@@ -119,7 +103,7 @@
 	Your hand ({{#userHand.size}}{{userHand.size}}{{/userHand.size}} Remaining Cards){{#isTurn}}<b> It's your turn!</b>{{/isTurn}}:
 	<div class="viewingHand">
 		{{#userHand}}
-			<div class="userCard card noSelectText {{#isRed}}red{{/isRed}} {{^isTurn}}greyedOut{{/isTurn}}" number="{{number}}" suit="{{suit.displayName}}">
+			<div class="userCard card noSelectText {{#isRed}}red{{/isRed}} {{^isTurn}}greyedOut{{/isTurn}}" number="{{number}}" suit="{{suit.displayName}}" draggable="true" ondragstart="drag(event)">
 			{{displayNumber}} {{{suit.html}}}
 			</div>
 		{{/userHand}}
@@ -173,12 +157,9 @@
 	});
 
 	$(".userCard").click(function (){
-	    if(moveHasBeenSubmitted){
+	    if(moveHasBeenSubmitted || !isActive){
 	    	return;
 	    }
-		if(!isActive){
-			return;
-		}
 		if(!isTurn){
 			notTurnAlert();
 			return
@@ -196,7 +177,7 @@
 			$(this).addClass("clicked");
 			selectedCard = $(this);
 			if(selectedPile){
-				move();
+				handleMove();
 			}
 		} else {
 			if($(this).attr("id") == "drawPile"){
@@ -213,10 +194,7 @@
 	});
 	
 	$(".gamePile").click(function (){
-		if(moveHasBeenSubmitted){
-			return;
-		}
-		if(!isActive){
+		if(moveHasBeenSubmitted || !isActive){
 			return;
 		}
 		if(!isTurn){
@@ -236,14 +214,14 @@
 			$(this).children().first().addClass("pileClicked");
 			selectedPile = $(this);
 			if(selectedCard){
-				move();
+				handleMove();
 			}
 		} else {
 			// This is the second selected pile
 			if($(this).children().first().attr("id") != "drawPile"){
 				$(this).children().first().addClass("pileClicked");
 				secondPile = $(this);
-				move();
+				handleMove();
 			}
 		}
 		return;
@@ -273,7 +251,7 @@
 		return;
 	}
 	
-	function move(){
+	function handleMove(){
 		moveHasBeenSubmitted = true;
 		moveForm=document.createElement('FORM');
 		moveForm.name='makeMove';
@@ -312,6 +290,27 @@
 		moveForm.submit();
 		return;
 	}
+	
+    function dragEnter(event) {
+        event.preventDefault();
+        $(event.target).addClass("dragHover");
+     }
+     
+     function dragOver(event) {
+         event.preventDefault();
+     }
+     
+     function dragLeave(event) {
+         $(event.target).removeClass("dragHover");
+     }
+
+     function drag(ev) {
+         $(ev.target).click();
+     }
+
+     function drop(event) {
+         $(event.target).click();
+     }
 </script>
 {{/game}}
 

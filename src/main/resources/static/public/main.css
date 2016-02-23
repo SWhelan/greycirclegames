@@ -73,6 +73,15 @@
 	margin-right: -30px;
 }
 
+.dragHover {
+    background-color: azure;
+}
+
+.gamePile {
+    /* Need this below dragHover as of implementation of drag/drop */
+    background-color: white;
+}
+
 /* Colors */
 
 .white {
