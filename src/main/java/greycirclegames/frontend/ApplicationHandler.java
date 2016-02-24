@@ -166,16 +166,19 @@ public class ApplicationHandler extends TemplateHandler {
 		boolean emailForNewGame = rq.queryParams("emailForNewGame") != null ?true:false;
 		boolean emailForTurn = rq.queryParams("emailForTurn") != null ?true:false;
 		boolean emailForGameOver = rq.queryParams("emailForGameOver") != null ?true:false;
+		boolean showHelpers = rq.queryParams("showHelpers") != null ?true:false;
 		
 		if(	user.getEmailForNewFriend() != emailForNewFriend ||
 			user.getEmailForNewGame() != emailForNewGame ||
 			user.getEmailForTurn() != emailForTurn ||
-			user.getEmailForGameOver() != emailForGameOver){
+			user.getEmailForGameOver() != emailForGameOver ||
+			user.getShowHelpers() != showHelpers){
 				// Only change if there was a change (to conserve DB hits)
 				user.setEmailForNewFriend(emailForNewFriend);
 				user.setEmailForNewGame(emailForNewGame);
 				user.setEmailForTurn(emailForTurn);
 				user.setEmailForGameOver(emailForGameOver);
+				user.setShowHelpers(showHelpers);
 				// Update just the email settings in case there are errors with other sections.
 				DBHandler.updateUser(user);
 		}

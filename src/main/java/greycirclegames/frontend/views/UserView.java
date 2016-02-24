@@ -10,6 +10,7 @@ public class UserView {
 	public boolean emailForTurn;
 	public boolean emailForGameOver;
 	public boolean emailForPoke;
+	public boolean showHelpers;
 	
 	public UserView(User user){
 		this.username = user.getUsername();
@@ -19,6 +20,7 @@ public class UserView {
 		this.emailForTurn = user.getEmailForTurn();
 		this.emailForGameOver = user.getEmailForGameOver();
 		this.emailForPoke = user.getEmailForPoke();
+		this.showHelpers = user.getShowHelpers();
 	}
 
 }

@@ -70,12 +70,14 @@ public class CirclesView {
 			isTie = game.getTie();
 		}
 		
+		boolean showHelpers = DBHandler.getUser(userId).getShowHelpers();
+		
 		for(int i = 0; i < board.rows(); i++){
             ArrayList<CircleView> row = new ArrayList<>();
             for(int j = 0; j < board.columns(); j++){
                 if(board.cellAt(i, j) == null){
                     if(new CirclesMove(i, j, yourColor, gameState, userId).isValid()) {
-                        row.add(new CircleView(i, j, true));
+                        row.add(new CircleView(i, j, true && showHelpers));
                     } else {
                         row.add(new CircleView(i, j, false));
                     }
