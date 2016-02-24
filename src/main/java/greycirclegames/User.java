@@ -7,6 +7,7 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -17,58 +18,119 @@ public class User extends ReflectionDBObject implements Player {
 	private static final int NUM_BITS = 128;
 	private static final int RADIX = 32;
 	private static final String ALGORITHM = "SHA-256";
+	
 	private int _id;
 	private String username;
-	private String password;
-
-	private String salt;
 	private String email;
-	// List of ids of friends
-	private BasicDBList friends;
+	private String password;
+	private String salt;
+	private String cookieValue;
+	
+	private BasicDBList friendIds;
+	
 	private Integer nextNotificationId;
 	private List<Notification> notifications = new ArrayList<Notification>();
+	
 	private boolean emailForNewFriend;
 	private boolean emailForNewGame;
 	private boolean emailForTurn;
 	private boolean emailForGameOver;
 	private boolean emailForPoke;
-	private String cookieValue;
+	
+	private boolean showHelpers;
 
-	public User(int _id, String username, String password, String salt, String email, BasicDBList friends,
-			boolean emailForNewFriend, boolean emailForNewGame, boolean emailForTurn, boolean emailForGameOver, boolean emailForPoke, int nextNotificationId, String cookieValue) {
+	/**
+	 * Does absolutely nothing for you used mostly for testing purposes.
+	 * 
+	 * Okay well to be fair I guess you get a shiny new User object but nothing else.
+	 */
+	public User(){
+		
+	}
+	
+	/**
+	 * This saves a new User to the database and should be used for creating a User for the first time.
+	 * 
+	 * This sets the ID from the Database, hashes the password, sets all the 
+	 * default values, and most importantly saves the User to the database.
+	 * 
+	 * @param username
+	 * @param email
+	 * @param password should be the plain text password will be hashed in this method
+	 */
+	public User(String username, String email, String password) {
+		this(DBHandler.getNextUserID(), username, email, "", User.generateSalt(), User.generateCookieValue(),
+				new BasicDBList(), 0, null, 
+				false, false, false, false, false,
+				true
+				);
+		this.password = User.hashPassword(this.salt, password);
+		DBHandler.createUser(this);
+	}
+	
+	/**
+	 * Use this to specify every possible parameter of a User
+	 * 
+	 * @param _id
+	 * @param username
+	 * @param email
+	 * @param password
+	 * @param salt use User.generateSalt
+	 * @param cookieValue use User.generateCookieValue
+	 * @param friendIds
+	 * @param nextNotificationId
+	 * @param notifications
+	 * @param emailForNewFriend
+	 * @param emailForNewGame
+	 * @param emailForTurn
+	 * @param emailForGameOver
+	 * @param emailForPoke
+	 * @param showHelpers
+	 */
+	public User(int _id, String username, String email, String password, String salt, String cookieValue,
+			BasicDBList friendIds, int nextNotificationId, List<Notification> notifications,
+			boolean emailForNewFriend, boolean emailForNewGame, boolean emailForTurn, boolean emailForGameOver, boolean emailForPoke, 
+			boolean showHelpers) {
 		this._id = _id;
 		this.username = username;
+		this.email = email;
 		this.password = password;
 		this.salt = salt;
-		this.email = email;
-		this.friends = friends;
+		this.cookieValue = cookieValue;
+		
+		this.friendIds = friendIds;
+		
+		this.nextNotificationId = nextNotificationId;
+		if(notifications == null){
+			this.notifications = new ArrayList<Notification>();
+		} else {
+			this.notifications = notifications;
+		}
+		
 		this.emailForNewFriend = emailForNewFriend;
 		this.emailForNewGame = emailForNewGame;
 		this.emailForTurn = emailForTurn;
 		this.emailForGameOver = emailForGameOver;
 		this.emailForPoke = emailForPoke;
-		this.nextNotificationId = nextNotificationId;
-		this.setCookieValue(cookieValue);
-	}
-
-	public User(int _id, String username, String password, String salt, String email, BasicDBList friends) {
-		this(_id, username, password, salt, email, friends, false, false, false, false, false, 0, "");
-	}
-
-	public User(int _id, String email) {
-		this(_id, email, null, null, email, new BasicDBList());
+		
+		this.showHelpers = showHelpers;
 	}
 
 	public User(DBObject obj) {
-		this((Integer) obj.get("_id"), (String) obj.get("Username"), (String) obj.get("Password"),
-				(String) obj.get("Salt"), (String) obj.get("Email"), (BasicDBList) obj.get("Friends"),
-				(boolean) obj.get("EmailForNewFriend"), (boolean) obj.get("EmailForNewGame"),
-				(boolean) obj.get("EmailForTurn"), (boolean) obj.get("EmailForGameOver"), (boolean) obj.get("EmailForPoke"), (Integer) obj.get("NextNotificationId"), (String) obj.get("CookieValue"));
-		BasicDBList dbNotifications = (BasicDBList) obj.get("Notifications");
-		for(Object dbNotification : dbNotifications){
-			this.notifications.add(new Notification((BasicDBObject) dbNotification));
-		}
+		this((Integer) obj.get("_id"), (String) obj.get("Username"), (String) obj.get("Email"),
+				(String) obj.get("Password"), (String) obj.get("Salt"), (String) obj.get("CookieValue"),
+				(BasicDBList) obj.get("FriendIds"), (Integer) obj.get("NextNotificationId"),
+				((BasicDBList) obj.get("Notifications")).stream().map(e -> new Notification((BasicDBObject) e)).collect(Collectors.toList()),
+				(boolean) obj.get("EmailForNewFriend"), (boolean) obj.get("EmailForNewGame"), 
+				(boolean) obj.get("EmailForTurn"), (boolean) obj.get("EmailForGameOver"), (boolean) obj.get("EmailForPoke"), 
+				(boolean) obj.get("ShowHelpers"));
 	}
+	
+	/**
+	 * Getters and Setters must start with get/set and must both exist publicly 
+	 * for Mongo DB to access and set fields. Even for booleans the getters/setters
+	 * must start with "get/set" not "is"
+	 */
 
 	public Integer get_id() {
 		return _id;
@@ -82,6 +144,12 @@ public class User extends ReflectionDBObject implements Player {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	public String getPassword() {
 		return password;
 	}
@@ -94,23 +162,29 @@ public class User extends ReflectionDBObject implements Player {
 	public void setSalt(String salt) {
 		this.salt = salt;
 	}
-	public String getEmail() {
-		return email;
+	public BasicDBList getFriendIds() {
+		return friendIds;
 	}
-	public void setEmail(String email) {
-		this.email = email;
+	public void setFriendIds(BasicDBList friendIds) {
+		this.friendIds = friendIds;
 	}
-	public BasicDBList getFriends() {
-		return friends;
+	public Integer getNextNotificationId() {
+		return nextNotificationId;
 	}
-	public void setFriends(BasicDBList friends) {
-		this.friends = friends;
+	public void setNextNotificationId(int nextNotificationId) {
+		this.nextNotificationId = nextNotificationId;
 	}
-	public void addFriend(int friendID) {
-		this.friends.add(friendID);
+	public List<Notification> getNotifications() {
+		return notifications;
 	}
-	public void destroyFriendship(Integer friendID) {
-		this.friends.remove(friendID);
+	public void setNotifications(List<Notification> notifications) {
+		this.notifications = notifications;
+	}
+	public String getCookieValue() {
+		return cookieValue;
+	}
+	public void setCookieValue(String cookieValue) {
+		this.cookieValue = cookieValue;
 	}
 	public boolean getEmailForNewFriend() {
 		return emailForNewFriend;
@@ -142,18 +216,25 @@ public class User extends ReflectionDBObject implements Player {
 	public void setEmailForPoke(boolean emailForPoke){
 		this.emailForPoke = emailForPoke;
 	}
-	public Integer getNextNotificationId() {
-		return nextNotificationId;
+	public boolean getShowHelpers() {
+		return showHelpers;
 	}
-	public void setNextNotificationId(int nextNotificationId) {
-		this.nextNotificationId = nextNotificationId;
+	public void setShowHelpers(boolean showHelpers) {
+		this.showHelpers = showHelpers;
 	}
-	public List<Notification> getNotifications() {
-		return notifications;
+	
+	/**
+	 * End of getter/setter section
+	 */
+	
+	public void addFriend(int friendID) {
+		this.friendIds.add(friendID);
 	}
-	public void setNotifications(List<Notification> notifications) {
-		this.notifications = notifications;
+	
+	public void destroyFriendship(Integer friendID) {
+		this.friendIds.remove(friendID);
 	}
+	
 	public void addNotification(String text, String url, int gameId, boolean friends){
 		this.notifications.add(new Notification(this.nextNotificationId, text, url, gameId, friends));
 		this.nextNotificationId = this.nextNotificationId + 1;
@@ -202,7 +283,7 @@ public class User extends ReflectionDBObject implements Player {
 		SecureRandom random = new SecureRandom();
 		return new BigInteger(NUM_BITS, random).toString(RADIX);
 	}
-
+	
 	public static String hashPassword(String salt, String password) {
 		try {
 			MessageDigest md = MessageDigest.getInstance(ALGORITHM);
@@ -221,12 +302,16 @@ public class User extends ReflectionDBObject implements Player {
 
 	public List<User> getFriendsList() {
 		List<User> toReturn = new LinkedList<User>();
-		for (Object o : friends) {
+		for (Object o : friendIds) {
 			Integer friend_id = (Integer) o;
 			User f = DBHandler.getUser(friend_id);
 			toReturn.add(f);
 		}
 		return toReturn;
+	}
+	
+	public static String generateCookieValue(){
+		return User.generateSalt() + User.generateSalt();
 	}
 
 	@Override		
@@ -274,15 +359,4 @@ public class User extends ReflectionDBObject implements Player {
 			return false;		
 		return true;		
 	}
-
-	public String getCookieValue() {
-		return cookieValue;
-	}
-	public void setCookieValue(String cookieValue) {
-		this.cookieValue = cookieValue;
-	}
-	public static String generateCookieValue(){
-		return User.generateSalt() + User.generateSalt();
-	}
-
 }

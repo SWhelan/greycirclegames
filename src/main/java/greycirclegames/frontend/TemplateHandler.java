@@ -179,9 +179,13 @@ public class TemplateHandler {
         	return false;
         } else {
         	User user = getUserFromCookies(rq);
-        	String correctCookieValue = user.getCookieValue();
-        	String actualCookieValue = rq.cookie(GlobalConstants.VERIFY_COOKIE_KEY);
-        	return correctCookieValue.equals(actualCookieValue);
+        	if(user != null){
+	        	String correctCookieValue = user.getCookieValue();
+	        	String actualCookieValue = rq.cookie(GlobalConstants.VERIFY_COOKIE_KEY);
+	        	return correctCookieValue.equals(actualCookieValue);
+        	} else {
+        		return false;
+        	}
         }
     }
 

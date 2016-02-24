@@ -14,7 +14,7 @@ public class UserTest {
     }
     
     public void testCheckPassword(){
-    	User user = new User(1, "Test");
+    	User user = new User();
     	user.setSalt(User.generateSalt());
     	user.setPassword(User.hashPassword(user.getSalt(), "password"));
     	Assert.isTrue(user.passwordMatches("password"), "Method should return true for password matches.");

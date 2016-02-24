@@ -82,16 +82,11 @@ public class ApplicationHandler extends TemplateHandler {
 	
 	protected static ModelAndView postRegister(Request rq, Response rs) {
 		boolean guest = Boolean.parseBoolean(rq.queryParams("guest"));
-		String username;
-		String email;
-		String password;
-		String passwordAgain;
-		if(guest){
-			username = "guest";
-			email = "";
-			password = User.generateSalt();
-			passwordAgain = password;
-		} else {
+		String username = "";
+		String email = "";
+		String password = "";
+		String passwordAgain = "";
+		if(!guest){	
 			username = rq.queryParams("username");
 			email = rq.queryParams("email").toLowerCase();
 			password = rq.queryParams("password");
@@ -122,18 +117,12 @@ public class ApplicationHandler extends TemplateHandler {
 				return renderRegister(rq, rs);
 			}
 		}
-		
-		User newUser = new User(DBHandler.getNextUserID(), email);
+		User newUser = new User(username, email, password);
 		if(guest){
-			username = "Guest " + Integer.toString(newUser.get_id());
-			password = username;
+			newUser.setUsername("Guest " + Integer.toString(newUser.get_id()));
+			newUser.setPassword(User.hashPassword(newUser.getSalt(), newUser.getUsername()));
+			DBHandler.updateUser(newUser);
 		}
-		String salt = User.generateSalt();
-		newUser.setSalt(salt);
-		newUser.setPassword(User.hashPassword(salt, password));
-		newUser.setUsername(username);
-		newUser.setCookieValue(User.generateCookieValue());
-		DBHandler.createUser(newUser);
 		rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(newUser.get_id()), MAX_AGE);
 		rs.cookie(GlobalConstants.VERIFY_COOKIE_KEY, newUser.getCookieValue());
 		if(guest){

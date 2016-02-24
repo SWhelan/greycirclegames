@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 
-import com.mongodb.BasicDBList;
-
 import greycirclegames.DBHandler;
 import greycirclegames.User;
 import greycirclegames.games.card.Card;
@@ -21,38 +19,25 @@ public class DBTest {
 
 	//test CRUD operations for a USER
 	public void testUser() {
+		User user1 = new User("goduser", "word", "email@gmail.com");
+		User user2 = new User("goduser2", "word2", "2email@gmail.com");
+		User user3 = new User("goduser3", "word3", "3email@gmail.com");
+		
+		user1 = DBHandler.getUser(user1.get_id());
+		user1.setUsername("newName");
+		DBHandler.updateUser(user1);
 
-		int id1 = DBHandler.getNextUserID();
-		int id2 = DBHandler.getNextUserID();
-		int id3 = DBHandler.getNextUserID();
+		user1 = DBHandler.getUser(user1.get_id());
+		user2 = DBHandler.getUser(user2.get_id());
+		user3 = DBHandler.getUser(user3.get_id());
 
-		BasicDBList frands = new BasicDBList();
-		frands.add(id1);
-		frands.add(id2);
-		frands.add(id3);
+		Assert.isTrue(user1.getUsername().equals("newName"), "UNEXPECTED username 1!!!!");
+		Assert.isTrue(user2.getUsername().equals("goduser2"), "UNEXPECTED username 2!!!!");
+		Assert.isTrue(user3.getUsername().equals("goduser3"), "UNEXPECTED username 3!!!!");
 
-		User user = new User(id1,"goduser", "word", "salt", "email@gmail.com", frands);
-		User user2 = new User(id2,"goduser2", "word2", "salt2", "2email@gmail.com", frands);
-		User user3 = new User(id3,"goduser3", "word3", "salt3", "3email@gmail.com", frands);
-		DBHandler.createUser(user);
-		DBHandler.createUser(user2);
-		DBHandler.createUser(user3);
-
-		User u1 = DBHandler.getUser(id1);
-		u1.setUsername("newName");
-		DBHandler.updateUser(u1);
-
-		u1 = DBHandler.getUser(id1);
-		User u2 = DBHandler.getUser(id2);
-		User u3 = DBHandler.getUser(id3);
-
-		Assert.isTrue(u1.getUsername().equals("newName"), "UNEXPECTED username 1!!!!");
-		Assert.isTrue(u2.getUsername().equals("goduser2"), "UNEXPECTED username 2!!!!");
-		Assert.isTrue(u3.getUsername().equals("goduser3"), "UNEXPECTED username 3!!!!");
-
-		DBHandler.deleteUser(id1);
-		DBHandler.deleteUser(id2);
-		DBHandler.deleteUser(id3);
+		DBHandler.deleteUser(user1.get_id());
+		DBHandler.deleteUser(user2.get_id());
+		DBHandler.deleteUser(user3.get_id());
 	}
 
 	//test CRUD operations for a KCGame
@@ -60,9 +45,9 @@ public class DBTest {
 
 		ArrayList<Integer> playerList = new ArrayList<Integer>();
 
-		DBHandler.createUser(new User(43, "sldkfj"));
-		playerList.add(43);
-		playerList.add(-1);		
+		User test = new User("Test User", "Test Email", "password");
+		playerList.add(test.get_id());
+		playerList.add(-1);
 
 		Pile pile1 = new Pile("pile one");
 		pile1.add(new Card(2, Suit.CLUB));
@@ -87,6 +72,7 @@ public class DBTest {
 		Assert.isTrue(!kc.getIsActive(), "Demo game should be inactive!");
 
 		DBHandler.deleteKCGame(gameID);
+		DBHandler.deleteUser(test.get_id());
 	}
 	
     public void testThatTestsDidNotBreakThings(){

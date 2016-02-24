@@ -183,7 +183,7 @@ public class DBHandler {
 		if(user == null){
 			return null;
 		}
-		return user.getFriends();
+		return user.getFriendIds();
 	}
 
 	/**
