@@ -219,9 +219,16 @@
 		} else {
 			// This is the second selected pile
 			if($(this).children().first().attr("id") != "drawPile"){
-				$(this).children().first().addClass("pileClicked");
-				secondPile = $(this);
-				handleMove();
+				if($(this).children().first().hasClass("emptyPile") && selectedPile.children().first().hasClass("emptyPile")){
+					// The first selected pile and this were both empty piles just switch the selectedPile to this
+					selectedPile.children().first().removeClass("pileClicked");
+					$(this).children().first().addClass("pileClicked");
+					selectedPile = $(this);
+				} else {
+				    $(this).children().first().addClass("pileClicked");
+				    secondPile = $(this);
+				    handleMove();
+				}
 			}
 		}
 		return;
@@ -304,13 +311,34 @@
          $(event.target).removeClass("dragHover");
      }
 
-     function drag(ev) {
-         $(ev.target).click();
+     function drag(event) {
+    	 if(selectedCard){
+    		  selectedCard.removeClass("clicked");
+    		  selectedCard = null;
+    	 }
+    	 if(selectedPile){
+    		  selectedPile.children().first().removeClass("pileClicked");
+    		  selectedPile = null;
+    	 }
+    	 if(secondPile){
+    		  secondPile.children().first().removeClass("pileClicked");
+    		  secondPile = null;
+    	 }
+    	 if(!$(event.srcElement).hasClass("emptyPile")){
+    		   $(event.target).click();
+    	 } else {
+    		 $(event.srcElement).attr("draggable", false);
+    	 }
      }
 
      function drop(event) {
-         $(event.target).click();
+    	 $(event.target).click();
      }
+     
+     $(".emptyPile").mousedown(function (){
+         this.parentNode.setAttribute("draggable", false);
+         this.parentNode.setAttribute("ondragstart", "");
+     });
 </script>
 {{/game}}
 

@@ -90,7 +90,7 @@ public class KingsCornerHandler extends TemplateHandler{
 			moving.addAll(pile1);
 		}
 		KCMove move = new KCMove(playerId, origin, moving, destination);
-		if(game.applyMove(move)){
+		if(moving.size() > 0 && game.applyMove(move)){
 			if(game.getIsActive()){
 				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied successfully.");
 			}

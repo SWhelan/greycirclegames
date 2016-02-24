@@ -79,7 +79,7 @@
 
 .gamePile {
     /* Need this below dragHover as of implementation of drag/drop */
-    background-color: white;
+    background-color: transparent;
 }
 
 /* Colors */
