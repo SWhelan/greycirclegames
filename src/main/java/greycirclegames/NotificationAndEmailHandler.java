@@ -23,7 +23,7 @@ public class NotificationAndEmailHandler {
 		for(Integer id : players){
 			if(id > 0){
 				User user = DBHandler.getUser(id);
-				if(user.getEmailForNewGame() && !user.equals(creator)){
+				if(user.getEmailForNewGame() && !user.get_id().equals(creator.get_id())){
 					EmailService.sendNewGameMail(user.getEmail(), gameTypeIdentifier, url);
 				}
 			}
@@ -48,7 +48,7 @@ public class NotificationAndEmailHandler {
 			for(Integer id : players){
 				if(id > 0){
 					User user = DBHandler.getUser(id);
-					if(user.getEmailForGameOver() && !user.equals(ender)){
+					if(user.getEmailForGameOver() && !user.get_id().equals(ender.get_id())){
 						EmailService.sendGameOverMail(user.getEmail(), url);
 					}
 				}
@@ -60,8 +60,8 @@ public class NotificationAndEmailHandler {
 		sendNewGameIfWanted(players, gameTypeIdentifier, url, creator);
 		players.stream().forEach((e) -> {
 			if(e > 0){
-				User user = DBHandler.getUser(e);
-				if(!user.equals(creator)){
+				if(!e.equals(creator.get_id())){
+					User user = DBHandler.getUser(e);
 					user.addNotification("New: " + gameTypeIdentifier, url, gameId, false);
 					DBHandler.updateUser(user);
 				}
@@ -95,10 +95,10 @@ public class NotificationAndEmailHandler {
 		sendGameOverMailIfWanted(players, gameTypeIdentifier, url, ender);
 		players.stream().forEach(e -> {
 			if(e > 0){
-				User user = DBHandler.getUser(e);
-				if(!user.equals(ender)){ // The know the game is over already
+				if(!e.equals(ender.get_id())){ // The know the game is over already
+					User user = DBHandler.getUser(e);
 					String status = "lost";
-					if(winner != null && e.equals(winner)){
+					if(winner != null && e.equals(winner.get_id())){
 						status = "won";
 					} else if(winner == null){
 						status = "tied";

@@ -57,13 +57,6 @@ public class ApplicationHandler extends TemplateHandler {
 		return getModelAndView(new HashMap<String, Object>(), TUTORIAL_TEMPLATE, rq, rs);
 	}
 	
-	protected static ModelAndView logout(Request rq, Response rs) {
-		rs.removeCookie(GlobalConstants.USER_COOKIE_KEY);
-		rs.removeCookie(GlobalConstants.VERIFY_COOKIE_KEY);
-		rs.redirect(HOME_ROUTE);
-		return getModelAndView(null, HOME_TEMPLATE, rq, rs);
-	}
-	
 	protected static ModelAndView renderGameList(Request rq, Response rs) {
 		HashMap<String, Object> info = new HashMap<String, Object>();
 		int userId = getUserIdFromCookies(rq);
@@ -78,6 +71,42 @@ public class ApplicationHandler extends TemplateHandler {
 		info.put("friends", friends);
 		info.put("hasFriends", !friends.isEmpty());
 		return getModelAndView(info, CREATE_GAME_TEMPLATE, rq, rs);
+	}
+	
+	protected static ModelAndView renderRematch(Request rq, Response rs) {
+		int gameId = Integer.parseInt(rq.params(":id"));
+		int creatorId = getUserIdFromCookies(rq);
+		String gameType = rq.params(":gameType");
+		List<Integer> players;
+		if(("/" + gameType).equals(TemplateHandler.CIRCLES_ROUTE)){
+			Circles game = DBHandler.getCirclesGame(gameId);
+			players = makeNewPlayersList(game.getPlayers(), creatorId);
+			return CirclesHandler.createCirclesGame(players, rq, rs);
+		} else if(("/" + gameType).equals(TemplateHandler.KINGS_CORNER_ROUTE)){
+			KingsCorner game = DBHandler.getKCGame(gameId);
+			players = makeNewPlayersList(game.getPlayers(), creatorId);
+			return KingsCornerHandler.createKCGame(players, rq, rs);
+		}
+		return null; // Compiler can't know we can never get here.
+	}
+	
+	protected static ModelAndView renderUserHistory(Request rq, Response rs) {
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		info.put("friend", new FriendView(getUserIdFromCookies(rq), "All Artificial Players"));
+		return getModelAndView(info, FRIEND_INFO_TEMPLATE, rq, rs);
+	}
+	
+	protected static ModelAndView renderEditUser(Request rq, Response rs) {
+		HashMap<String, Object> info = new HashMap<String, Object>();
+		info.put("user", new UserView(getUserFromCookies(rq)));
+		return getModelAndView(info, EDIT_USER_TEMPLATE, rq, rs);
+	}
+	
+	protected static ModelAndView logout(Request rq, Response rs) {
+		rs.removeCookie(GlobalConstants.USER_COOKIE_KEY);
+		rs.removeCookie(GlobalConstants.VERIFY_COOKIE_KEY);
+		rs.redirect(HOME_ROUTE);
+		return getModelAndView(null, HOME_TEMPLATE, rq, rs);
 	}
 	
 	protected static ModelAndView postRegister(Request rq, Response rs) {
@@ -147,12 +176,6 @@ public class ApplicationHandler extends TemplateHandler {
 		rs.header(GlobalConstants.DISPLAY_ERROR, "Your username or password is incorrect.");
 		return renderLogin(rq, rs);
 	}
-
-	protected static ModelAndView renderEditUser(Request rq, Response rs) {
-		HashMap<String, Object> info = new HashMap<String, Object>();
-		info.put("user", new UserView(getUserFromCookies(rq)));
-		return getModelAndView(info, EDIT_USER_TEMPLATE, rq, rs);
-	}
 	
 	protected static ModelAndView postEditUser(Request rq, Response rs) {
 		User user = getUserFromCookies(rq);
@@ -166,18 +189,21 @@ public class ApplicationHandler extends TemplateHandler {
 		boolean emailForNewGame = rq.queryParams("emailForNewGame") != null ?true:false;
 		boolean emailForTurn = rq.queryParams("emailForTurn") != null ?true:false;
 		boolean emailForGameOver = rq.queryParams("emailForGameOver") != null ?true:false;
+		boolean emailForPoke = rq.queryParams("emailForPoke") != null ?true:false;
 		boolean showHelpers = rq.queryParams("showHelpers") != null ?true:false;
 		
 		if(	user.getEmailForNewFriend() != emailForNewFriend ||
 			user.getEmailForNewGame() != emailForNewGame ||
 			user.getEmailForTurn() != emailForTurn ||
 			user.getEmailForGameOver() != emailForGameOver ||
+			user.getEmailForPoke() != emailForPoke ||
 			user.getShowHelpers() != showHelpers){
 				// Only change if there was a change (to conserve DB hits)
 				user.setEmailForNewFriend(emailForNewFriend);
 				user.setEmailForNewGame(emailForNewGame);
 				user.setEmailForTurn(emailForTurn);
 				user.setEmailForGameOver(emailForGameOver);
+				user.setEmailForPoke(emailForPoke);
 				user.setShowHelpers(showHelpers);
 				// Update just the email settings in case there are errors with other sections.
 				DBHandler.updateUser(user);
@@ -249,32 +275,7 @@ public class ApplicationHandler extends TemplateHandler {
 		return getModelAndView(null, EDIT_USER_TEMPLATE, rq, rs);
 	}
 
-	public static ModelAndView removeNotification(Request rq, Response rs) {
-		int notificationIndex = Integer.parseInt(rq.params(":id"));
-		User user = getUserFromCookies(rq);
-		user.removeNotification(notificationIndex);
-		DBHandler.updateUser(user);
-		return getModelAndView(null, GAME_LIST_TEMPLATE, rq, rs);
-	}
-
-	public static ModelAndView renderRematch(Request rq, Response rs) {
-		int gameId = Integer.parseInt(rq.params(":id"));
-		int creatorId = getUserIdFromCookies(rq);
-		String gameType = rq.params(":gameType");
-		List<Integer> players;
-		if(("/" + gameType).equals(TemplateHandler.CIRCLES_ROUTE)){
-			Circles game = DBHandler.getCirclesGame(gameId);
-			players = makeNewPlayersList(game.getPlayers(), creatorId);
-			return CirclesHandler.createCirclesGame(players, rq, rs);
-		} else if(("/" + gameType).equals(TemplateHandler.KINGS_CORNER_ROUTE)){
-			KingsCorner game = DBHandler.getKCGame(gameId);
-			players = makeNewPlayersList(game.getPlayers(), creatorId);
-			return KingsCornerHandler.createKCGame(players, rq, rs);
-		}
-		return null; // Compiler can't know we can never get here.
-	}
-
-	public static ModelAndView postPoke(Request rq, Response rs){
+	protected static ModelAndView postPoke(Request rq, Response rs){
 		String originalUrl = rq.headers("referer");
 		int gameId = Integer.parseInt(rq.params(":id"));
 		NotificationAndEmailHandler.poke(getUserIdFromCookies(rq), gameId);
@@ -282,17 +283,19 @@ public class ApplicationHandler extends TemplateHandler {
 		return getModelAndView(new HashMap<String, Object>(), GAME_LIST_TEMPLATE, rq, rs);
 	}
 	
+	protected static ModelAndView removeNotification(Request rq, Response rs) {
+		int notificationIndex = Integer.parseInt(rq.params(":id"));
+		User user = getUserFromCookies(rq);
+		user.removeNotification(notificationIndex);
+		DBHandler.updateUser(user);
+		return getModelAndView(null, GAME_LIST_TEMPLATE, rq, rs);
+	}
+	
 	private static List<Integer> makeNewPlayersList(List<Integer> players, int creatorId) {
 		List<Integer> newPlayerList = new ArrayList<Integer>();
 		newPlayerList.add(creatorId);
 		newPlayerList.addAll(players.stream().filter(e -> ((int) e) != creatorId).collect(Collectors.toList()));
 		return newPlayerList;
-	}
-
-	public static ModelAndView renderUserHistory(Request rq, Response rs) {
-		HashMap<String, Object> info = new HashMap<String, Object>();
-		info.put("friend", new FriendView(getUserIdFromCookies(rq), "All Artificial Players"));
-		return getModelAndView(info, FRIEND_INFO_TEMPLATE, rq, rs);
 	}
 
 }

@@ -143,15 +143,13 @@ public class TemplateHandler {
 
     }
 
-    /* Utilities */
-
     /**
      * 
      * @param rq
      * @return -1 if game id parameter not valid or paramter value
      */
 
-    public static int getGameId(Request rq) {
+    protected static int getGameId(Request rq) {
         int gameId;
         try {
             gameId = Integer.parseInt(rq.queryParams("gameId"));

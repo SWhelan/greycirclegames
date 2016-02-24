@@ -46,7 +46,7 @@ public class KingsCornerView {
 			} else {
 				player = DBHandler.getUser(e);
 			}
-			if(player.equals(viewingPlayer)){
+			if(player.get_id().equals(viewingPlayer.get_id())){
 				userHand = makeCardView(game.getGameState().userHands.get(Integer.toString(viewingPlayer.get_id())).getCards());
 			} else {
 				otherPlayers.add(new HandView(makeCardView(game.getGameState().userHands.get(Integer.toString(player.get_id())).getCards()), player.getUsername(), player.get_id() == currentPlayerId));

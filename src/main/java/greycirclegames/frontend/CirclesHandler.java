@@ -60,7 +60,7 @@ public class CirclesHandler extends TemplateHandler{
 		return getModelAndView(info, CIRCLES_TEMPLATE, rq, rs);
 	}
 
-	public static ModelAndView postTurn(Request rq, Response rs) {
+	protected static ModelAndView postTurn(Request rq, Response rs) {
 		String gameIdString = rq.queryParams("gameId");
 		int gameId = Integer.parseInt(gameIdString);
 		Circles game = DBHandler.getCirclesGame(gameId);

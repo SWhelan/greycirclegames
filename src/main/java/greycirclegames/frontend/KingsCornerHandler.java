@@ -122,7 +122,7 @@ public class KingsCornerHandler extends TemplateHandler{
 		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
 
-	public static ModelAndView createKCGame(List<Integer> players, Request rq, Response rs) {
+	protected static ModelAndView createKCGame(List<Integer> players, Request rq, Response rs) {
 		KingsCorner game = new KingsCorner(DBHandler.getNextGameID(), players);
 		DBHandler.createKCGame(game);
 		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
