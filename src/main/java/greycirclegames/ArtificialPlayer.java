@@ -31,5 +31,5 @@ public abstract class ArtificialPlayer extends ReflectionDBObject implements Pla
 		return username;
 	}
 	
-	public abstract Move createMove(Game<? extends Move, ? extends  GameState, ? extends ArtificialPlayer> game);
+	public abstract Move createMove(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game);
 }

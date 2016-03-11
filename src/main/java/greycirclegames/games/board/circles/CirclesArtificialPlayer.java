@@ -7,7 +7,6 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
 
 import greycirclegames.ArtificialPlayer;
-import greycirclegames.GlobalConstants;
 import greycirclegames.games.Game;
 import greycirclegames.games.GameState;
 import greycirclegames.games.Move;

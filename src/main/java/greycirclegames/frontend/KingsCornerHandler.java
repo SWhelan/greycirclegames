@@ -99,8 +99,9 @@ public class KingsCornerHandler extends TemplateHandler{
 		}
 		
 		if(game.getIsActive() && game.players.get(game.currentPlayerIndex) < 0){
-			game.applyAIMoves();
+	        game.applyAIMoves();
 		}
+		
 		DBHandler.updateKCGame(game);
 		rs.redirect(KINGS_CORNER_ROUTE + "/" + gameIdString);
 		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);

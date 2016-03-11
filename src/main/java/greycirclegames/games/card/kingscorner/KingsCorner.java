@@ -62,6 +62,11 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 	public String getGameTypeIdentifier() {
 		return GlobalConstants.KINGS_CORNER;
 	}
+	
+	@Override
+	public String getRootUrlRoute() {
+		return TemplateHandler.KINGS_CORNER_ROUTE;
+	}
 
 	@Override
 	protected int determineWinnerId() {
@@ -69,22 +74,17 @@ public class KingsCorner extends Game<KCMove, KCGameState, KCArtificialPlayer>{
 	}
 
 	@Override
-	public KCArtificialPlayer makeArtificialPlayer(int playerId) {
-		return new KCArtificialPlayer(playerId);
+	public KCGameState makeGameStateFromDB(BasicDBObject dbObject) {
+		return new KCGameState(dbObject);
 	}
-
+	
 	@Override
 	public KCMove makeMoveFromDB(BasicDBObject move) {
 		return new KCMove((BasicDBObject)move);
 	}
-
+	
 	@Override
-	public KCGameState makeGameStateFromDB(BasicDBObject dbObject) {
-		return new KCGameState(dbObject);
-	}
-
-	@Override
-	public String getRootUrlRoute() {
-		return TemplateHandler.KINGS_CORNER_ROUTE;
+	public KCArtificialPlayer makeArtificialPlayer(int playerId) {
+		return new KCArtificialPlayer(playerId);
 	}
 }
