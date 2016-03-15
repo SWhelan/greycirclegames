@@ -118,13 +118,16 @@ public class NotificationAndEmailHandler {
 		DBHandler.updateUser(added);
 	}
 
-	public static void poke(int senderId, int gameId) {
+	public static void poke(int senderId, int gameId, String gameIdentifier) {
 		User sender = DBHandler.getUser(senderId);
-		Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game = DBHandler.getCirclesGame(gameId);
-		String url = TemplateHandler.CIRCLES_ROUTE;
-		if(game == null){
+		Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game = null;
+		String url = "";
+		if(gameIdentifier.equals(GlobalConstants.KINGS_CORNER)){
 			game = DBHandler.getKCGame(gameId);
 			url = TemplateHandler.KINGS_CORNER_ROUTE;
+		} else {
+			game = DBHandler.getCirclesGame(gameId);
+			url = TemplateHandler.CIRCLES_ROUTE;
 		}
 		url = url + "/" + Integer.toString(gameId);
 		User receiver = DBHandler.getUser(game.getPlayers().get(game.getCurrentPlayerIndex()));

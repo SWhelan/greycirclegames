@@ -93,7 +93,7 @@ public class TemplateHandler {
         post(REGISTER_ROUTE, (rq, rs) -> ApplicationHandler.postRegister(rq, rs), new MustacheTemplateEngine());
         post(LOGIN_ROUTE, (rq, rs) -> ApplicationHandler.postLogin(rq, rs), new MustacheTemplateEngine());
         post(EDIT_USER_ROUTE, (rq, rs) -> ApplicationHandler.postEditUser(rq, rs), new MustacheTemplateEngine());
-        get(POKE_ROUTE + "/:id", (rq, rs) -> ApplicationHandler.postPoke(rq, rs), new MustacheTemplateEngine());
+        get(POKE_ROUTE + "/:gameTypeId" + "/:id", (rq, rs) -> ApplicationHandler.postPoke(rq, rs), new MustacheTemplateEngine());
 
         // Routes involving adding, removing, or viewing friends
         get(FRIENDS_ROUTE, (rq, rs) -> FriendsHandler.renderFriends(rq, rs), new MustacheTemplateEngine());

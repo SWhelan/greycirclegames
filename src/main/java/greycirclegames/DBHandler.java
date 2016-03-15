@@ -94,7 +94,7 @@ public class DBHandler {
 		return new GameHistory(thing);
 	}
 	
-	public static DBObject getGame(int gameId, String collectionName){	
+	public static DBObject getGame(int gameId, String collectionName){
 		return getCollection(collectionName).find(eq("_id", gameId)).first();
 	}
 	

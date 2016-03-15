@@ -278,7 +278,8 @@ public class ApplicationHandler extends TemplateHandler {
 	protected static ModelAndView postPoke(Request rq, Response rs){
 		String originalUrl = rq.headers("referer");
 		int gameId = Integer.parseInt(rq.params(":id"));
-		NotificationAndEmailHandler.poke(getUserIdFromCookies(rq), gameId);
+		String gameIdentifier = rq.params(":gameTypeId");
+		NotificationAndEmailHandler.poke(getUserIdFromCookies(rq), gameId, gameIdentifier);
 		rs.redirect(originalUrl);
 		return getModelAndView(new HashMap<String, Object>(), GAME_LIST_TEMPLATE, rq, rs);
 	}

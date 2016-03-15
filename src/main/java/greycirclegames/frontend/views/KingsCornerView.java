@@ -16,6 +16,7 @@ import greycirclegames.games.card.kingscorner.KingsCorner;
 public class KingsCornerView {
 	public Integer gameId;
 	public String gameRoute;
+	public String gameTypeId;
 	public boolean isTurn;
 	public boolean isActive;
 	public List<CardView> userHand;
@@ -88,6 +89,7 @@ public class KingsCornerView {
 		}
 		isTie = game.getTie();
 		this.gameRoute = game.getRootUrlRoute();
+		this.gameTypeId = game.getGameTypeIdentifier();
 	}
 	
 	private List<CardView> removeMiddle(List<CardView> pile){
