@@ -8,7 +8,7 @@ public class GlobalConstants {
 	public static final String USER_COOKIE_KEY = "id";
 	public static final String VERIFY_COOKIE_KEY = "verify";
 	public static final String FRIEND_SEARCH_COOKIE_KEY = "friendSearchValue";
-	
+	public static final String DEV_MODE = "DEV_MODE";
 	
 	//Games
 	public static final String KINGS_CORNER = "King's Corner";

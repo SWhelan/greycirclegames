@@ -284,6 +284,9 @@ public class TemplateHandler {
             info.put("showNotificationCount", count > 0);
             info.put("notificationCount", Integer.toString(count));
         }
+        if (rq.host().startsWith("localhost")) {
+        	info.put(GlobalConstants.DEV_MODE, "Development: ");
+        }
         if (rs.raw().containsHeader(GlobalConstants.DISPLAY_ERROR)) {
             info.put(GlobalConstants.DISPLAY_ERROR, rs.raw().getHeader(GlobalConstants.DISPLAY_ERROR));
         }

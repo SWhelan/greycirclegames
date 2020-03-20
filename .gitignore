@@ -7,3 +7,4 @@ codecoverage/*
 .idea/*
 *.iml
 /target/
+.metadata/*
