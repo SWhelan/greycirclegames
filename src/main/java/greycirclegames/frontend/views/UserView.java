@@ -11,6 +11,7 @@ public class UserView {
 	public boolean emailForGameOver;
 	public boolean emailForPoke;
 	public boolean showHelpers;
+	public int refreshRate;
 	
 	public UserView(User user){
 		this.username = user.getUsername();
@@ -21,6 +22,7 @@ public class UserView {
 		this.emailForGameOver = user.getEmailForGameOver();
 		this.emailForPoke = user.getEmailForPoke();
 		this.showHelpers = user.getShowHelpers();
+		this.refreshRate = user.getRefreshRateForViewing(); 
 	}
 
 }

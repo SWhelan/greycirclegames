@@ -15,6 +15,7 @@ import com.mongodb.DBObject;
 import com.mongodb.ReflectionDBObject;
 
 public class User extends ReflectionDBObject implements Player {
+	public static final int DEFAULT_REFRESH_RATE = 20;
 	private static final int NUM_BITS = 128;
 	private static final int RADIX = 32;
 	private static final String ALGORITHM = "SHA-256";
@@ -38,6 +39,8 @@ public class User extends ReflectionDBObject implements Player {
 	private boolean emailForPoke;
 	
 	private boolean showHelpers;
+	
+	private Integer refreshRate; // In seconds
 
 	/**
 	 * Does absolutely nothing for you used mostly for testing purposes.
@@ -62,8 +65,7 @@ public class User extends ReflectionDBObject implements Player {
 		this(DBHandler.getNextUserID(), username, email, "", User.generateSalt(), User.generateCookieValue(),
 				new BasicDBList(), 0, null, 
 				false, false, false, false, false,
-				true
-				);
+				true, DEFAULT_REFRESH_RATE);
 		this.password = User.hashPassword(this.salt, password);
 		DBHandler.createUser(this);
 	}
@@ -86,11 +88,12 @@ public class User extends ReflectionDBObject implements Player {
 	 * @param emailForGameOver
 	 * @param emailForPoke
 	 * @param showHelpers
+	 * @param refreshRate
 	 */
 	public User(int _id, String username, String email, String password, String salt, String cookieValue,
 			BasicDBList friendIds, int nextNotificationId, List<Notification> notifications,
 			boolean emailForNewFriend, boolean emailForNewGame, boolean emailForTurn, boolean emailForGameOver, boolean emailForPoke, 
-			boolean showHelpers) {
+			boolean showHelpers, Integer refreshRate) {
 		this._id = _id;
 		this.username = username;
 		this.email = email;
@@ -114,6 +117,7 @@ public class User extends ReflectionDBObject implements Player {
 		this.emailForPoke = emailForPoke;
 		
 		this.showHelpers = showHelpers;
+		this.refreshRate = refreshRate;
 	}
 
 	public User(DBObject obj) {
@@ -123,7 +127,9 @@ public class User extends ReflectionDBObject implements Player {
 				((BasicDBList) obj.get("Notifications")).stream().map(e -> new Notification((BasicDBObject) e)).collect(Collectors.toList()),
 				(boolean) obj.get("EmailForNewFriend"), (boolean) obj.get("EmailForNewGame"), 
 				(boolean) obj.get("EmailForTurn"), (boolean) obj.get("EmailForGameOver"), (boolean) obj.get("EmailForPoke"), 
-				(boolean) obj.get("ShowHelpers"));
+				// These two were added after some databases were populated with data should ensure that if there is missing data in mongo that the fields are still populated./The users still work and can login.
+				(boolean) (obj.get("ShowHelpers") == null ? true : obj.get("ShowHelpers")),
+				(Integer) (obj.get("RefreshRate") == null ? DEFAULT_REFRESH_RATE : obj.get("RefreshRate")));
 	}
 	
 	/**
@@ -222,6 +228,12 @@ public class User extends ReflectionDBObject implements Player {
 	public void setShowHelpers(boolean showHelpers) {
 		this.showHelpers = showHelpers;
 	}
+	public Integer getRefreshRate() {
+		return refreshRate;
+	}
+	public void setRefreshRate(Integer refreshRate) {
+		this.refreshRate = refreshRate;
+	}
 	
 	/**
 	 * End of getter/setter section
@@ -312,5 +324,13 @@ public class User extends ReflectionDBObject implements Player {
 	
 	public static String generateCookieValue(){
 		return User.generateSalt() + User.generateSalt();
+	}
+
+	@Override
+	public int getRefreshRateForViewing() {
+		if (getRefreshRate() == null) {
+			return DEFAULT_REFRESH_RATE;
+		}
+		return getRefreshRate();
 	}
 }

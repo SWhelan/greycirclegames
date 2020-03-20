@@ -191,13 +191,15 @@ public class ApplicationHandler extends TemplateHandler {
 		boolean emailForGameOver = rq.queryParams("emailForGameOver") != null ?true:false;
 		boolean emailForPoke = rq.queryParams("emailForPoke") != null ?true:false;
 		boolean showHelpers = rq.queryParams("showHelpers") != null ?true:false;
+		Integer refreshRate = Integer.parseInt(rq.queryParams("refreshRate"));
 		
-		if(	user.getEmailForNewFriend() != emailForNewFriend ||
+		if (user.getEmailForNewFriend() != emailForNewFriend ||
 			user.getEmailForNewGame() != emailForNewGame ||
 			user.getEmailForTurn() != emailForTurn ||
 			user.getEmailForGameOver() != emailForGameOver ||
 			user.getEmailForPoke() != emailForPoke ||
-			user.getShowHelpers() != showHelpers){
+			user.getShowHelpers() != showHelpers ||
+			user.getRefreshRate() != refreshRate){
 				// Only change if there was a change (to conserve DB hits)
 				user.setEmailForNewFriend(emailForNewFriend);
 				user.setEmailForNewGame(emailForNewGame);
@@ -205,6 +207,7 @@ public class ApplicationHandler extends TemplateHandler {
 				user.setEmailForGameOver(emailForGameOver);
 				user.setEmailForPoke(emailForPoke);
 				user.setShowHelpers(showHelpers);
+				user.setRefreshRate(refreshRate);
 				// Update just the email settings in case there are errors with other sections.
 				DBHandler.updateUser(user);
 		}
@@ -212,15 +215,15 @@ public class ApplicationHandler extends TemplateHandler {
 		boolean noError = true;
 		boolean change = false;
         String currentUsername = user.getUsername();
-		if(!username.equals(currentUsername)){
-            if(username.toLowerCase().startsWith(ArtificialPlayer.USERNAME_PREFIX.toLowerCase())) {
+		if (!username.equals(currentUsername)){
+            if (username.toLowerCase().startsWith(ArtificialPlayer.USERNAME_PREFIX.toLowerCase())) {
                 noError = false;
                 errorMessage.add("Don't steal our artificial players' names!");
-            } else if(username.toLowerCase().equals(currentUsername.toLowerCase()) ||
+            } else if (username.toLowerCase().equals(currentUsername.toLowerCase()) ||
                     DBHandler.getUserByUsername(username) == null){
 				user.setUsername(username);
 				change = true;
-			} else if(username.equals("")){
+			} else if (username.equals("")){
 				noError = false;
 				errorMessage.add("A username is required.");
 			} else {
@@ -228,7 +231,7 @@ public class ApplicationHandler extends TemplateHandler {
 				errorMessage.add("That username is already taken.");
 			}
 		}
-		if(!email.equals(user.getEmail())){
+		if (!email.equals(user.getEmail())){
 			if((email.equals("") || DBHandler.getUserByEmail(email) == null)){
 				user.setEmail(email);
 				change = true;
@@ -237,13 +240,13 @@ public class ApplicationHandler extends TemplateHandler {
 				errorMessage.add("That email has already been registered.");
 			}
 		}
-		if(change){
+		if (change){
 			// Update after just the username and password in case errors with other section
 			DBHandler.updateUser(user);
 			change = false;
 		}
 		
-		if(!currentPassword.equals("") || !newPassword.equals("") || !newPasswordAgain.equals("")){
+		if (!currentPassword.equals("") || !newPassword.equals("") || !newPasswordAgain.equals("")){
 			if(user.passwordMatches(currentPassword)){
 				if(newPassword.equals(newPasswordAgain)){
 					String newSalt = User.generateSalt();
@@ -261,8 +264,8 @@ public class ApplicationHandler extends TemplateHandler {
 			}
 		}
 		
-		if(noError){
-			if(change){
+		if (noError){
+			if (change){
 				DBHandler.updateUser(user);
 			}
 			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "User was updated successfully.");

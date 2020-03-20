@@ -15,7 +15,7 @@ public interface Player {
 	 * Negative player ids are AI's.
 	 * @return	The player id.
 	 */
-	public Integer get_id();
+	public Integer get_id();	
 	//Players must override the hashCode and equals functions
 	//To be based on the player ids.
 	public abstract int hashCode();
@@ -27,5 +27,10 @@ public interface Player {
 	 * @return	Name of the player.
 	 */
 	public String getUsername();
+	
+	/**
+	 * @return how often to check the status of the game in seconds
+	 */
+	public int getRefreshRateForViewing();
 	
 }

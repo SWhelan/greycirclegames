@@ -13,7 +13,7 @@ import greycirclegames.games.card.Pile;
 import greycirclegames.games.card.kingscorner.KCPile;
 import greycirclegames.games.card.kingscorner.KingsCorner;
 
-public class KingsCornerView {
+public class KingsCornerView extends GameView {
 	public Integer gameId;
 	public String gameRoute;
 	public String gameTypeId;
@@ -38,6 +38,7 @@ public class KingsCornerView {
 	public boolean isTie;
 	
 	public KingsCornerView(KingsCorner game, Player viewingPlayer){
+		super(viewingPlayer);
 		gameId = game.get_id();
 		int currentPlayerId = game.getPlayers().get(game.getCurrentPlayerIndex());
 		game.getPlayers().stream().forEach((e) -> { 

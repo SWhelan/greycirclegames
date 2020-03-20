@@ -5,13 +5,14 @@ import java.util.List;
 
 import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
+import greycirclegames.Player;
 import greycirclegames.games.board.circles.Circles;
 import greycirclegames.games.board.circles.CirclesArtificialPlayer;
 import greycirclegames.games.board.circles.CirclesBoard;
 import greycirclegames.games.board.circles.CirclesGameState;
 import greycirclegames.games.board.circles.CirclesMove;
 
-public class CirclesView {
+public class CirclesView extends GameView {
 	public List<RowView> displayBoard = new ArrayList<>();
 	public int gameId;
 	public String gameRoute;
@@ -27,13 +28,14 @@ public class CirclesView {
 	public boolean isWinner = false;
 	public boolean isTie = false;
 
-	public CirclesView(Circles game, Integer userId) {
+	public CirclesView(Circles game, Player viewingPlayer) {
+		super(viewingPlayer);
 	    CirclesGameState gameState = game.getGameState();
 		CirclesBoard board = gameState.getBoard();
 		gameId = game.get_id();
 		color = Circles.turnColors.get(game.currentPlayerIndex);
 		int currentPlayerId = game.getPlayers().get(game.currentPlayerIndex);
-		int viewingPlayerId = userId;
+		int viewingPlayerId = viewingPlayer.get_id();
 		isTurn = currentPlayerId == viewingPlayerId; 
 		isActive = game.getIsActive();
 		
@@ -71,13 +73,13 @@ public class CirclesView {
 			isTie = game.getTie();
 		}
 		
-		boolean showHelpers = DBHandler.getUser(userId).getShowHelpers();
+		boolean showHelpers = DBHandler.getUser(viewingPlayerId).getShowHelpers();
 		
 		for(int i = 0; i < board.rows(); i++){
             ArrayList<CircleView> row = new ArrayList<>();
             for(int j = 0; j < board.columns(); j++){
                 if(board.cellAt(i, j) == null){
-                    if(new CirclesMove(i, j, yourColor, gameState, userId).isValid()) {
+                    if(new CirclesMove(i, j, yourColor, gameState, viewingPlayerId).isValid()) {
                         row.add(new CircleView(i, j, true && showHelpers));
                     } else {
                         row.add(new CircleView(i, j, false));

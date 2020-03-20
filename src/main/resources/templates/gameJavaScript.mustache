@@ -6,10 +6,13 @@
 	{{^isTurn}}
 	isTurn = false;
 	{{#isActive}}
-	window.onload = function (){
-		setTimeout(function (){
-			window.location.replace(window.location.pathname);
-		}, 20000);
+	var refreshRate = {{refreshRate}} * 1000;
+	if (refreshRate > 0) {
+    	window.onload = function (){
+    		setTimeout(function (){
+    			window.location.replace(window.location.pathname);
+    		}, {{refreshRate}} * 1000);
+    	}
 	}
 	{{/isActive}}
 	{{/isTurn}}

@@ -55,7 +55,7 @@ public class CirclesHandler extends TemplateHandler{
 			rs.header(GlobalConstants.DISPLAY_ERROR, "Game not found.");
 			return getModelAndView(info, CIRCLES_TEMPLATE, rq, rs);
 		}
-		CirclesView view = new CirclesView(DBHandler.getCirclesGame(gameId), getUserIdFromCookies(rq));
+		CirclesView view = new CirclesView(DBHandler.getCirclesGame(gameId), getUserFromCookies(rq));
 		info.put("game", view);
 		return getModelAndView(info, CIRCLES_TEMPLATE, rq, rs);
 	}
