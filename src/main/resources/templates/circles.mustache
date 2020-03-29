@@ -7,7 +7,7 @@
 	{{#displayBoard}}
 		<tr>
 		{{#row}}
-			<td class="centeredCell {{^isTurn}}greyedOut{{/isTurn}}">
+			<td class="centeredCell {{^isTurn}}greyedOut{{/isTurn}} {{#isRelevantMove}}circlesRelevantMove{{/isRelevantMove}}">
 				{{#isAPiece}}
 				<div class="circle {{color}}">
 				{{/isAPiece}}

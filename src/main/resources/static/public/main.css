@@ -123,6 +123,10 @@
     display: inline-block;
 }
 
+.circlesRelevantMove {
+    background: rgba(0, 175, 0, .1);
+}
+
 .greyedOut .circlesPossibleMove {
     display: none;
 }

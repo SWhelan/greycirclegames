@@ -27,7 +27,7 @@ public class CirclesView extends GameView {
 	public String opponentName;
 	public boolean isWinner = false;
 	public boolean isTie = false;
-
+	
 	public CirclesView(Circles game, Player viewingPlayer) {
 		super(viewingPlayer);
 	    CirclesGameState gameState = game.getGameState();
@@ -74,6 +74,7 @@ public class CirclesView extends GameView {
 		}
 		
 		boolean showHelpers = DBHandler.getUser(viewingPlayerId).getShowHelpers();
+		CirclesMove mostRecentMove = mostRecentMove(game);
 		
 		for(int i = 0; i < board.rows(); i++){
             ArrayList<CircleView> row = new ArrayList<>();
@@ -85,13 +86,28 @@ public class CirclesView extends GameView {
                         row.add(new CircleView(i, j, false));
                     }
                 } else {
-                    row.add(new CircleView(i, j, board.cellAt(i, j), true));
+                	boolean isRelevantMove = mostRecentMove != null && mostRecentMove.getRow() == i && mostRecentMove.getColumn() == j;
+                    row.add(new CircleView(i, j, board.cellAt(i, j), true, isRelevantMove));
                 }
             }
             displayBoard.add(new RowView(row));
         }
 		this.gameRoute = game.getRootUrlRoute();
 		this.gameTypeId = game.getGameTypeIdentifier();
+		populateHistoryState();
+	}
+	
+	private CirclesMove mostRecentMove(Circles game) {
+		int size = game.getMoves().size();
+		if (size - 1 >= 0) {
+			return game.getMoves().get(size -1);
+		} else {
+			return null;
+		}
+	}
+
+	private void populateHistoryState() {
+		// TODO
 	}
 
 }
