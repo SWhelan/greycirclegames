@@ -31,5 +31,10 @@ public abstract class ArtificialPlayer extends ReflectionDBObject implements Pla
 		return username;
 	}
 	
+	@Override
+	public int getRefreshRateForViewing() {
+		return User.DEFAULT_REFRESH_RATE; // The Artificial player doesn't view the screen in the traditional way this seems mostly irrelevant.
+	}
+	
 	public abstract Move createMove(Game<? extends Move, ? extends GameState, ? extends ArtificialPlayer> game);
 }
