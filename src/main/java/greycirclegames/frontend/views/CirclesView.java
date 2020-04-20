@@ -94,7 +94,6 @@ public class CirclesView extends GameView {
         }
 		this.gameRoute = game.getRootUrlRoute();
 		this.gameTypeId = game.getGameTypeIdentifier();
-		populateHistoryState();
 	}
 	
 	private CirclesMove mostRecentMove(Circles game) {
@@ -104,10 +103,6 @@ public class CirclesView extends GameView {
 		} else {
 			return null;
 		}
-	}
-
-	private void populateHistoryState() {
-		// TODO
 	}
 
 }
