@@ -29,7 +29,7 @@ public class DatabaseConnector {
 				if (environmentURI != null) {
 					MONGO_DATABASE_URI = environmentURI;
 				}
-				uri = new MongoClientURI(MONGO_DATABASE_URI);
+				uri = new MongoClientURI(MONGO_DATABASE_URI + "?retryWrites=false"); // Additional parameter required after updating mongo driver. Probably should update mongo DB versions on heroku to match so that we don't need this query param.
 				client = new MongoClient(uri);
 			}
 			db = client.getDatabase(uri.getDatabase());

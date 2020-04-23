@@ -3,7 +3,6 @@ import static spark.SparkBase.port;
 import greycirclegames.frontend.TemplateHandler;
 import spark.Spark;
 
-
 public class Main {
 
     public static void main(String[] args) {
