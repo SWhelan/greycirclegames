@@ -85,7 +85,7 @@
 					<jdkVersion>11</jdkVersion>
 					<appName>greycirclegames</appName>
 					<processTypes>
-						<web>java -jar ./target/greycirclegames-1.0-jar-with-dependencies.jar</web>
+						<web>java -jar ./target/greycirclegames-2.0-jar-with-dependencies.jar</web>
 					</processTypes>
 				</configuration>
 			</plugin>
