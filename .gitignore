@@ -8,3 +8,4 @@ codecoverage/*
 *.iml
 /target/
 .metadata/*
+config/local.properties

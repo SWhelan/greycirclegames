@@ -1,6 +1,5 @@
 package greycirclegames.frontend;
 
-import static spark.Spark.before;
 import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.post;
@@ -19,6 +18,7 @@ import greycirclegames.games.card.kingscorner.KCPile;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
+import spark.Spark;
 import spark.template.mustache.MustacheTemplateEngine;
 
 /**
@@ -31,8 +31,8 @@ import spark.template.mustache.MustacheTemplateEngine;
  *
  */
 public class TemplateHandler {
-	public static final String FAVICON_ROUTE = "/favicon.ico";
-	public static final String HOME_ROUTE = "/";
+    public static final String FAVICON_ROUTE = "/favicon.ico";
+    public static final String HOME_ROUTE = "/";
     public static final String LOGIN_ROUTE = "/login";
     public static final String REGISTER_ROUTE = "/register";
     public static final String EDIT_USER_ROUTE = "/editUser";
@@ -70,7 +70,7 @@ public class TemplateHandler {
 
     public static void registerTemplates() {
         // Ensure they are logged in or the url is public/doesn't require login
-        before((rq, rs) -> {
+        Spark.before((rq, rs) -> {
             rs.removeCookie(GlobalConstants.DISPLAY_SUCCESS);
             rs.removeCookie(GlobalConstants.DISPLAY_ERROR);
             String path = rq.pathInfo();

@@ -1,3 +1,4 @@
+import greycirclegames.DatabaseConnector;
 import greycirclegames.frontend.TemplateHandler;
 import spark.Spark;
 
@@ -7,6 +8,7 @@ public class Main {
     	Spark.staticFileLocation("/static");
         Spark.port(getHerokuAssignedPort());
         TemplateHandler.registerTemplates();
+        DatabaseConnector.setDefaultDatabase();
         DevHandler.addDefaultUsers();
     }
 

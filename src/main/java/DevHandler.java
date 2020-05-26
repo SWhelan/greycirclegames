@@ -17,7 +17,8 @@ public class DevHandler {
 		DBHandler.updateUser(user);
 	}
 
-	public static void dropDev(){
+	public static void dropDev() {
+		System.out.println("Dropping entire database.");
 		DBHandler.dropAllCollections();
 	}
 	

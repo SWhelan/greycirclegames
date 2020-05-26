@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 import greycirclegames.DBHandler;
+import greycirclegames.DatabaseConnector;
 import greycirclegames.User;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Card.Suit;
@@ -13,6 +14,7 @@ import spark.utils.Assert;
 public class DBTest {
 	
     public void testInit(){
+    	DatabaseConnector.setTestingDatabase();
     	DevHandler.dropDev();
     	DevHandler.addDefaultUsers();
     }
@@ -75,7 +77,4 @@ public class DBTest {
 		DBHandler.deleteUser(test.get_id());
 	}
 	
-    public void testThatTestsDidNotBreakThings(){
-    	DevHandler.dropDev();
-    }
 }
