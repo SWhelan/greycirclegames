@@ -13,13 +13,13 @@ import spark.utils.Assert;
 
 public class DBTest {
 	
-    public void testInit(){
-    	DatabaseConnector.setTestingDatabase();
+    public void testInit() {
+    	DatabaseConnector.getInstance().setTestDatabase();
     	DevHandler.dropDev();
     	DevHandler.addDefaultUsers();
     }
-
-	//test CRUD operations for a USER
+    
+	// Test CRUD operations for a USER
 	public void testUser() {
 		User user1 = new User("goduser", "word", "email@gmail.com");
 		User user2 = new User("goduser2", "word2", "2email@gmail.com");
@@ -42,7 +42,7 @@ public class DBTest {
 		DBHandler.deleteUser(user3.get_id());
 	}
 
-	//test CRUD operations for a KCGame
+	// Test CRUD operations for a KCGame
 	public void testKCGame() {
 
 		ArrayList<Integer> playerList = new ArrayList<Integer>();

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import greycirclegames.DatabaseConnector;
 import greycirclegames.GlobalConstants;
 import greycirclegames.games.board.circles.Circles;
 import greycirclegames.games.board.circles.CirclesBoard;
@@ -12,6 +13,10 @@ import spark.utils.Assert;
 
 public class CirclesTest {
 	private static final List<Integer> players = new ArrayList<Integer>(Arrays.asList(-1, -2));
+
+	public void testInit() {
+		DatabaseConnector.getInstance().setTestDatabase();
+	}
 
 	public void testCircles(){
 		Circles game = new Circles(2, players);

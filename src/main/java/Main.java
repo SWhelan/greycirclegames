@@ -8,7 +8,7 @@ public class Main {
     	Spark.staticFileLocation("/static");
         Spark.port(getHerokuAssignedPort());
         TemplateHandler.registerTemplates();
-        DatabaseConnector.setDefaultDatabase();
+        DatabaseConnector.getInstance().setDefaultDatabase();
         DevHandler.addDefaultUsers();
     }
 

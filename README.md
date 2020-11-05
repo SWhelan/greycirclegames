@@ -15,3 +15,6 @@ When a change is made to a template file the server will need to be restarted bu
 ## Tests
 Install Maven
 Run `mvn test` in this root of this repo.
+
+## Heroku Deploy
+Run `mvn clean heroku:deploy`

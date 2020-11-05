@@ -11,12 +11,20 @@ import com.mongodb.client.MongoDatabase;
  * To connect via mongo shell/command line: mongo host:port/dbname -u dbuser -p dbpassword
  */
 public class DatabaseConnector {
-	private static MongoClient client;
-	private static MongoDatabase db;
-	private static MongoClientURI uri;
 	
+	private MongoClient client;
+	private MongoDatabase db;
+	private MongoClientURI uri;
 	
-	public static MongoDatabase getMongoDB() {
+	private static final DatabaseConnector instance = new DatabaseConnector();
+
+    private DatabaseConnector() {}
+
+    public static DatabaseConnector getInstance() {
+        return instance;
+    }
+	
+	public MongoDatabase getMongoDB() {
 		return db;
 	}
 	
@@ -25,25 +33,29 @@ public class DatabaseConnector {
 	 * @param url format driver://username:password@hostname.com:port/dbname
 	 * @return MongoDatabase of that url
 	 */
-	private static MongoDatabase setSpecifiedMongoDB(String url) {
+	private MongoDatabase setSpecifiedMongoDB(String url) {
 		uri = new MongoClientURI(url + "?retryWrites=false"); // Additional parameter required after updating mongo driver. Probably should update mongo DB versions on heroku to match so that we don't need this query param.
 		client = new MongoClient(uri);
 		db = client.getDatabase(uri.getDatabase());
 		return db;
 	}
 	
-	public static void setTestingDatabase() {
-		setSpecifiedMongoDB(ConfigurationHandler.getConfig("test.db.url").get());
+	public void setTestDatabase() {
+		setDatabase("TEST_MONGO", "test.db.url");
 	}
 
-	public static void setDefaultDatabase() {
+	public void setDefaultDatabase() {
+		setDatabase("PRODUCTION_MONGO", "dev.db.url");
+	}
+	
+	private void setDatabase(String environmentVariable, String localConfigVariable) {
 		Optional<String> mongoDatabaseURI = Optional.empty();
 		ProcessBuilder processBuilder = new ProcessBuilder();
-		String environmentURI = processBuilder.environment().get("MONGOLAB_URI");
+		String environmentURI = processBuilder.environment().get(environmentVariable);
 		if (environmentURI != null) {
 			mongoDatabaseURI = Optional.of(environmentURI);
 		} else {
-			mongoDatabaseURI = ConfigurationHandler.getConfig("dev.db.url");
+			mongoDatabaseURI = ConfigurationHandler.getConfig(localConfigVariable);
 		}
 		if (mongoDatabaseURI.isEmpty()) {
 			return;

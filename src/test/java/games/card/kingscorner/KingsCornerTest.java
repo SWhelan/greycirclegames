@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import greycirclegames.DatabaseConnector;
 import greycirclegames.Player;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Pile;
@@ -15,6 +16,10 @@ import spark.utils.Assert;
 
 public class KingsCornerTest {
 	private static final List<Integer> players = new ArrayList<Integer>(Arrays.asList(-1, -2, -3));
+	
+    public void testInit() {
+    	DatabaseConnector.getInstance().setTestDatabase();
+    }
 	
 	public void testKingsCornerEndTurn(){
     	KingsCorner kc = new KingsCorner(0, players);

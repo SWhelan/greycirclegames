@@ -1,8 +1,13 @@
+import greycirclegames.DatabaseConnector;
 import greycirclegames.User;
 import spark.utils.Assert;
 
 public class UserTest {
-   
+	
+    public void testInit() {
+    	DatabaseConnector.getInstance().setTestDatabase();
+    }
+    
     public void testHashPassword(){
     	String test = User.hashPassword("salt", "password");
     	Assert.isTrue(test.equals(User.hashPassword("salt", "password")), "This method should return the same thing every time the same inputs are used.");

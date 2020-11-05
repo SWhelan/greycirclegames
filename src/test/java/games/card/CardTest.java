@@ -1,9 +1,14 @@
 package games.card;
 
+import greycirclegames.DatabaseConnector;
 import greycirclegames.games.card.Card;
 import spark.utils.Assert;
 
 public class CardTest {
+	
+    public void testInit() {
+    	DatabaseConnector.getInstance().setTestDatabase();
+    }
 	
     public void testCardNumberTooLow(){
     	//Zero case

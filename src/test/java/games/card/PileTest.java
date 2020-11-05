@@ -4,11 +4,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import greycirclegames.DatabaseConnector;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Pile;
 import spark.utils.Assert;
 
 public class PileTest {
+	
+    public void testInit() {
+    	DatabaseConnector.getInstance().setTestDatabase();
+    }
+    
     public void testPileMakeDeck(){
     	Pile p = Pile.makeDeck("Test Deck");
     	

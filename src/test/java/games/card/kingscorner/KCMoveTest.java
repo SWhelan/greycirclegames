@@ -1,6 +1,7 @@
 package games.card.kingscorner;
 
 import greycirclegames.ArtificialPlayer;
+import greycirclegames.DatabaseConnector;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.CardBasedMove;
 import greycirclegames.games.card.Pile;
@@ -9,7 +10,11 @@ import greycirclegames.games.card.kingscorner.KCPile;
 import spark.utils.Assert;
 
 public class KCMoveTest {
-
+	
+    public void testInit() {
+    	DatabaseConnector.getInstance().setTestDatabase();
+    }
+    
 	public void testKCMoveIsValidGoodData(){
 		Pile origin = new Pile("Origin");
 		origin.add(Card.make(10, Card.Suit.CLUB));
@@ -216,7 +221,7 @@ public class KCMoveTest {
 
 		Assert.isTrue(appliedDest.equals(dest), "Destination should have new card.");
 		Assert.isTrue(appliedOrigin.equals(origin), "Origin should not have moved card.");
-		try{
+		try {
 			m.apply();
 			Assert.isTrue(false, "Should not be able to apply an invalid move.");
 		}catch(IllegalStateException e){

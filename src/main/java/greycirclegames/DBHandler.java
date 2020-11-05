@@ -43,8 +43,8 @@ public class DBHandler {
 		create(history, "gamehistories");
 	}
 	
-	public static MongoCollection<DBObject> getCollection(String collectionName){
-		MongoDatabase db = DatabaseConnector.getMongoDB();
+	public synchronized static MongoCollection<DBObject> getCollection(String collectionName){
+		MongoDatabase db = DatabaseConnector.getInstance().getMongoDB();
 		return db.getCollection(collectionName, DBObject.class);	
 	}
 	
@@ -218,9 +218,9 @@ public class DBHandler {
 	}
 
 	public static void dropAllCollections(){
-		MongoDatabase db = DatabaseConnector.getMongoDB();
+		MongoDatabase db = DatabaseConnector.getInstance().getMongoDB();
 		db.listCollectionNames().iterator().forEachRemaining(e -> {
-			if(!e.equals("system.indexes")){
+			if (!e.equals("system.indexes")) {
 				db.getCollection(e).drop();
 			}
 		});
