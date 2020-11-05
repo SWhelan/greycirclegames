@@ -11,15 +11,10 @@ import greycirclegames.games.card.kingscorner.KingsCorner;
 import spark.utils.Assert;
 
 public class DBTest {
-	
-	public void testInit() {
-    	DatabaseConnector.getInstance().setTestDatabase();
-    	DevHandler.dropDev();
-    	DevHandler.addDefaultUsers();
-    }
     
 	// Test CRUD operations for a USER
 	public void testUser() {
+    	DatabaseConnector.getInstance().setTestDatabase();
 		User user1 = new User("goduser", "word", "email@gmail.com");
 		User user2 = new User("goduser2", "word2", "2email@gmail.com");
 		User user3 = new User("goduser3", "word3", "3email@gmail.com");
@@ -43,6 +38,7 @@ public class DBTest {
 
 	// Test CRUD operations for a KCGame
 	public void testKCGame() {
+    	DatabaseConnector.getInstance().setTestDatabase();
 
 		ArrayList<Integer> playerList = new ArrayList<Integer>();
 

@@ -13,7 +13,6 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
 
 import greycirclegames.games.board.circles.Circles;
 import greycirclegames.games.card.kingscorner.KingsCorner;
@@ -43,9 +42,8 @@ public class DBHandler {
 		create(history, "gamehistories");
 	}
 	
-	public synchronized static MongoCollection<DBObject> getCollection(String collectionName){
-		MongoDatabase db = DatabaseConnector.getInstance().getMongoDB();
-		return db.getCollection(collectionName, DBObject.class);	
+	public static MongoCollection<DBObject> getCollection(String collectionName){
+		return DatabaseConnector.getInstance().getMongoDB().getCollection(collectionName, DBObject.class);
 	}
 	
 	public static void create(DBObject obj, String collectionName){
@@ -215,15 +213,6 @@ public class DBHandler {
 			return false;
 		}
 		return true;
-	}
-
-	public static void dropAllCollections(){
-		MongoDatabase db = DatabaseConnector.getInstance().getMongoDB();
-		db.listCollectionNames().iterator().forEachRemaining(e -> {
-			if (!e.equals("system.indexes")) {
-				db.getCollection(e).drop();
-			}
-		});
 	}
 	
 }

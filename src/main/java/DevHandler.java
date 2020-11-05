@@ -4,7 +4,6 @@ import greycirclegames.User;
 public class DevHandler {
 
 	public static void main(String[] args){
-		//dropDev();
 		changePassword();
 	}
 	
@@ -17,18 +16,13 @@ public class DevHandler {
 		DBHandler.updateUser(user);
 	}
 
-	public static void dropDev() {
-		System.out.println("Dropping entire database.");
-		DBHandler.dropAllCollections();
-	}
-	
 	public static void addDefaultUsers() {
-		if(DBHandler.numUsers() == 0){
+		if (DBHandler.numUsers() == 0) {
 			System.out.println("Creating default users.");
 			String password = "password";
 			User sarah = new User("Sarah", "sarah@lifeinstillsllc.com", password);
 			
-			for(int i = 0; i < 5; i++){
+			for (int i = 0; i < 5; i++) {
 				User test = new User("Test" + Integer.toString(i), "", password);
 				DBHandler.addFriend(test.get_id(), sarah.get_id());
 				DBHandler.addFriend(sarah.get_id(), test.get_id());

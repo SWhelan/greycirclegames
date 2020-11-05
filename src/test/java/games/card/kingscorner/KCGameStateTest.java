@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import greycirclegames.DatabaseConnector;
 import greycirclegames.GlobalConstants;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Pile;
@@ -19,10 +18,6 @@ import spark.utils.Assert;
 
 public class KCGameStateTest {
 	private static final List<Integer> players = new ArrayList<Integer>(Arrays.asList(-1, -2, -3));
-	
-    public void testInit() {
-    	DatabaseConnector.getInstance().setTestDatabase();
-    }
     
 	public void testKCGameStateInitializeToNewGame(){    
 		KCGameState gameState = new KCGameState();
@@ -37,11 +32,11 @@ public class KCGameStateTest {
 		}
 
 		int numCardsPlayed = 0;
-		for(Entry<String, Pile> e : gameState.piles.entrySet()){
-			if(!e.getKey().equals(KCPile.DRAW_PILE.getKey())){
+		for (Entry<String, Pile> e : gameState.piles.entrySet()) {
+			if (!e.getKey().equals(KCPile.DRAW_PILE.getKey())) {
 				if(e.getValue().size() == 1){
 					numCardsPlayed++;
-				}else if(e.getValue().size() != 0){
+				} else if(e.getValue().size() != 0){
 					Assert.isTrue(false, "Initial card pile should be only 1 or 0 size.");
 				}
 			}
@@ -52,7 +47,7 @@ public class KCGameStateTest {
 		Assert.isTrue(allCards.size() == 52, "All cards should be somewhere.");
 	}
 
-	public void testGetVisiblePiles(){
+	public void testGetVisiblePiles() {
 		KCGameState gameState = new KCGameState();
 		KingsCorner game = new KingsCorner(44, players);
 		gameState.initializeToNewGameState(game, players);
