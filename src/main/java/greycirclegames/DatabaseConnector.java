@@ -27,13 +27,6 @@ public class DatabaseConnector {
     }
 	
 	public MongoDatabase getMongoDB() {
-		if (db == null) {
-			if (uri != null && client != null) {
-				db = client.getDatabase(uri.getDatabase());
-			} else {
-				throw new IllegalStateException();
-			}
-		}
 		return db;
 	}
 	
