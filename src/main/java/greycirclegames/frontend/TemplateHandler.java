@@ -3,6 +3,7 @@ package greycirclegames.frontend;
 import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.post;
+import static spark.Spark.before;
 
 import java.util.Arrays;
 import java.util.HashMap;
