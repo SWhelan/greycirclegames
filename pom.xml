@@ -80,11 +80,11 @@
 			<plugin>
 				<groupId>com.heroku.sdk</groupId>
 				<artifactId>heroku-maven-plugin</artifactId>
-				<version>3.0.2</version>
+				<version>3.0.4</version>
 				<configuration>
 					<jdkVersion>11</jdkVersion>
 					<processTypes>
-						<web>java -jar ./target/greycirclegames-2.0-jar-with-dependencies.jar</web>
+						<web>java -jar ./target/greycirclegames-2.1-jar-with-dependencies.jar</web>
 					</processTypes>
 				</configuration>
 			</plugin>

@@ -10,10 +10,9 @@ import greycirclegames.games.card.kingscorner.KCMove;
 import greycirclegames.games.card.kingscorner.KingsCorner;
 import spark.utils.Assert;
 
-
 public class DBTest {
 	
-    public void testInit() {
+	public void testInit() {
     	DatabaseConnector.getInstance().setTestDatabase();
     	DevHandler.dropDev();
     	DevHandler.addDefaultUsers();

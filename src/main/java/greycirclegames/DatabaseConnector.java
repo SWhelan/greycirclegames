@@ -18,7 +18,9 @@ public class DatabaseConnector {
 	
 	private static final DatabaseConnector instance = new DatabaseConnector();
 
-    private DatabaseConnector() {}
+    private DatabaseConnector() {
+    	
+    }
 
     public static DatabaseConnector getInstance() {
         return instance;
