@@ -1,11 +1,13 @@
 package games.card;
 
+import greycirclegames.DatabaseConnector;
 import greycirclegames.games.card.Card;
 import spark.utils.Assert;
 
 public class CardTest {
 	
     public void testCardNumberTooLow() {
+    	DatabaseConnector.getInstance().setTestDatabase();
     	// Zero case
     	try {
     		Card.make(0, Card.Suit.DIAMOND);
@@ -23,6 +25,7 @@ public class CardTest {
     }
     
     public void testCardNumberTooHigh() {
+    	DatabaseConnector.getInstance().setTestDatabase();
     	// 14 case
     	try {
     		Card.make(14, Card.Suit.DIAMOND);
@@ -40,6 +43,7 @@ public class CardTest {
     }
     
     public void testCardNullSuit() {
+    	DatabaseConnector.getInstance().setTestDatabase();
     	try {
     		Card.make(1, null);
     		Assert.isTrue(false, "Cannot make a card with number 0.");
@@ -49,6 +53,7 @@ public class CardTest {
     }
     
     public void testCardNominal() {
+    	DatabaseConnector.getInstance().setTestDatabase();
     	Card t = Card.make(10, Card.Suit.SPADE);
     	Assert.isTrue(t.getNumber() == 10, "Card should have value 10.");
     	Assert.isTrue(t.getSuit() == Card.Suit.SPADE, "Card should be spade.");

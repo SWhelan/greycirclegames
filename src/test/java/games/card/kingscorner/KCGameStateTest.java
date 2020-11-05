@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import greycirclegames.DatabaseConnector;
 import greycirclegames.GlobalConstants;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Pile;
@@ -19,7 +20,8 @@ import spark.utils.Assert;
 public class KCGameStateTest {
 	private static final List<Integer> players = new ArrayList<Integer>(Arrays.asList(-1, -2, -3));
     
-	public void testKCGameStateInitializeToNewGame(){    
+	public void testKCGameStateInitializeToNewGame() {
+    	DatabaseConnector.getInstance().setTestDatabase();  
 		KCGameState gameState = new KCGameState();
 		KingsCorner game = new KingsCorner(43, players);
 		gameState.initializeToNewGameState(game, players);
@@ -48,6 +50,7 @@ public class KCGameStateTest {
 	}
 
 	public void testGetVisiblePiles() {
+    	DatabaseConnector.getInstance().setTestDatabase();
 		KCGameState gameState = new KCGameState();
 		KingsCorner game = new KingsCorner(44, players);
 		gameState.initializeToNewGameState(game, players);

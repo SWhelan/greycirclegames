@@ -42,6 +42,9 @@ public class DatabaseConnector {
 	}
 	
 	public void setTestDatabase() {
+		if (db != null && client != null) {
+			client.close();
+		}
 		setDatabase("TEST_MONGO", "test.db.url");
 	}
 

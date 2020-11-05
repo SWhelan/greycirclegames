@@ -1,6 +1,7 @@
 package games.card.kingscorner;
 
 import greycirclegames.ArtificialPlayer;
+import greycirclegames.DatabaseConnector;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.CardBasedMove;
 import greycirclegames.games.card.Pile;
@@ -10,7 +11,8 @@ import spark.utils.Assert;
 
 public class KCMoveTest {
 	
-	public void testKCMoveIsValidGoodData(){
+	public void testKCMoveIsValidGoodData() {
+    	DatabaseConnector.getInstance().setTestDatabase();
 		Pile origin = new Pile("Origin");
 		origin.add(Card.make(10, Card.Suit.CLUB));
 		origin.add(Card.make(11, Card.Suit.HEART));
@@ -27,7 +29,8 @@ public class KCMoveTest {
 		Assert.isTrue(m.isValid(), "This should be a valid move.");
 	}
 
-	public void testKCMoveIsValidBadDataOriginNotContains(){
+	public void testKCMoveIsValidBadDataOriginNotContains() {
+    	DatabaseConnector.getInstance().setTestDatabase();
 		Pile origin = new Pile("Origin");
 		origin.add(Card.make(10, Card.Suit.CLUB));
 		//origin.add(Card.make(11, Card.Suit.HEART));
@@ -44,7 +47,8 @@ public class KCMoveTest {
 		Assert.isTrue(!m.isValid(), "This should not be a valid move.");
 	}
 
-	public void testKCMoveIsValidBadDataCardsNotCompatible(){
+	public void testKCMoveIsValidBadDataCardsNotCompatible() {
+    	DatabaseConnector.getInstance().setTestDatabase();
 		Pile origin = new Pile("Origin");
 		origin.add(Card.make(10, Card.Suit.CLUB));
 		origin.add(Card.make(11, Card.Suit.HEART));
@@ -61,7 +65,8 @@ public class KCMoveTest {
 		Assert.isTrue(!m.isValid(), "This should not be a valid move.");
 	}
 	
-	public void testKCMoveIsValidDrawPile(){
+	public void testKCMoveIsValidDrawPile() {
+    	DatabaseConnector.getInstance().setTestDatabase();
 		Pile origin = new Pile(KCPile.DRAW_PILE.getPrettyName());
 		origin.add(Card.make(10, Card.Suit.CLUB));
 		origin.add(Card.make(11, Card.Suit.HEART));
@@ -80,7 +85,8 @@ public class KCMoveTest {
 		Assert.isTrue(dest.size() == originalLength + 1, "This should add one card to the destination.");
 	}
 	
-	public void testKCMoveToEmpty(){
+	public void testKCMoveToEmpty() {
+    	DatabaseConnector.getInstance().setTestDatabase();
 		Pile origin = new Pile("Origin");
 		origin.add(Card.make(10, Card.Suit.CLUB));
 		origin.add(Card.make(11, Card.Suit.HEART));
@@ -95,7 +101,8 @@ public class KCMoveTest {
 		Assert.isTrue(m.isValid(), "This move should be allowed.");
 	}
 
-	public void testKCMoveToEmptyCornerValid(){
+	public void testKCMoveToEmptyCornerValid() {
+    	DatabaseConnector.getInstance().setTestDatabase();
 		Pile origin = new Pile("Origin");
 		origin.add(Card.make(11, Card.Suit.HEART));
 		origin.add(Card.make(8, Card.Suit.CLUB));
@@ -125,7 +132,8 @@ public class KCMoveTest {
 		Assert.isTrue(!m.isValid(), "This move should be allowed.");
 	}
 	
-	public void testToStringSimple(){
+	public void testToStringSimple() {
+    	DatabaseConnector.getInstance().setTestDatabase();
 		Pile origin = new Pile("Origin");
 		origin.add(Card.make(10, Card.Suit.CLUB));
 		origin.add(Card.make(11, Card.Suit.HEART));
@@ -144,7 +152,8 @@ public class KCMoveTest {
 		Assert.isTrue(actual.equals(expected), "The toString method should be properly formatted.");
 	}
 	
-	public void testToStringComplicated(){
+	public void testToStringComplicated() {
+    	DatabaseConnector.getInstance().setTestDatabase();
 		Card card1 = Card.make(11, Card.Suit.HEART);
 		Card card2 = Card.make(8, Card.Suit.CLUB); 
 		
@@ -167,7 +176,8 @@ public class KCMoveTest {
 	}
 	
 
-	public void testToStringFromDrawPile(){
+	public void testToStringFromDrawPile() {
+    	DatabaseConnector.getInstance().setTestDatabase();
 		Card card = Card.make(8, Card.Suit.CLUB);
 		Pile origin = new Pile(KCPile.DRAW_PILE.getPrettyName());
 		origin.add(Card.make(10, Card.Suit.CLUB));
@@ -188,7 +198,8 @@ public class KCMoveTest {
 	}
 	
 
-	public void testKCMoveApply(){
+	public void testKCMoveApply() {
+    	DatabaseConnector.getInstance().setTestDatabase();
 		Pile origin = new Pile("Origin");
 		origin.add(Card.make(10, Card.Suit.CLUB));
 		origin.add(Card.make(11, Card.Suit.HEART));
@@ -219,7 +230,7 @@ public class KCMoveTest {
 		try {
 			m.apply();
 			Assert.isTrue(false, "Should not be able to apply an invalid move.");
-		}catch(IllegalStateException e){
+		} catch(IllegalStateException e) {
 
 		}
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import greycirclegames.DatabaseConnector;
 import greycirclegames.Player;
 import greycirclegames.games.card.Card;
 import greycirclegames.games.card.Pile;
@@ -16,7 +17,8 @@ import spark.utils.Assert;
 public class KingsCornerTest {
 	private static final List<Integer> players = new ArrayList<Integer>(Arrays.asList(-1, -2, -3));
 	
-	public void testKingsCornerEndTurn(){
+	public void testKingsCornerEndTurn() {
+    	DatabaseConnector.getInstance().setTestDatabase();
     	KingsCorner kc = new KingsCorner(0, players);
     	KCGameState gs = (KCGameState) kc.getGameState();
     	
@@ -32,7 +34,8 @@ public class KingsCornerTest {
     	Assert.isTrue(!currentPlayer.equals(kc.getCurrentPlayerObject()), "Current player should have been incremented.");
     }
     
-    public void testKingsCornerApplyMove(){
+    public void testKingsCornerApplyMove() {
+    	DatabaseConnector.getInstance().setTestDatabase();
     	KingsCorner kc = new KingsCorner(0, players);
     	KCGameState gs = (KCGameState) kc.getGameState();
     	
@@ -68,7 +71,8 @@ public class KingsCornerTest {
     	Assert.isTrue(mostRecent.getDestinationName().equals(spoof.getName()), "Most recent destination");
     }
     
-    public void testKingsCornerApplyMoveInvalidMove(){
+    public void testKingsCornerApplyMoveInvalidMove() {
+    	DatabaseConnector.getInstance().setTestDatabase();
     	KingsCorner kc = new KingsCorner(0, players);
     	KCGameState gs = (KCGameState) kc.getGameState();
     	
@@ -90,7 +94,8 @@ public class KingsCornerTest {
     	Assert.isTrue(!kc.applyMove(move), "This is not a valid move, so return should be false.");
     }
     
-    public void testKingsCornerGameOverConditions(){
+    public void testKingsCornerGameOverConditions() {
+    	DatabaseConnector.getInstance().setTestDatabase();
     	KingsCorner kc = new KingsCorner(0, players);
     	KCGameState gs = kc.getGameState();
 
@@ -101,4 +106,5 @@ public class KingsCornerTest {
     	
     	Assert.isTrue(kc.gameIsOver(), "The game should be over");
     }
+    
 }
