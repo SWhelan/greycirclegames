@@ -23,7 +23,7 @@ public class FriendsHandler extends TemplateHandler {
 		user.removeFriendNotifications();
 		DBHandler.updateUser(user);
 		String searchValue = rq.cookie(GlobalConstants.FRIEND_SEARCH_COOKIE_KEY);
-		rs.removeCookie(GlobalConstants.FRIEND_SEARCH_COOKIE_KEY);
+		CookieHandler.removeCookie(rs, GlobalConstants.FRIEND_SEARCH_COOKIE_KEY);
 		info.put("searchValue", searchValue);
 		info.put("friends", getFriendsFromDB(getUserIdFromCookies(rq)));
 		return getModelAndView(info, FRIENDS_TEMPLATE, rq, rs);

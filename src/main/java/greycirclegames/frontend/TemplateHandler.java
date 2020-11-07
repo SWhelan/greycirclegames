@@ -3,6 +3,7 @@ package greycirclegames.frontend;
 import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.post;
+import static spark.Spark.before;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -297,11 +298,11 @@ public class TemplateHandler {
 
         if (rq.cookie(GlobalConstants.DISPLAY_ERROR) != null) {
             info.put(GlobalConstants.DISPLAY_ERROR, rq.cookie(GlobalConstants.DISPLAY_ERROR));
-            rs.removeCookie(GlobalConstants.DISPLAY_ERROR);
+            CookieHandler.removeCookie(rs, GlobalConstants.DISPLAY_ERROR);
         }
         if (rq.cookie(GlobalConstants.DISPLAY_SUCCESS) != null) {
             info.put(GlobalConstants.DISPLAY_SUCCESS, rq.cookie(GlobalConstants.DISPLAY_SUCCESS));
-            rs.removeCookie(GlobalConstants.DISPLAY_SUCCESS);
+            CookieHandler.removeCookie(rs, GlobalConstants.DISPLAY_SUCCESS);
         }
 
         info.put("HOME_ROUTE", HOME_ROUTE);

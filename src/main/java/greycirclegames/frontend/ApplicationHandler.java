@@ -104,8 +104,8 @@ public class ApplicationHandler extends TemplateHandler {
 	}
 	
 	protected static ModelAndView logout(Request rq, Response rs) {
-		rs.removeCookie(GlobalConstants.USER_COOKIE_KEY);
-		rs.removeCookie(GlobalConstants.VERIFY_COOKIE_KEY);
+		CookieHandler.removeCookie(rs, GlobalConstants.USER_COOKIE_KEY);
+		CookieHandler.removeCookie(rs, GlobalConstants.VERIFY_COOKIE_KEY);
 		rs.redirect(HOME_ROUTE);
 		return getModelAndView(null, HOME_TEMPLATE, rq, rs);
 	}
@@ -200,7 +200,7 @@ public class ApplicationHandler extends TemplateHandler {
 			user.getEmailForGameOver() != emailForGameOver ||
 			user.getEmailForPoke() != emailForPoke ||
 			user.getShowHelpers() != showHelpers ||
-			user.getRefreshRate() != refreshRate){
+			user.getRefreshRate() != refreshRate) {
 				// Only change if there was a change (to conserve DB hits)
 				user.setEmailForNewFriend(emailForNewFriend);
 				user.setEmailForNewGame(emailForNewGame);
