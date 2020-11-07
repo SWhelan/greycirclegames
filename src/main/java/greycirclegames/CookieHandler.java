@@ -5,7 +5,7 @@ import spark.Response;
 public class CookieHandler {
     
     public static Response setCookie(Response rs, String key, String value) {
-    	rs.header("Set-Cookie", key + "=" + value + "; Max-Age=28800; SameSite=Lax");
+    	rs.header("Set-Cookie", key + "=" + value + "; Max-Age=888000; SameSite=Strict; Secure");
     	return rs;
     }
     
