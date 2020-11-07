@@ -1,14 +1,15 @@
 package greycirclegames.frontend;
 
-import static spark.Spark.exception;
-import static spark.Spark.get;
-import static spark.Spark.post;
-import static spark.Spark.before;
-
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static spark.Spark.after;
+import static spark.Spark.before;
+import static spark.Spark.exception;
+import static spark.Spark.get;
+import static spark.Spark.post;
 
 import greycirclegames.CookieHandler;
 import greycirclegames.DBHandler;
@@ -20,7 +21,6 @@ import greycirclegames.games.card.kingscorner.KCPile;
 import spark.ModelAndView;
 import spark.Request;
 import spark.Response;
-import spark.Spark;
 import spark.template.mustache.MustacheTemplateEngine;
 
 /**
@@ -72,9 +72,7 @@ public class TemplateHandler {
 
     public static void registerTemplates() {
         // Ensure they are logged in or the url is public/doesn't require login
-        Spark.before((rq, rs) -> {
-            CookieHandler.removeCookie(rs, GlobalConstants.DISPLAY_SUCCESS);
-            CookieHandler.removeCookie(rs, GlobalConstants.DISPLAY_ERROR);
+        before((rq, rs) -> {
             String path = rq.pathInfo();
             if (requiresAuthentication(path) && !isLoggedIn(rq)) {
                 rs.redirect("/");
@@ -128,6 +126,13 @@ public class TemplateHandler {
             } else {
                 return null;
             }
+        });
+        
+        after((rq, rs) -> {
+        	if (!rq.pathInfo().startsWith(PUBLIC_ROUTE) && !rq.pathInfo().startsWith("favicon.ico")) { // Probably could be done via filter path regex
+        		CookieHandler.removeCookieIfNotSet(rs, GlobalConstants.DISPLAY_SUCCESS);
+            	CookieHandler.removeCookieIfNotSet(rs, GlobalConstants.DISPLAY_ERROR);
+        	}
         });
 
         // Catch the 404 errors and redirect to home page
@@ -298,11 +303,11 @@ public class TemplateHandler {
 
         if (rq.cookie(GlobalConstants.DISPLAY_ERROR) != null) {
             info.put(GlobalConstants.DISPLAY_ERROR, rq.cookie(GlobalConstants.DISPLAY_ERROR));
-            CookieHandler.removeCookie(rs, GlobalConstants.DISPLAY_ERROR);
+            CookieHandler.removeCookieIfNotSet(rs, GlobalConstants.DISPLAY_ERROR);
         }
         if (rq.cookie(GlobalConstants.DISPLAY_SUCCESS) != null) {
             info.put(GlobalConstants.DISPLAY_SUCCESS, rq.cookie(GlobalConstants.DISPLAY_SUCCESS));
-            CookieHandler.removeCookie(rs, GlobalConstants.DISPLAY_SUCCESS);
+            CookieHandler.removeCookieIfNotSet(rs, GlobalConstants.DISPLAY_SUCCESS);
         }
 
         info.put("HOME_ROUTE", HOME_ROUTE);
