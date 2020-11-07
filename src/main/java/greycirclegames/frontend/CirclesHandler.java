@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import greycirclegames.CookieHandler;
 import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.User;
@@ -39,7 +40,7 @@ public class CirclesHandler extends TemplateHandler{
 	protected static ModelAndView createCirclesGame(List<Integer> players, Request rq, Response rs) {
 		Circles game = new Circles(DBHandler.getNextGameID(), players);
 		DBHandler.createCirclesGame(game);
-		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
+		CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
 		rs.redirect(CIRCLES_ROUTE + "/" + Integer.toString(game.get_id()));
 		return getModelAndView(null, CIRCLES_TEMPLATE, rq, rs);
 	}
@@ -74,17 +75,17 @@ public class CirclesHandler extends TemplateHandler{
 			game.endTurn();
 			if(game.applyAIMoves()){
 				// It was an AI Player's turn
-				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn ended. AI Player(s) played.");
+				CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "Your turn ended. AI Player(s) played.");
 			} else {
                 if(game.getIsActive() && game.players.get(game.currentPlayerIndex) == getUserIdFromCookies(rq)) {
-                    rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The other player had no valid moves. It's your turn again!");
+                    CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "The other player had no valid moves. It's your turn again!");
                 } else {
-                    rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
+                    CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
                 }
 			}
 			DBHandler.updateCirclesGame(game);
 		} else {
-			rs.cookie(GlobalConstants.DISPLAY_ERROR, "Move was invalid and not applied.");
+			CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_ERROR, "Move was invalid and not applied.");
 		}
 		rs.redirect(CIRCLES_ROUTE + "/" + gameIdString);
 		return getModelAndView(null, CIRCLES_TEMPLATE, rq, rs);

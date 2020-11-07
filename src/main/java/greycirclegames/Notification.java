@@ -8,7 +8,7 @@ public class Notification extends ReflectionDBObject {
 	private String text;
 	private String url;
 	private int gameId;
-	private boolean friends;	
+	private boolean friends;
 	
 	public Notification(Integer uid, String text, String url, int gameId, boolean friends){
 		this.uid = uid;

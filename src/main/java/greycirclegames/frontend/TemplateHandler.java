@@ -3,13 +3,13 @@ package greycirclegames.frontend;
 import static spark.Spark.exception;
 import static spark.Spark.get;
 import static spark.Spark.post;
-import static spark.Spark.before;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import greycirclegames.CookieHandler;
 import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.NotFoundException;
@@ -72,8 +72,8 @@ public class TemplateHandler {
     public static void registerTemplates() {
         // Ensure they are logged in or the url is public/doesn't require login
         Spark.before((rq, rs) -> {
-            rs.removeCookie(GlobalConstants.DISPLAY_SUCCESS);
-            rs.removeCookie(GlobalConstants.DISPLAY_ERROR);
+            CookieHandler.removeCookie(rs, GlobalConstants.DISPLAY_SUCCESS);
+            CookieHandler.removeCookie(rs, GlobalConstants.DISPLAY_ERROR);
             String path = rq.pathInfo();
             if (requiresAuthentication(path) && !isLoggedIn(rq)) {
                 rs.redirect("/");

@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import greycirclegames.CookieHandler;
 import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.NotificationAndEmailHandler;
@@ -42,50 +43,50 @@ public class FriendsHandler extends TemplateHandler {
 		return getModelAndView(info, FRIEND_INFO_TEMPLATE, rq, rs);
 	}
 	
-	protected static ModelAndView postAddFriend(Request rq, Response rs){
+	protected static ModelAndView postAddFriend(Request rq, Response rs) {
 		String searchValue = rq.queryParams("searchValue");
 		if(searchValue.equals("")) {
-			rs.cookie(GlobalConstants.DISPLAY_ERROR, "Please enter an email or username.");
+			CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_ERROR, "Please enter an email or username.");
 		} else {
 			Player user2 = DBHandler.getUserByUsername(searchValue);
-			if(user2 == null){
+			if (user2 == null) {
 				searchValue = searchValue.toLowerCase();
 				user2 = DBHandler.getUserByEmail(searchValue);
 			}
-			if(user2 == null){
-				rs.cookie(GlobalConstants.DISPLAY_ERROR, "No user was found with that search.");
+			if (user2 == null) {
+				CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_ERROR, "No user was found with that search.");
 			} else if (user2.get_id() == getUserIdFromCookies(rq)){
-				rs.cookie(GlobalConstants.DISPLAY_ERROR, "You cannot add yourself as a friend.");
+				CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_ERROR, "You cannot add yourself as a friend.");
 			} else if(alreadyFriends(getUserIdFromCookies(rq), user2.get_id())){
-				rs.cookie(GlobalConstants.DISPLAY_ERROR, "You are already friends with " + user2.getUsername());
+				CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_ERROR, "You are already friends with " + user2.getUsername());
 			} else {
 				if(!DBHandler.addFriend(getUserIdFromCookies(rq), user2.get_id())){
-					rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
+					CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
 				} else if(!DBHandler.addFriend(user2.get_id(), getUserIdFromCookies(rq))){
-					rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
+					CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_ERROR, "There was an error adding that friend.");
 				} else {
-					rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The requested friend has been added.");
+					CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "The requested friend has been added.");
 					NotificationAndEmailHandler.newFriend(getUserIdFromCookies(rq), user2.get_id());
 				}
 			}
 		}
-		rs.cookie(GlobalConstants.FRIEND_SEARCH_COOKIE_KEY, searchValue);
+		CookieHandler.setCookie(rs, GlobalConstants.FRIEND_SEARCH_COOKIE_KEY, searchValue);
 		rs.redirect(FRIENDS_ROUTE);
 		return getModelAndView(null, FRIENDS_TEMPLATE, rq, rs);
 	}
 	
-	protected static ModelAndView postRemoveFriend(Request rq, Response rs){
+	protected static ModelAndView postRemoveFriend(Request rq, Response rs) {
 		Integer friendToRemoveId = Integer.parseInt(rq.queryParams("friendId"));
 		Player user2 = DBHandler.getUser(friendToRemoveId);
-		if(user2 == null){
-			rs.cookie(GlobalConstants.DISPLAY_ERROR, "No user was found with that id to remove.");
+		if (user2 == null) {
+			CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_ERROR, "No user was found with that id to remove.");
 		} else {
 			if(!DBHandler.removeFriend(getUserIdFromCookies(rq), user2.get_id())){
-				rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
+				CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
 			} else if (!DBHandler.removeFriend(user2.get_id(), getUserIdFromCookies(rq))){
-				rs.cookie(GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
+				CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_ERROR, "There was an error removing that friend.");
 			} else {
-				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Friend was successfully removed.");
+				CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "Friend was successfully removed.");
 			}
 		}
 		rs.redirect(FRIENDS_ROUTE);

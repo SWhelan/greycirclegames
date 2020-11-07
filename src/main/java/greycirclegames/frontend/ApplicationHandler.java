@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import greycirclegames.ArtificialPlayer;
+import greycirclegames.CookieHandler;
 import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.NotificationAndEmailHandler;
@@ -152,12 +153,12 @@ public class ApplicationHandler extends TemplateHandler {
 			newUser.setPassword(User.hashPassword(newUser.getSalt(), newUser.getUsername()));
 			DBHandler.updateUser(newUser);
 		}
-		rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(newUser.get_id()), MAX_AGE);
-		rs.cookie(GlobalConstants.VERIFY_COOKIE_KEY, newUser.getCookieValue());
+		CookieHandler.setCookie(rs, GlobalConstants.USER_COOKIE_KEY, Integer.toString(newUser.get_id()));
+		CookieHandler.setCookie(rs, GlobalConstants.VERIFY_COOKIE_KEY, newUser.getCookieValue());
 		if(guest){
-			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "A guest account has been created for you. Your username/password is \"" + newUser.getUsername() + "\" (no quotes). You have been logged in. You should create a game or add friends to get started. If you change your mind about forms in the top right there is a drop down to edit settings and you can change your username and other settings.");
+			CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "A guest account has been created for you. Your username/password is \"" + newUser.getUsername() + "\" (no quotes). You have been logged in. You should create a game or add friends to get started. If you change your mind about forms in the top right there is a drop down to edit settings and you can change your username and other settings.");
 		} else {
-			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "New user successfully created. You have been logged in. You should create a game or add friends to get started.");
+			CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "New user successfully created. You have been logged in. You should create a game or add friends to get started.");
 		}
 		rs.redirect(CREATE_GAME_ROUTE);
 		return getModelAndView(null, REGISTER_TEMPLATE, rq, rs);
@@ -168,9 +169,9 @@ public class ApplicationHandler extends TemplateHandler {
 		String password = rq.queryParams("password");
 		User user = DBHandler.getUserByUsername(username);
 		if(checkLogin(user, password)){
-			rs.cookie(GlobalConstants.USER_COOKIE_KEY, Integer.toString(user.get_id()), MAX_AGE);
-			rs.cookie(GlobalConstants.VERIFY_COOKIE_KEY, user.getCookieValue(), MAX_AGE);
-			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Logged in successfully.");
+			CookieHandler.setCookie(rs, GlobalConstants.USER_COOKIE_KEY, Integer.toString(user.get_id()));
+			CookieHandler.setCookie(rs, GlobalConstants.VERIFY_COOKIE_KEY, user.getCookieValue());
+			CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "Logged in successfully.");
 			rs.redirect(GAMES_ROUTE);
 		}
 		rs.header(GlobalConstants.DISPLAY_ERROR, "Your username or password is incorrect.");
@@ -268,11 +269,11 @@ public class ApplicationHandler extends TemplateHandler {
 			if (change){
 				DBHandler.updateUser(user);
 			}
-			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "User was updated successfully.");
+			CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "User was updated successfully.");
 		} else {
 			StringBuilder builder = new StringBuilder();
 			errorMessage.stream().forEach(e -> {builder.append(e); builder.append(" ");});
-			rs.cookie(GlobalConstants.DISPLAY_ERROR, builder.toString());
+			CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_ERROR, builder.toString());
 		}
 		rs.redirect(EDIT_USER_ROUTE);
 		return getModelAndView(null, EDIT_USER_TEMPLATE, rq, rs);

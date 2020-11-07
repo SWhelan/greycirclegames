@@ -29,4 +29,8 @@ public class GlobalConstants {
     
     public static final int CIRCLES_ROWS = 8;
     public static final int CIRCLES_COLUMNS = 8;
+    
+    // Cookies
+    public static final int DEFAULT_COOKIE_MAX_AGE = 60; // 1 minute in seconds
+    public static final boolean DEFAULT_COOKIE_SECURE_SETTING = true;
 }

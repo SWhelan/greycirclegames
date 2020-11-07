@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import greycirclegames.CookieHandler;
 import greycirclegames.DBHandler;
 import greycirclegames.GlobalConstants;
 import greycirclegames.User;
@@ -49,7 +50,7 @@ public class KingsCornerHandler extends TemplateHandler{
 		}
 		
 		if(players.size() + numAiPlayers > GlobalConstants.MAX_PLAYERS){
-			rs.cookie(GlobalConstants.DISPLAY_ERROR, "The game may not have more than " + Integer.toString(GlobalConstants.MAX_PLAYERS) + " players.");
+			CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_ERROR, "The game may not have more than " + Integer.toString(GlobalConstants.MAX_PLAYERS) + " players.");
 			rs.redirect(CREATE_GAME_ROUTE);
 			return getModelAndView(null, CREATE_GAME_TEMPLATE, rq, rs);
 		}
@@ -92,10 +93,10 @@ public class KingsCornerHandler extends TemplateHandler{
 		KCMove move = new KCMove(playerId, origin, moving, destination);
 		if(moving.size() > 0 && game.applyMove(move)){
 			if(game.getIsActive()){
-				rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied successfully.");
+				CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "Move was valid and applied successfully.");
 			}
 		} else {
-			rs.cookie(GlobalConstants.DISPLAY_ERROR, "Move was invalid and not applied.");
+			CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_ERROR, "Move was invalid and not applied.");
 		}
 		
 		if(game.getIsActive() && game.players.get(game.currentPlayerIndex) < 0){
@@ -114,9 +115,9 @@ public class KingsCornerHandler extends TemplateHandler{
 		game.endTurn();
 		if(game.applyAIMoves()){
 			// It was an AI Player's turn
-			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn ended. Computer Player(s) played.");
+			CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "Your turn ended. Computer Player(s) played.");
 		} else {
-			rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
+			CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "Your turn has ended.");
 		}
 		DBHandler.updateKCGame(game);
 		rs.redirect(KINGS_CORNER_ROUTE + "/" + gameIdString);
@@ -126,7 +127,7 @@ public class KingsCornerHandler extends TemplateHandler{
 	protected static ModelAndView createKCGame(List<Integer> players, Request rq, Response rs) {
 		KingsCorner game = new KingsCorner(DBHandler.getNextGameID(), players);
 		DBHandler.createKCGame(game);
-		rs.cookie(GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
+		CookieHandler.setCookie(rs, GlobalConstants.DISPLAY_SUCCESS, "The game was created. It is your move first.");
 		rs.redirect(KINGS_CORNER_ROUTE + "/" + Integer.toString(game.get_id()));
 		return getModelAndView(null, KINGS_CORNERS_TEMPLATE, rq, rs);
 	}
