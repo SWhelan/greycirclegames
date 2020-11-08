@@ -17,4 +17,5 @@ Install Maven
 Run `mvn test` in this root of this repo.
 
 ## Heroku Deploy
-Run `mvn clean heroku:deploy`
+Run `mvn clean heroku:deploy -P staging` or for production `mvn clean heroku:deploy -P production`
+The `clean` is very important because without it the heroku build will upload all the way to heroku and then fail at some static imports in TemplateHandler for spark.Spark.before.

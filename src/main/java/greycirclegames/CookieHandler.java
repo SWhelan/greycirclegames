@@ -60,9 +60,6 @@ public class CookieHandler {
 			dateFormatter.setTimeZone(TimeZone.getTimeZone("GMT"));
 			expirationString = "Expires=" + dateFormatter.format(calendar.getTime()) + ";";
 		}
-		if (value == null || value.equals("")) {
-			value = key;
-		}
 		rs.header("Set-Cookie", key + "=" + value + "; " + expirationString + " SameSite=Strict; Secure");
 		return rs;
 	}
