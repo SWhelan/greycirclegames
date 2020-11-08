@@ -14,8 +14,11 @@ When a change is made to a template file the server will need to be restarted bu
 
 ## Tests
 Install Maven
-Run `mvn test` in this root of this repo.
+Run `mvn clean test` in this root of this repo.
 
 ## Heroku Deploy
 Run `mvn clean heroku:deploy -P staging` or for production `mvn clean heroku:deploy -P production`
 The `clean` is very important because without it the heroku build will upload all the way to heroku and then fail at some static imports in TemplateHandler for spark.Spark.before.
+
+## Eclipse
+If running eclipse you may want to run `mvn clean eclipse:eclipse` to compile classpath files and such for eclipse to use. Run this when things appear to be running old code or eclipse isn't saying something is an error but maven is reporting them. I think build automatically turned on in eclipse is also good.
